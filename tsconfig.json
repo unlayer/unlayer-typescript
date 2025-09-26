@@ -7,10 +7,9 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "baseUrl": "./",
     "paths": {
-      "unlayer/*": ["src/*"],
-      "unlayer": ["src/index.ts"]
+      "unlayer/*": ["./src/*"],
+      "unlayer": ["./src/index.ts"]
     },
     "noEmit": true,
 
