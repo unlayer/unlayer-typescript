@@ -8,8 +8,8 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "paths": {
-      "unlayer/*": ["./src/*"],
-      "unlayer": ["./src/index.ts"]
+      "@unlayer/sdk/*": ["./src/*"],
+      "@unlayer/sdk": ["./src/index.ts"]
     },
     "noEmit": true,
 

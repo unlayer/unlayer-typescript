@@ -1,8 +1,8 @@
 {
-  "name": "unlayer",
+  "name": "@unlayer/sdk",
   "version": "0.0.1",
   "description": "The official TypeScript library for the Unlayer API",
-  "author": "Unlayer <>",
+  "author": "Unlayer <contact@example.com>",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "type": "commonjs",

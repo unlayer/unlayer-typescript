@@ -5,11 +5,11 @@ import { APIPromise } from '../core/api-promise';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
-export class Documents extends APIResource {
+export class DocumentsV1 extends APIResource {
   /**
    * Retrieve details of a previously generated document.
    */
-  documentsRetrieve(id: string, options?: RequestOptions): APIPromise<DocumentDocumentsRetrieveResponse> {
+  documentsRetrieve(id: string, options?: RequestOptions): APIPromise<DocumentsV1DocumentsRetrieveResponse> {
     return this._client.get(path`/documents/v1/documents/${id}`, options);
   }
 
@@ -17,9 +17,9 @@ export class Documents extends APIResource {
    * Generate PDF document from JSON design, HTML content, or URL.
    */
   generateCreate(
-    body: DocumentGenerateCreateParams | null | undefined = {},
+    body: DocumentsV1GenerateCreateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<DocumentGenerateCreateResponse> {
+  ): APIPromise<DocumentsV1GenerateCreateResponse> {
     return this._client.post('/documents/v1/generate', { body, ...options });
   }
 
@@ -27,14 +27,14 @@ export class Documents extends APIResource {
    * Generate PDF document from an existing template with merge tags.
    */
   generateTemplateTemplate(
-    body: DocumentGenerateTemplateTemplateParams,
+    body: DocumentsV1GenerateTemplateTemplateParams,
     options?: RequestOptions,
-  ): APIPromise<DocumentGenerateTemplateTemplateResponse> {
+  ): APIPromise<DocumentsV1GenerateTemplateTemplateResponse> {
     return this._client.post('/documents/v1/generate/template', { body, ...options });
   }
 }
 
-export interface DocumentDocumentsRetrieveResponse {
+export interface DocumentsV1DocumentsRetrieveResponse {
   /**
    * Document ID
    */
@@ -76,7 +76,7 @@ export interface DocumentDocumentsRetrieveResponse {
   status?: 'generating' | 'completed' | 'failed';
 }
 
-export interface DocumentGenerateCreateResponse {
+export interface DocumentsV1GenerateCreateResponse {
   /**
    * Unique document identifier
    */
@@ -95,7 +95,7 @@ export interface DocumentGenerateCreateResponse {
   status?: 'generating' | 'completed' | 'failed';
 }
 
-export interface DocumentGenerateTemplateTemplateResponse {
+export interface DocumentsV1GenerateTemplateTemplateResponse {
   /**
    * Unique document identifier
    */
@@ -114,7 +114,7 @@ export interface DocumentGenerateTemplateTemplateResponse {
   status?: 'generating' | 'completed' | 'failed';
 }
 
-export interface DocumentGenerateCreateParams {
+export interface DocumentsV1GenerateCreateParams {
   /**
    * Proprietary design format JSON
    */
@@ -141,7 +141,7 @@ export interface DocumentGenerateCreateParams {
   url?: string;
 }
 
-export interface DocumentGenerateTemplateTemplateParams {
+export interface DocumentsV1GenerateTemplateTemplateParams {
   /**
    * ID of the template to use for generation
    */
@@ -158,12 +158,12 @@ export interface DocumentGenerateTemplateTemplateParams {
   mergeTags?: { [key: string]: string };
 }
 
-export declare namespace Documents {
+export declare namespace DocumentsV1 {
   export {
-    type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
-    type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
-    type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
-    type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
-    type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
+    type DocumentsV1DocumentsRetrieveResponse as DocumentsV1DocumentsRetrieveResponse,
+    type DocumentsV1GenerateCreateResponse as DocumentsV1GenerateCreateResponse,
+    type DocumentsV1GenerateTemplateTemplateResponse as DocumentsV1GenerateTemplateTemplateResponse,
+    type DocumentsV1GenerateCreateParams as DocumentsV1GenerateCreateParams,
+    type DocumentsV1GenerateTemplateTemplateParams as DocumentsV1GenerateTemplateTemplateParams,
   };
 }

@@ -1,4 +1,4 @@
-import { createPathTagFunction, encodeURIPath } from 'unlayer/internal/utils/path';
+import { createPathTagFunction, encodeURIPath } from '@unlayer/sdk/internal/utils/path';
 import { inspect } from 'node:util';
 import { runInNewContext } from 'node:vm';
 

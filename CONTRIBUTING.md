@@ -55,12 +55,12 @@ $ cd unlayer-typescript
 # With yarn
 $ yarn link
 $ cd ../my-package
-$ yarn link unlayer
+$ yarn link @unlayer/sdk
 
 # With pnpm
 $ pnpm link --global
 $ cd ../my-package
-$ pnpm link -—global unlayer
+$ pnpm link -—global @unlayer/sdk
 ```
 
 ## Running tests

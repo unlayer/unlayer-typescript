@@ -4,23 +4,26 @@ import { APIResource } from '../core/resource';
 import { APIPromise } from '../core/api-promise';
 import { RequestOptions } from '../internal/request-options';
 
-export class Pages extends APIResource {
+export class PagesV1 extends APIResource {
   /**
    * Convert page design JSON to HTML with optional merge tags.
    */
-  renderCreate(body: PageRenderCreateParams, options?: RequestOptions): APIPromise<PageRenderCreateResponse> {
+  renderCreate(
+    body: PagesV1RenderCreateParams,
+    options?: RequestOptions,
+  ): APIPromise<PagesV1RenderCreateResponse> {
     return this._client.post('/pages/v1/render', { body, ...options });
   }
 }
 
-export interface PageRenderCreateResponse {
+export interface PagesV1RenderCreateResponse {
   /**
    * Rendered HTML content
    */
   html?: string;
 }
 
-export interface PageRenderCreateParams {
+export interface PagesV1RenderCreateParams {
   /**
    * Proprietary design format JSON
    */
@@ -32,9 +35,9 @@ export interface PageRenderCreateParams {
   mergeTags?: { [key: string]: string };
 }
 
-export declare namespace Pages {
+export declare namespace PagesV1 {
   export {
-    type PageRenderCreateResponse as PageRenderCreateResponse,
-    type PageRenderCreateParams as PageRenderCreateParams,
+    type PagesV1RenderCreateResponse as PagesV1RenderCreateResponse,
+    type PagesV1RenderCreateParams as PagesV1RenderCreateParams,
   };
 }
