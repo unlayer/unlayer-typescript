@@ -5,11 +5,11 @@ import { APIPromise } from '../core/api-promise';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
-export class Emails extends APIResource {
+export class EmailsV1 extends APIResource {
   /**
    * Retrieve details of a previously sent email.
    */
-  emailsRetrieve(id: string, options?: RequestOptions): APIPromise<EmailEmailsRetrieveResponse> {
+  emailsRetrieve(id: string, options?: RequestOptions): APIPromise<EmailsV1EmailsRetrieveResponse> {
     return this._client.get(path`/emails/v1/emails/${id}`, options);
   }
 
@@ -17,16 +17,19 @@ export class Emails extends APIResource {
    * Convert design JSON to HTML with optional merge tags.
    */
   renderCreate(
-    body: EmailRenderCreateParams,
+    body: EmailsV1RenderCreateParams,
     options?: RequestOptions,
-  ): APIPromise<EmailRenderCreateResponse> {
+  ): APIPromise<EmailsV1RenderCreateResponse> {
     return this._client.post('/emails/v1/render', { body, ...options });
   }
 
   /**
    * Send email with design JSON or HTML content.
    */
-  sendCreate(body: EmailSendCreateParams, options?: RequestOptions): APIPromise<EmailSendCreateResponse> {
+  sendCreate(
+    body: EmailsV1SendCreateParams,
+    options?: RequestOptions,
+  ): APIPromise<EmailsV1SendCreateResponse> {
     return this._client.post('/emails/v1/send', { body, ...options });
   }
 
@@ -34,14 +37,14 @@ export class Emails extends APIResource {
    * Send email using an existing template with merge tags.
    */
   sendTemplateTemplate(
-    body: EmailSendTemplateTemplateParams,
+    body: EmailsV1SendTemplateTemplateParams,
     options?: RequestOptions,
-  ): APIPromise<EmailSendTemplateTemplateResponse> {
+  ): APIPromise<EmailsV1SendTemplateTemplateResponse> {
     return this._client.post('/emails/v1/send/template', { body, ...options });
   }
 }
 
-export interface EmailEmailsRetrieveResponse {
+export interface EmailsV1EmailsRetrieveResponse {
   /**
    * Email message ID
    */
@@ -73,14 +76,14 @@ export interface EmailEmailsRetrieveResponse {
   to?: string;
 }
 
-export interface EmailRenderCreateResponse {
+export interface EmailsV1RenderCreateResponse {
   /**
    * Rendered HTML content
    */
   html?: string;
 }
 
-export interface EmailSendCreateResponse {
+export interface EmailsV1SendCreateResponse {
   /**
    * Unique message identifier
    */
@@ -89,7 +92,7 @@ export interface EmailSendCreateResponse {
   status?: 'sent' | 'queued' | 'failed';
 }
 
-export interface EmailSendTemplateTemplateResponse {
+export interface EmailsV1SendTemplateTemplateResponse {
   /**
    * Unique message identifier
    */
@@ -98,7 +101,7 @@ export interface EmailSendTemplateTemplateResponse {
   status?: 'sent' | 'queued' | 'failed';
 }
 
-export interface EmailRenderCreateParams {
+export interface EmailsV1RenderCreateParams {
   /**
    * Proprietary design format JSON
    */
@@ -110,7 +113,7 @@ export interface EmailRenderCreateParams {
   mergeTags?: { [key: string]: string };
 }
 
-export interface EmailSendCreateParams {
+export interface EmailsV1SendCreateParams {
   /**
    * Recipient email address
    */
@@ -137,7 +140,7 @@ export interface EmailSendCreateParams {
   subject?: string;
 }
 
-export interface EmailSendTemplateTemplateParams {
+export interface EmailsV1SendTemplateTemplateParams {
   /**
    * ID of the template to use
    */
@@ -159,14 +162,14 @@ export interface EmailSendTemplateTemplateParams {
   subject?: string;
 }
 
-export declare namespace Emails {
+export declare namespace EmailsV1 {
   export {
-    type EmailEmailsRetrieveResponse as EmailEmailsRetrieveResponse,
-    type EmailRenderCreateResponse as EmailRenderCreateResponse,
-    type EmailSendCreateResponse as EmailSendCreateResponse,
-    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
-    type EmailRenderCreateParams as EmailRenderCreateParams,
-    type EmailSendCreateParams as EmailSendCreateParams,
-    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
+    type EmailsV1EmailsRetrieveResponse as EmailsV1EmailsRetrieveResponse,
+    type EmailsV1RenderCreateResponse as EmailsV1RenderCreateResponse,
+    type EmailsV1SendCreateResponse as EmailsV1SendCreateResponse,
+    type EmailsV1SendTemplateTemplateResponse as EmailsV1SendTemplateTemplateResponse,
+    type EmailsV1RenderCreateParams as EmailsV1RenderCreateParams,
+    type EmailsV1SendCreateParams as EmailsV1SendCreateParams,
+    type EmailsV1SendTemplateTemplateParams as EmailsV1SendTemplateTemplateParams,
   };
 }

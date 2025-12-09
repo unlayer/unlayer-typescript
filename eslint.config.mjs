@@ -25,7 +25,7 @@ export default tseslint.config(
         {
           patterns: [
             {
-              regex: '^unlayer(/.*)?',
+              regex: '^@unlayer/sdk(/.*)?',
               message: 'Use a relative import, not a package import.',
             },
           ],

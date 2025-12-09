@@ -1,16 +1,12 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Unlayer from 'unlayer';
+import Unlayer from '@unlayer/sdk';
 
-const client = new Unlayer({
-  apiKey: 'My API Key',
-  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-});
+const client = new Unlayer({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
-describe('resource generate', () => {
-  // Prism tests are disabled
-  test.skip('create', async () => {
-    const responsePromise = client.documents.v1.generate.create();
+describe('resource documents', () => {
+  test('documentsRetrieve', async () => {
+    const responsePromise = client.documents.documentsRetrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,11 +16,21 @@ describe('resource generate', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
-  test.skip('create: request options and params are passed correctly', async () => {
+  test('generateCreate', async () => {
+    const responsePromise = client.documents.generateCreate();
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('generateCreate: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.documents.v1.generate.create(
+      client.documents.generateCreate(
         {
           design: {},
           filename: 'filename',
@@ -37,9 +43,8 @@ describe('resource generate', () => {
     ).rejects.toThrow(Unlayer.NotFoundError);
   });
 
-  // Prism tests are disabled
-  test.skip('createFromTemplate: only required params', async () => {
-    const responsePromise = client.documents.v1.generate.createFromTemplate({ templateId: 'templateId' });
+  test('generateTemplateTemplate: only required params', async () => {
+    const responsePromise = client.documents.generateTemplateTemplate({ templateId: 'templateId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -49,9 +54,8 @@ describe('resource generate', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
-  test.skip('createFromTemplate: required and optional params', async () => {
-    const response = await client.documents.v1.generate.createFromTemplate({
+  test('generateTemplateTemplate: required and optional params', async () => {
+    const response = await client.documents.generateTemplateTemplate({
       templateId: 'templateId',
       filename: 'filename',
       mergeTags: { foo: 'string' },

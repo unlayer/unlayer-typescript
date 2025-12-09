@@ -5,8 +5,8 @@
   "compilerOptions": {
     "rootDir": "./dist/src",
     "paths": {
-      "unlayer/*": ["./dist/src/*"],
-      "unlayer": ["./dist/src/index.ts"]
+      "@unlayer/sdk/*": ["./dist/src/*"],
+      "@unlayer/sdk": ["./dist/src/index.ts"]
     },
     "noEmit": false,
     "declaration": true,

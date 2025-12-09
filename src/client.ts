@@ -16,10 +16,88 @@ import * as Errors from './core/error';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
-import { Documents } from './resources/documents/documents';
-import { Emails } from './resources/emails/emails';
-import { Pages } from './resources/pages/pages';
-import { Project } from './resources/project/project';
+import {
+  DocumentDocumentsRetrieveResponse,
+  DocumentGenerateCreateParams,
+  DocumentGenerateCreateResponse,
+  DocumentGenerateTemplateTemplateParams,
+  DocumentGenerateTemplateTemplateResponse,
+  Documents,
+} from './resources/documents';
+import {
+  DocumentsV1,
+  DocumentsV1DocumentsRetrieveResponse,
+  DocumentsV1GenerateCreateParams,
+  DocumentsV1GenerateCreateResponse,
+  DocumentsV1GenerateTemplateTemplateParams,
+  DocumentsV1GenerateTemplateTemplateResponse,
+} from './resources/documents-v1';
+import {
+  EmailEmailsRetrieveResponse,
+  EmailRenderCreateParams,
+  EmailRenderCreateResponse,
+  EmailSendCreateParams,
+  EmailSendCreateResponse,
+  EmailSendTemplateTemplateParams,
+  EmailSendTemplateTemplateResponse,
+  Emails,
+} from './resources/emails';
+import {
+  EmailsV1,
+  EmailsV1EmailsRetrieveResponse,
+  EmailsV1RenderCreateParams,
+  EmailsV1RenderCreateResponse,
+  EmailsV1SendCreateParams,
+  EmailsV1SendCreateResponse,
+  EmailsV1SendTemplateTemplateParams,
+  EmailsV1SendTemplateTemplateResponse,
+} from './resources/emails-v1';
+import { PageRenderCreateParams, PageRenderCreateResponse, Pages } from './resources/pages';
+import { PagesV1, PagesV1RenderCreateParams, PagesV1RenderCreateResponse } from './resources/pages-v1';
+import {
+  Project,
+  ProjectAPIKeysCreateParams,
+  ProjectAPIKeysCreateResponse,
+  ProjectAPIKeysListResponse,
+  ProjectAPIKeysRetrieveResponse,
+  ProjectAPIKeysUpdateParams,
+  ProjectAPIKeysUpdateResponse,
+  ProjectCurrentListResponse,
+  ProjectDomainsCreateParams,
+  ProjectDomainsCreateResponse,
+  ProjectDomainsListResponse,
+  ProjectDomainsRetrieveResponse,
+  ProjectDomainsUpdateParams,
+  ProjectDomainsUpdateResponse,
+  ProjectTemplatesCreateParams,
+  ProjectTemplatesCreateResponse,
+  ProjectTemplatesListResponse,
+  ProjectTemplatesRetrieveResponse,
+  ProjectTemplatesUpdateParams,
+  ProjectTemplatesUpdateResponse,
+} from './resources/project';
+import {
+  ProjectV1,
+  ProjectV1APIKeysCreateParams,
+  ProjectV1APIKeysCreateResponse,
+  ProjectV1APIKeysListResponse,
+  ProjectV1APIKeysRetrieveResponse,
+  ProjectV1APIKeysUpdateParams,
+  ProjectV1APIKeysUpdateResponse,
+  ProjectV1CurrentListResponse,
+  ProjectV1DomainsCreateParams,
+  ProjectV1DomainsCreateResponse,
+  ProjectV1DomainsListResponse,
+  ProjectV1DomainsRetrieveResponse,
+  ProjectV1DomainsUpdateParams,
+  ProjectV1DomainsUpdateResponse,
+  ProjectV1TemplatesCreateParams,
+  ProjectV1TemplatesCreateResponse,
+  ProjectV1TemplatesListResponse,
+  ProjectV1TemplatesRetrieveResponse,
+  ProjectV1TemplatesUpdateParams,
+  ProjectV1TemplatesUpdateResponse,
+} from './resources/project-v1';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -34,11 +112,6 @@ import {
 import { isEmptyObj } from './internal/utils/values';
 
 export interface ClientOptions {
-  /**
-   * Defaults to process.env['UNLAYER_API_KEY'].
-   */
-  apiKey?: string | undefined;
-
   /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
    *
@@ -112,8 +185,6 @@ export interface ClientOptions {
  * API Client for interfacing with the Unlayer API.
  */
 export class Unlayer {
-  apiKey: string;
-
   baseURL: string;
   maxRetries: number;
   timeout: number;
@@ -129,7 +200,6 @@ export class Unlayer {
   /**
    * API Client for interfacing with the Unlayer API.
    *
-   * @param {string | undefined} [opts.apiKey=process.env['UNLAYER_API_KEY'] ?? undefined]
    * @param {string} [opts.baseURL=process.env['UNLAYER_BASE_URL'] ?? https://api.unlayer.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
@@ -138,19 +208,8 @@ export class Unlayer {
    * @param {HeadersLike} opts.defaultHeaders - Default headers to include with every request to the API.
    * @param {Record<string, string | undefined>} opts.defaultQuery - Default query parameters to include with every request to the API.
    */
-  constructor({
-    baseURL = readEnv('UNLAYER_BASE_URL'),
-    apiKey = readEnv('UNLAYER_API_KEY'),
-    ...opts
-  }: ClientOptions = {}) {
-    if (apiKey === undefined) {
-      throw new Errors.UnlayerError(
-        "The UNLAYER_API_KEY environment variable is missing or empty; either provide it, or instantiate the Unlayer client with an apiKey option, like new Unlayer({ apiKey: 'My API Key' }).",
-      );
-    }
-
+  constructor({ baseURL = readEnv('UNLAYER_BASE_URL'), ...opts }: ClientOptions = {}) {
     const options: ClientOptions = {
-      apiKey,
       ...opts,
       baseURL: baseURL || `https://api.unlayer.com`,
     };
@@ -171,8 +230,6 @@ export class Unlayer {
     this.#encoder = Opts.FallbackEncoder;
 
     this._options = options;
-
-    this.apiKey = apiKey;
   }
 
   /**
@@ -188,7 +245,6 @@ export class Unlayer {
       logLevel: this.logLevel,
       fetch: this.fetch,
       fetchOptions: this.fetchOptions,
-      apiKey: this.apiKey,
       ...options,
     });
     return client;
@@ -207,10 +263,6 @@ export class Unlayer {
 
   protected validateHeaders({ values, nulls }: NullableHeaders) {
     return;
-  }
-
-  protected async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    return buildHeaders([{ Authorization: `Bearer ${this.apiKey}` }]);
   }
 
   /**
@@ -650,7 +702,6 @@ export class Unlayer {
         ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
         ...getPlatformHeaders(),
       },
-      await this.authHeaders(options),
       this._options.defaultHeaders,
       bodyHeaders,
       options.headers,
@@ -717,25 +768,123 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
-  project: API.Project = new API.Project(this);
-  documents: API.Documents = new API.Documents(this);
+  emailsV1: API.EmailsV1 = new API.EmailsV1(this);
   emails: API.Emails = new API.Emails(this);
+  projectV1: API.ProjectV1 = new API.ProjectV1(this);
+  project: API.Project = new API.Project(this);
+  documentsV1: API.DocumentsV1 = new API.DocumentsV1(this);
+  documents: API.Documents = new API.Documents(this);
+  pagesV1: API.PagesV1 = new API.PagesV1(this);
   pages: API.Pages = new API.Pages(this);
 }
 
-Unlayer.Project = Project;
-Unlayer.Documents = Documents;
+Unlayer.EmailsV1 = EmailsV1;
 Unlayer.Emails = Emails;
+Unlayer.ProjectV1 = ProjectV1;
+Unlayer.Project = Project;
+Unlayer.DocumentsV1 = DocumentsV1;
+Unlayer.Documents = Documents;
+Unlayer.PagesV1 = PagesV1;
 Unlayer.Pages = Pages;
 
 export declare namespace Unlayer {
   export type RequestOptions = Opts.RequestOptions;
 
-  export { Project as Project };
+  export {
+    EmailsV1 as EmailsV1,
+    type EmailsV1EmailsRetrieveResponse as EmailsV1EmailsRetrieveResponse,
+    type EmailsV1RenderCreateResponse as EmailsV1RenderCreateResponse,
+    type EmailsV1SendCreateResponse as EmailsV1SendCreateResponse,
+    type EmailsV1SendTemplateTemplateResponse as EmailsV1SendTemplateTemplateResponse,
+    type EmailsV1RenderCreateParams as EmailsV1RenderCreateParams,
+    type EmailsV1SendCreateParams as EmailsV1SendCreateParams,
+    type EmailsV1SendTemplateTemplateParams as EmailsV1SendTemplateTemplateParams,
+  };
 
-  export { Documents as Documents };
+  export {
+    Emails as Emails,
+    type EmailEmailsRetrieveResponse as EmailEmailsRetrieveResponse,
+    type EmailRenderCreateResponse as EmailRenderCreateResponse,
+    type EmailSendCreateResponse as EmailSendCreateResponse,
+    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
+    type EmailRenderCreateParams as EmailRenderCreateParams,
+    type EmailSendCreateParams as EmailSendCreateParams,
+    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
+  };
 
-  export { Emails as Emails };
+  export {
+    ProjectV1 as ProjectV1,
+    type ProjectV1APIKeysCreateResponse as ProjectV1APIKeysCreateResponse,
+    type ProjectV1APIKeysListResponse as ProjectV1APIKeysListResponse,
+    type ProjectV1APIKeysRetrieveResponse as ProjectV1APIKeysRetrieveResponse,
+    type ProjectV1APIKeysUpdateResponse as ProjectV1APIKeysUpdateResponse,
+    type ProjectV1CurrentListResponse as ProjectV1CurrentListResponse,
+    type ProjectV1DomainsCreateResponse as ProjectV1DomainsCreateResponse,
+    type ProjectV1DomainsListResponse as ProjectV1DomainsListResponse,
+    type ProjectV1DomainsRetrieveResponse as ProjectV1DomainsRetrieveResponse,
+    type ProjectV1DomainsUpdateResponse as ProjectV1DomainsUpdateResponse,
+    type ProjectV1TemplatesCreateResponse as ProjectV1TemplatesCreateResponse,
+    type ProjectV1TemplatesListResponse as ProjectV1TemplatesListResponse,
+    type ProjectV1TemplatesRetrieveResponse as ProjectV1TemplatesRetrieveResponse,
+    type ProjectV1TemplatesUpdateResponse as ProjectV1TemplatesUpdateResponse,
+    type ProjectV1APIKeysCreateParams as ProjectV1APIKeysCreateParams,
+    type ProjectV1APIKeysUpdateParams as ProjectV1APIKeysUpdateParams,
+    type ProjectV1DomainsCreateParams as ProjectV1DomainsCreateParams,
+    type ProjectV1DomainsUpdateParams as ProjectV1DomainsUpdateParams,
+    type ProjectV1TemplatesCreateParams as ProjectV1TemplatesCreateParams,
+    type ProjectV1TemplatesUpdateParams as ProjectV1TemplatesUpdateParams,
+  };
 
-  export { Pages as Pages };
+  export {
+    Project as Project,
+    type ProjectAPIKeysCreateResponse as ProjectAPIKeysCreateResponse,
+    type ProjectAPIKeysListResponse as ProjectAPIKeysListResponse,
+    type ProjectAPIKeysRetrieveResponse as ProjectAPIKeysRetrieveResponse,
+    type ProjectAPIKeysUpdateResponse as ProjectAPIKeysUpdateResponse,
+    type ProjectCurrentListResponse as ProjectCurrentListResponse,
+    type ProjectDomainsCreateResponse as ProjectDomainsCreateResponse,
+    type ProjectDomainsListResponse as ProjectDomainsListResponse,
+    type ProjectDomainsRetrieveResponse as ProjectDomainsRetrieveResponse,
+    type ProjectDomainsUpdateResponse as ProjectDomainsUpdateResponse,
+    type ProjectTemplatesCreateResponse as ProjectTemplatesCreateResponse,
+    type ProjectTemplatesListResponse as ProjectTemplatesListResponse,
+    type ProjectTemplatesRetrieveResponse as ProjectTemplatesRetrieveResponse,
+    type ProjectTemplatesUpdateResponse as ProjectTemplatesUpdateResponse,
+    type ProjectAPIKeysCreateParams as ProjectAPIKeysCreateParams,
+    type ProjectAPIKeysUpdateParams as ProjectAPIKeysUpdateParams,
+    type ProjectDomainsCreateParams as ProjectDomainsCreateParams,
+    type ProjectDomainsUpdateParams as ProjectDomainsUpdateParams,
+    type ProjectTemplatesCreateParams as ProjectTemplatesCreateParams,
+    type ProjectTemplatesUpdateParams as ProjectTemplatesUpdateParams,
+  };
+
+  export {
+    DocumentsV1 as DocumentsV1,
+    type DocumentsV1DocumentsRetrieveResponse as DocumentsV1DocumentsRetrieveResponse,
+    type DocumentsV1GenerateCreateResponse as DocumentsV1GenerateCreateResponse,
+    type DocumentsV1GenerateTemplateTemplateResponse as DocumentsV1GenerateTemplateTemplateResponse,
+    type DocumentsV1GenerateCreateParams as DocumentsV1GenerateCreateParams,
+    type DocumentsV1GenerateTemplateTemplateParams as DocumentsV1GenerateTemplateTemplateParams,
+  };
+
+  export {
+    Documents as Documents,
+    type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
+    type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
+    type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
+    type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
+    type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
+  };
+
+  export {
+    PagesV1 as PagesV1,
+    type PagesV1RenderCreateResponse as PagesV1RenderCreateResponse,
+    type PagesV1RenderCreateParams as PagesV1RenderCreateParams,
+  };
+
+  export {
+    Pages as Pages,
+    type PageRenderCreateResponse as PageRenderCreateResponse,
+    type PageRenderCreateParams as PageRenderCreateParams,
+  };
 }

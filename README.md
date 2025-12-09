@@ -1,6 +1,6 @@
 # Unlayer TypeScript API Library
 
-[![NPM version](<https://img.shields.io/npm/v/unlayer.svg?label=npm%20(stable)>)](https://npmjs.org/package/unlayer) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/unlayer)
+[![NPM version](<https://img.shields.io/npm/v/@unlayer/sdk.svg?label=npm%20(stable)>)](https://npmjs.org/package/@unlayer/sdk) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@unlayer/sdk)
 
 This library provides convenient access to the Unlayer REST API from server-side TypeScript or JavaScript.
 
@@ -15,7 +15,7 @@ npm install git+ssh://git@github.com:stainless-sdks/unlayer-typescript.git
 ```
 
 > [!NOTE]
-> Once this package is [published to npm](https://www.stainless.com/docs/guides/publish), this will become: `npm install unlayer`
+> Once this package is [published to npm](https://www.stainless.com/docs/guides/publish), this will become: `npm install @unlayer/sdk`
 
 ## Usage
 
@@ -23,15 +23,13 @@ The full API of this library can be found in [api.md](api.md).
 
 <!-- prettier-ignore -->
 ```js
-import Unlayer from 'unlayer';
+import Unlayer from '@unlayer/sdk';
 
-const client = new Unlayer({
-  apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
-});
+const client = new Unlayer();
 
-const apiKeys = await client.project.v1.apiKeys.list();
+const response = await client.projectV1.currentList();
 
-console.log(apiKeys.data);
+console.log(response.data);
 ```
 
 ### Request & Response types
@@ -40,13 +38,11 @@ This library includes TypeScript definitions for all request params and response
 
 <!-- prettier-ignore -->
 ```ts
-import Unlayer from 'unlayer';
+import Unlayer from '@unlayer/sdk';
 
-const client = new Unlayer({
-  apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
-});
+const client = new Unlayer();
 
-const apiKeys: Unlayer.Project.V1.APIKeyListResponse = await client.project.v1.apiKeys.list();
+const response: Unlayer.ProjectV1CurrentListResponse = await client.projectV1.currentList();
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -59,7 +55,7 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-const apiKeys = await client.project.v1.apiKeys.list().catch(async (err) => {
+const response = await client.projectV1.currentList().catch(async (err) => {
   if (err instanceof Unlayer.APIError) {
     console.log(err.status); // 400
     console.log(err.name); // BadRequestError
@@ -99,7 +95,7 @@ const client = new Unlayer({
 });
 
 // Or, configure per-request:
-await client.project.v1.apiKeys.list({
+await client.projectV1.currentList({
   maxRetries: 5,
 });
 ```
@@ -116,7 +112,7 @@ const client = new Unlayer({
 });
 
 // Override per-request:
-await client.project.v1.apiKeys.list({
+await client.projectV1.currentList({
   timeout: 5 * 1000,
 });
 ```
@@ -139,13 +135,13 @@ Unlike `.asResponse()` this method consumes the body, returning once it is parse
 ```ts
 const client = new Unlayer();
 
-const response = await client.project.v1.apiKeys.list().asResponse();
+const response = await client.projectV1.currentList().asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: apiKeys, response: raw } = await client.project.v1.apiKeys.list().withResponse();
+const { data: response, response: raw } = await client.projectV1.currentList().withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(apiKeys.data);
+console.log(response.data);
 ```
 
 ### Logging
@@ -162,7 +158,7 @@ The log level can be configured in two ways:
 2. Using the `logLevel` client option (overrides the environment variable if set)
 
 ```ts
-import Unlayer from 'unlayer';
+import Unlayer from '@unlayer/sdk';
 
 const client = new Unlayer({
   logLevel: 'debug', // Show all log messages
@@ -190,7 +186,7 @@ When providing a custom logger, the `logLevel` option still controls which messa
 below the configured level will not be sent to your logger.
 
 ```ts
-import Unlayer from 'unlayer';
+import Unlayer from '@unlayer/sdk';
 import pino from 'pino';
 
 const logger = pino();
@@ -225,7 +221,7 @@ parameter. This library doesn't validate at runtime that the request matches the
 send will be sent as-is.
 
 ```ts
-client.project.v1.apiKeys.list({
+client.projectV1.currentList({
   // ...
   // @ts-expect-error baz is not yet public
   baz: 'undocumented option',
@@ -259,7 +255,7 @@ globalThis.fetch = fetch;
 Or pass it to the client:
 
 ```ts
-import Unlayer from 'unlayer';
+import Unlayer from '@unlayer/sdk';
 import fetch from 'my-fetch';
 
 const client = new Unlayer({ fetch });
@@ -270,7 +266,7 @@ const client = new Unlayer({ fetch });
 If you want to set custom `fetch` options without overriding the `fetch` function, you can provide a `fetchOptions` object when instantiating the client or making a request. (Request-specific options override client options.)
 
 ```ts
-import Unlayer from 'unlayer';
+import Unlayer from '@unlayer/sdk';
 
 const client = new Unlayer({
   fetchOptions: {
@@ -287,7 +283,7 @@ options to requests:
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/node.svg" align="top" width="18" height="21"> **Node** <sup>[[docs](https://github.com/nodejs/undici/blob/main/docs/docs/api/ProxyAgent.md#example---proxyagent-with-fetch)]</sup>
 
 ```ts
-import Unlayer from 'unlayer';
+import Unlayer from '@unlayer/sdk';
 import * as undici from 'undici';
 
 const proxyAgent = new undici.ProxyAgent('http://localhost:8888');
@@ -301,7 +297,7 @@ const client = new Unlayer({
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/bun.svg" align="top" width="18" height="21"> **Bun** <sup>[[docs](https://bun.sh/guides/http/proxy)]</sup>
 
 ```ts
-import Unlayer from 'unlayer';
+import Unlayer from '@unlayer/sdk';
 
 const client = new Unlayer({
   fetchOptions: {
@@ -313,7 +309,7 @@ const client = new Unlayer({
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/deno.svg" align="top" width="18" height="21"> **Deno** <sup>[[docs](https://docs.deno.com/api/deno/~/Deno.createHttpClient)]</sup>
 
 ```ts
-import Unlayer from 'npm:unlayer';
+import Unlayer from 'npm:@unlayer/sdk';
 
 const httpClient = Deno.createHttpClient({ proxy: { url: 'http://localhost:8888' } });
 const client = new Unlayer({

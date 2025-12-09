@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { Unlayer } from 'unlayer';
+import { Unlayer } from '@unlayer/sdk';
 
 const { stringifyQuery } = Unlayer.prototype as any;
 

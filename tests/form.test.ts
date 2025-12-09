@@ -1,5 +1,5 @@
-import { multipartFormRequestOptions, createForm } from 'unlayer/internal/uploads';
-import { toFile } from 'unlayer/core/uploads';
+import { multipartFormRequestOptions, createForm } from '@unlayer/sdk/internal/uploads';
+import { toFile } from '@unlayer/sdk/core/uploads';
 
 describe('form data validation', () => {
   test('valid values do not error', async () => {
