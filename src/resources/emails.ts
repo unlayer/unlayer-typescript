@@ -8,6 +8,11 @@ import { path } from '../internal/utils/path';
 export class Emails extends APIResource {
   /**
    * Retrieve details of a previously sent email.
+   *
+   * @example
+   * ```ts
+   * const response = await client.emails.emailsRetrieve('id');
+   * ```
    */
   emailsRetrieve(id: string, options?: RequestOptions): APIPromise<EmailEmailsRetrieveResponse> {
     return this._client.get(path`/emails/v1/emails/${id}`, options);
@@ -15,6 +20,13 @@ export class Emails extends APIResource {
 
   /**
    * Convert design JSON to HTML with optional merge tags.
+   *
+   * @example
+   * ```ts
+   * const response = await client.emails.renderCreate({
+   *   design: { counters: 'bar', body: 'bar' },
+   * });
+   * ```
    */
   renderCreate(
     body: EmailRenderCreateParams,
@@ -25,6 +37,13 @@ export class Emails extends APIResource {
 
   /**
    * Send email with design JSON or HTML content.
+   *
+   * @example
+   * ```ts
+   * const response = await client.emails.sendCreate({
+   *   to: 'dev@stainless.com',
+   * });
+   * ```
    */
   sendCreate(body: EmailSendCreateParams, options?: RequestOptions): APIPromise<EmailSendCreateResponse> {
     return this._client.post('/emails/v1/send', { body, ...options });
@@ -32,6 +51,14 @@ export class Emails extends APIResource {
 
   /**
    * Send email using an existing template with merge tags.
+   *
+   * @example
+   * ```ts
+   * const response = await client.emails.sendTemplateTemplate({
+   *   templateId: 'templateId',
+   *   to: 'dev@stainless.com',
+   * });
+   * ```
    */
   sendTemplateTemplate(
     body: EmailSendTemplateTemplateParams,

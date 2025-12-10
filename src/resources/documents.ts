@@ -8,6 +8,13 @@ import { path } from '../internal/utils/path';
 export class Documents extends APIResource {
   /**
    * Retrieve details of a previously generated document.
+   *
+   * @example
+   * ```ts
+   * const response = await client.documents.documentsRetrieve(
+   *   'id',
+   * );
+   * ```
    */
   documentsRetrieve(id: string, options?: RequestOptions): APIPromise<DocumentDocumentsRetrieveResponse> {
     return this._client.get(path`/documents/v1/documents/${id}`, options);
@@ -15,6 +22,11 @@ export class Documents extends APIResource {
 
   /**
    * Generate PDF document from JSON design, HTML content, or URL.
+   *
+   * @example
+   * ```ts
+   * const response = await client.documents.generateCreate();
+   * ```
    */
   generateCreate(
     body: DocumentGenerateCreateParams | null | undefined = {},
@@ -25,6 +37,14 @@ export class Documents extends APIResource {
 
   /**
    * Generate PDF document from an existing template with merge tags.
+   *
+   * @example
+   * ```ts
+   * const response =
+   *   await client.documents.generateTemplateTemplate({
+   *     templateId: 'templateId',
+   *   });
+   * ```
    */
   generateTemplateTemplate(
     body: DocumentGenerateTemplateTemplateParams,
