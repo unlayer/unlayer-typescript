@@ -2,7 +2,7 @@
 
 export {
   Emails,
-  type EmailEmailsRetrieveResponse,
+  type EmailRetrieveResponse,
   type EmailRenderCreateResponse,
   type EmailSendCreateResponse,
   type EmailSendTemplateTemplateResponse,
@@ -12,7 +12,7 @@ export {
 } from './emails';
 export {
   V1,
-  type V1EmailsRetrieveResponse,
+  type V1RetrieveResponse,
   type V1RenderCreateResponse,
   type V1SendCreateResponse,
   type V1SendTemplateTemplateResponse,

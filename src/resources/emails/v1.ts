@@ -11,12 +11,10 @@ export class V1 extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.emails.v1.emailsRetrieve(
-   *   'id',
-   * );
+   * const v1 = await client.emails.v1.retrieve('id');
    * ```
    */
-  emailsRetrieve(id: string, options?: RequestOptions): APIPromise<V1EmailsRetrieveResponse> {
+  retrieve(id: string, options?: RequestOptions): APIPromise<V1RetrieveResponse> {
     return this._client.get(path`/emails/v1/emails/${id}`, options);
   }
 
@@ -108,7 +106,7 @@ export class V1 extends APIResource {
   }
 }
 
-export interface V1EmailsRetrieveResponse {
+export interface V1RetrieveResponse {
   /**
    * Email message ID
    */
@@ -228,7 +226,7 @@ export interface V1SendTemplateTemplateParams {
 
 export declare namespace V1 {
   export {
-    type V1EmailsRetrieveResponse as V1EmailsRetrieveResponse,
+    type V1RetrieveResponse as V1RetrieveResponse,
     type V1RenderCreateResponse as V1RenderCreateResponse,
     type V1SendCreateResponse as V1SendCreateResponse,
     type V1SendTemplateTemplateResponse as V1SendTemplateTemplateResponse,

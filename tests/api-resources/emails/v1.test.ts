@@ -8,8 +8,8 @@ const client = new Unlayer({
 });
 
 describe('resource v1', () => {
-  test('emailsRetrieve', async () => {
-    const responsePromise = client.emails.v1.emailsRetrieve('id');
+  test('retrieve', async () => {
+    const responsePromise = client.emails.v1.retrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
