@@ -1,77 +1,3 @@
-# ProjectV1
-
-Types:
-
-- <code><a href="./src/resources/project-v1.ts">ProjectV1APIKeysCreateResponse</a></code>
-- <code><a href="./src/resources/project-v1.ts">ProjectV1APIKeysListResponse</a></code>
-- <code><a href="./src/resources/project-v1.ts">ProjectV1APIKeysRetrieveResponse</a></code>
-- <code><a href="./src/resources/project-v1.ts">ProjectV1APIKeysUpdateResponse</a></code>
-- <code><a href="./src/resources/project-v1.ts">ProjectV1CurrentListResponse</a></code>
-- <code><a href="./src/resources/project-v1.ts">ProjectV1DomainsCreateResponse</a></code>
-- <code><a href="./src/resources/project-v1.ts">ProjectV1DomainsListResponse</a></code>
-- <code><a href="./src/resources/project-v1.ts">ProjectV1DomainsRetrieveResponse</a></code>
-- <code><a href="./src/resources/project-v1.ts">ProjectV1DomainsUpdateResponse</a></code>
-- <code><a href="./src/resources/project-v1.ts">ProjectV1TemplatesCreateResponse</a></code>
-- <code><a href="./src/resources/project-v1.ts">ProjectV1TemplatesListResponse</a></code>
-- <code><a href="./src/resources/project-v1.ts">ProjectV1TemplatesRetrieveResponse</a></code>
-- <code><a href="./src/resources/project-v1.ts">ProjectV1TemplatesUpdateResponse</a></code>
-
-Methods:
-
-- <code title="post /project/v1/api-keys">client.projectV1.<a href="./src/resources/project-v1.ts">apiKeysCreate</a>({ ...params }) -> ProjectV1APIKeysCreateResponse</code>
-- <code title="delete /project/v1/api-keys/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">apiKeysDelete</a>(id) -> void</code>
-- <code title="get /project/v1/api-keys">client.projectV1.<a href="./src/resources/project-v1.ts">apiKeysList</a>() -> ProjectV1APIKeysListResponse</code>
-- <code title="get /project/v1/api-keys/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">apiKeysRetrieve</a>(id) -> ProjectV1APIKeysRetrieveResponse</code>
-- <code title="put /project/v1/api-keys/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">apiKeysUpdate</a>(id, { ...params }) -> ProjectV1APIKeysUpdateResponse</code>
-- <code title="get /project/v1/current">client.projectV1.<a href="./src/resources/project-v1.ts">currentList</a>() -> ProjectV1CurrentListResponse</code>
-- <code title="post /project/v1/domains">client.projectV1.<a href="./src/resources/project-v1.ts">domainsCreate</a>({ ...params }) -> ProjectV1DomainsCreateResponse</code>
-- <code title="delete /project/v1/domains/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">domainsDelete</a>(id) -> void</code>
-- <code title="get /project/v1/domains">client.projectV1.<a href="./src/resources/project-v1.ts">domainsList</a>() -> ProjectV1DomainsListResponse</code>
-- <code title="get /project/v1/domains/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">domainsRetrieve</a>(id) -> ProjectV1DomainsRetrieveResponse</code>
-- <code title="put /project/v1/domains/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">domainsUpdate</a>(id, { ...params }) -> ProjectV1DomainsUpdateResponse</code>
-- <code title="post /project/v1/templates">client.projectV1.<a href="./src/resources/project-v1.ts">templatesCreate</a>({ ...params }) -> ProjectV1TemplatesCreateResponse</code>
-- <code title="delete /project/v1/templates/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">templatesDelete</a>(id) -> void</code>
-- <code title="get /project/v1/templates">client.projectV1.<a href="./src/resources/project-v1.ts">templatesList</a>() -> ProjectV1TemplatesListResponse</code>
-- <code title="get /project/v1/templates/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">templatesRetrieve</a>(id) -> ProjectV1TemplatesRetrieveResponse</code>
-- <code title="put /project/v1/templates/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">templatesUpdate</a>(id, { ...params }) -> ProjectV1TemplatesUpdateResponse</code>
-
-# Project
-
-Types:
-
-- <code><a href="./src/resources/project.ts">ProjectAPIKeysCreateResponse</a></code>
-- <code><a href="./src/resources/project.ts">ProjectAPIKeysListResponse</a></code>
-- <code><a href="./src/resources/project.ts">ProjectAPIKeysRetrieveResponse</a></code>
-- <code><a href="./src/resources/project.ts">ProjectAPIKeysUpdateResponse</a></code>
-- <code><a href="./src/resources/project.ts">ProjectCurrentListResponse</a></code>
-- <code><a href="./src/resources/project.ts">ProjectDomainsCreateResponse</a></code>
-- <code><a href="./src/resources/project.ts">ProjectDomainsListResponse</a></code>
-- <code><a href="./src/resources/project.ts">ProjectDomainsRetrieveResponse</a></code>
-- <code><a href="./src/resources/project.ts">ProjectDomainsUpdateResponse</a></code>
-- <code><a href="./src/resources/project.ts">ProjectTemplatesCreateResponse</a></code>
-- <code><a href="./src/resources/project.ts">ProjectTemplatesListResponse</a></code>
-- <code><a href="./src/resources/project.ts">ProjectTemplatesRetrieveResponse</a></code>
-- <code><a href="./src/resources/project.ts">ProjectTemplatesUpdateResponse</a></code>
-
-Methods:
-
-- <code title="post /project/v1/api-keys">client.project.<a href="./src/resources/project.ts">apiKeysCreate</a>({ ...params }) -> ProjectAPIKeysCreateResponse</code>
-- <code title="delete /project/v1/api-keys/{id}">client.project.<a href="./src/resources/project.ts">apiKeysDelete</a>(id) -> void</code>
-- <code title="get /project/v1/api-keys">client.project.<a href="./src/resources/project.ts">apiKeysList</a>() -> ProjectAPIKeysListResponse</code>
-- <code title="get /project/v1/api-keys/{id}">client.project.<a href="./src/resources/project.ts">apiKeysRetrieve</a>(id) -> ProjectAPIKeysRetrieveResponse</code>
-- <code title="put /project/v1/api-keys/{id}">client.project.<a href="./src/resources/project.ts">apiKeysUpdate</a>(id, { ...params }) -> ProjectAPIKeysUpdateResponse</code>
-- <code title="get /project/v1/current">client.project.<a href="./src/resources/project.ts">currentList</a>() -> ProjectCurrentListResponse</code>
-- <code title="post /project/v1/domains">client.project.<a href="./src/resources/project.ts">domainsCreate</a>({ ...params }) -> ProjectDomainsCreateResponse</code>
-- <code title="delete /project/v1/domains/{id}">client.project.<a href="./src/resources/project.ts">domainsDelete</a>(id) -> void</code>
-- <code title="get /project/v1/domains">client.project.<a href="./src/resources/project.ts">domainsList</a>() -> ProjectDomainsListResponse</code>
-- <code title="get /project/v1/domains/{id}">client.project.<a href="./src/resources/project.ts">domainsRetrieve</a>(id) -> ProjectDomainsRetrieveResponse</code>
-- <code title="put /project/v1/domains/{id}">client.project.<a href="./src/resources/project.ts">domainsUpdate</a>(id, { ...params }) -> ProjectDomainsUpdateResponse</code>
-- <code title="post /project/v1/templates">client.project.<a href="./src/resources/project.ts">templatesCreate</a>({ ...params }) -> ProjectTemplatesCreateResponse</code>
-- <code title="delete /project/v1/templates/{id}">client.project.<a href="./src/resources/project.ts">templatesDelete</a>(id) -> void</code>
-- <code title="get /project/v1/templates">client.project.<a href="./src/resources/project.ts">templatesList</a>() -> ProjectTemplatesListResponse</code>
-- <code title="get /project/v1/templates/{id}">client.project.<a href="./src/resources/project.ts">templatesRetrieve</a>(id) -> ProjectTemplatesRetrieveResponse</code>
-- <code title="put /project/v1/templates/{id}">client.project.<a href="./src/resources/project.ts">templatesUpdate</a>(id, { ...params }) -> ProjectTemplatesUpdateResponse</code>
-
 # EmailsV1
 
 Types:
@@ -151,3 +77,77 @@ Types:
 Methods:
 
 - <code title="post /pages/v1/render">client.pages.<a href="./src/resources/pages.ts">renderCreate</a>({ ...params }) -> PageRenderCreateResponse</code>
+
+# ProjectV1
+
+Types:
+
+- <code><a href="./src/resources/project-v1.ts">ProjectV1APIKeysCreateResponse</a></code>
+- <code><a href="./src/resources/project-v1.ts">ProjectV1APIKeysListResponse</a></code>
+- <code><a href="./src/resources/project-v1.ts">ProjectV1APIKeysRetrieveResponse</a></code>
+- <code><a href="./src/resources/project-v1.ts">ProjectV1APIKeysUpdateResponse</a></code>
+- <code><a href="./src/resources/project-v1.ts">ProjectV1CurrentListResponse</a></code>
+- <code><a href="./src/resources/project-v1.ts">ProjectV1DomainsCreateResponse</a></code>
+- <code><a href="./src/resources/project-v1.ts">ProjectV1DomainsListResponse</a></code>
+- <code><a href="./src/resources/project-v1.ts">ProjectV1DomainsRetrieveResponse</a></code>
+- <code><a href="./src/resources/project-v1.ts">ProjectV1DomainsUpdateResponse</a></code>
+- <code><a href="./src/resources/project-v1.ts">ProjectV1TemplatesCreateResponse</a></code>
+- <code><a href="./src/resources/project-v1.ts">ProjectV1TemplatesListResponse</a></code>
+- <code><a href="./src/resources/project-v1.ts">ProjectV1TemplatesRetrieveResponse</a></code>
+- <code><a href="./src/resources/project-v1.ts">ProjectV1TemplatesUpdateResponse</a></code>
+
+Methods:
+
+- <code title="post /project/v1/api-keys">client.projectV1.<a href="./src/resources/project-v1.ts">apiKeysCreate</a>({ ...params }) -> ProjectV1APIKeysCreateResponse</code>
+- <code title="delete /project/v1/api-keys/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">apiKeysDelete</a>(id) -> void</code>
+- <code title="get /project/v1/api-keys">client.projectV1.<a href="./src/resources/project-v1.ts">apiKeysList</a>() -> ProjectV1APIKeysListResponse</code>
+- <code title="get /project/v1/api-keys/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">apiKeysRetrieve</a>(id) -> ProjectV1APIKeysRetrieveResponse</code>
+- <code title="put /project/v1/api-keys/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">apiKeysUpdate</a>(id, { ...params }) -> ProjectV1APIKeysUpdateResponse</code>
+- <code title="get /project/v1/current">client.projectV1.<a href="./src/resources/project-v1.ts">currentList</a>() -> ProjectV1CurrentListResponse</code>
+- <code title="post /project/v1/domains">client.projectV1.<a href="./src/resources/project-v1.ts">domainsCreate</a>({ ...params }) -> ProjectV1DomainsCreateResponse</code>
+- <code title="delete /project/v1/domains/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">domainsDelete</a>(id) -> void</code>
+- <code title="get /project/v1/domains">client.projectV1.<a href="./src/resources/project-v1.ts">domainsList</a>() -> ProjectV1DomainsListResponse</code>
+- <code title="get /project/v1/domains/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">domainsRetrieve</a>(id) -> ProjectV1DomainsRetrieveResponse</code>
+- <code title="put /project/v1/domains/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">domainsUpdate</a>(id, { ...params }) -> ProjectV1DomainsUpdateResponse</code>
+- <code title="post /project/v1/templates">client.projectV1.<a href="./src/resources/project-v1.ts">templatesCreate</a>({ ...params }) -> ProjectV1TemplatesCreateResponse</code>
+- <code title="delete /project/v1/templates/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">templatesDelete</a>(id) -> void</code>
+- <code title="get /project/v1/templates">client.projectV1.<a href="./src/resources/project-v1.ts">templatesList</a>() -> ProjectV1TemplatesListResponse</code>
+- <code title="get /project/v1/templates/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">templatesRetrieve</a>(id) -> ProjectV1TemplatesRetrieveResponse</code>
+- <code title="put /project/v1/templates/{id}">client.projectV1.<a href="./src/resources/project-v1.ts">templatesUpdate</a>(id, { ...params }) -> ProjectV1TemplatesUpdateResponse</code>
+
+# Project
+
+Types:
+
+- <code><a href="./src/resources/project.ts">ProjectAPIKeysCreateResponse</a></code>
+- <code><a href="./src/resources/project.ts">ProjectAPIKeysListResponse</a></code>
+- <code><a href="./src/resources/project.ts">ProjectAPIKeysRetrieveResponse</a></code>
+- <code><a href="./src/resources/project.ts">ProjectAPIKeysUpdateResponse</a></code>
+- <code><a href="./src/resources/project.ts">ProjectCurrentListResponse</a></code>
+- <code><a href="./src/resources/project.ts">ProjectDomainsCreateResponse</a></code>
+- <code><a href="./src/resources/project.ts">ProjectDomainsListResponse</a></code>
+- <code><a href="./src/resources/project.ts">ProjectDomainsRetrieveResponse</a></code>
+- <code><a href="./src/resources/project.ts">ProjectDomainsUpdateResponse</a></code>
+- <code><a href="./src/resources/project.ts">ProjectTemplatesCreateResponse</a></code>
+- <code><a href="./src/resources/project.ts">ProjectTemplatesListResponse</a></code>
+- <code><a href="./src/resources/project.ts">ProjectTemplatesRetrieveResponse</a></code>
+- <code><a href="./src/resources/project.ts">ProjectTemplatesUpdateResponse</a></code>
+
+Methods:
+
+- <code title="post /project/v1/api-keys">client.project.<a href="./src/resources/project.ts">apiKeysCreate</a>({ ...params }) -> ProjectAPIKeysCreateResponse</code>
+- <code title="delete /project/v1/api-keys/{id}">client.project.<a href="./src/resources/project.ts">apiKeysDelete</a>(id) -> void</code>
+- <code title="get /project/v1/api-keys">client.project.<a href="./src/resources/project.ts">apiKeysList</a>() -> ProjectAPIKeysListResponse</code>
+- <code title="get /project/v1/api-keys/{id}">client.project.<a href="./src/resources/project.ts">apiKeysRetrieve</a>(id) -> ProjectAPIKeysRetrieveResponse</code>
+- <code title="put /project/v1/api-keys/{id}">client.project.<a href="./src/resources/project.ts">apiKeysUpdate</a>(id, { ...params }) -> ProjectAPIKeysUpdateResponse</code>
+- <code title="get /project/v1/current">client.project.<a href="./src/resources/project.ts">currentList</a>() -> ProjectCurrentListResponse</code>
+- <code title="post /project/v1/domains">client.project.<a href="./src/resources/project.ts">domainsCreate</a>({ ...params }) -> ProjectDomainsCreateResponse</code>
+- <code title="delete /project/v1/domains/{id}">client.project.<a href="./src/resources/project.ts">domainsDelete</a>(id) -> void</code>
+- <code title="get /project/v1/domains">client.project.<a href="./src/resources/project.ts">domainsList</a>() -> ProjectDomainsListResponse</code>
+- <code title="get /project/v1/domains/{id}">client.project.<a href="./src/resources/project.ts">domainsRetrieve</a>(id) -> ProjectDomainsRetrieveResponse</code>
+- <code title="put /project/v1/domains/{id}">client.project.<a href="./src/resources/project.ts">domainsUpdate</a>(id, { ...params }) -> ProjectDomainsUpdateResponse</code>
+- <code title="post /project/v1/templates">client.project.<a href="./src/resources/project.ts">templatesCreate</a>({ ...params }) -> ProjectTemplatesCreateResponse</code>
+- <code title="delete /project/v1/templates/{id}">client.project.<a href="./src/resources/project.ts">templatesDelete</a>(id) -> void</code>
+- <code title="get /project/v1/templates">client.project.<a href="./src/resources/project.ts">templatesList</a>() -> ProjectTemplatesListResponse</code>
+- <code title="get /project/v1/templates/{id}">client.project.<a href="./src/resources/project.ts">templatesRetrieve</a>(id) -> ProjectTemplatesRetrieveResponse</code>
+- <code title="put /project/v1/templates/{id}">client.project.<a href="./src/resources/project.ts">templatesUpdate</a>(id, { ...params }) -> ProjectTemplatesUpdateResponse</code>

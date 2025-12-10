@@ -50,7 +50,7 @@ export class Documents extends APIResource {
    * ```
    */
   generateCreate(
-    body: DocumentGenerateCreateParams | null | undefined = {},
+    body: DocumentGenerateCreateParams,
     options?: RequestOptions,
   ): APIPromise<DocumentGenerateCreateResponse> {
     return this._client.post('/documents/v1/generate', { body, ...options });
@@ -159,7 +159,7 @@ export interface DocumentGenerateCreateParams {
   /**
    * Proprietary design format JSON
    */
-  design?: { [key: string]: unknown };
+  design: { [key: string]: unknown };
 
   /**
    * Optional filename for the generated PDF

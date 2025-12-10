@@ -19,8 +19,8 @@ describe('resource documentsV1', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('generateCreate', async () => {
-    const responsePromise = client.documentsV1.generateCreate();
+  test('generateCreate: only required params', async () => {
+    const responsePromise = client.documentsV1.generateCreate({ design: { counters: 'bar', body: 'bar' } });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -30,20 +30,14 @@ describe('resource documentsV1', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('generateCreate: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.documentsV1.generateCreate(
-        {
-          design: { counters: 'bar', body: 'bar' },
-          filename: 'filename',
-          html: 'html',
-          mergeTags: { foo: 'string' },
-          url: 'https://example.com',
-        },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Unlayer.NotFoundError);
+  test('generateCreate: required and optional params', async () => {
+    const response = await client.documentsV1.generateCreate({
+      design: { counters: 'bar', body: 'bar' },
+      filename: 'filename',
+      html: 'html',
+      mergeTags: { foo: 'string' },
+      url: 'https://example.com',
+    });
   });
 
   test('generateTemplateTemplate: only required params', async () => {

@@ -60,7 +60,6 @@ export class EmailsV1 extends APIResource {
    * @example
    * ```ts
    * const response = await client.emailsV1.sendCreate({
-   *   to: 'test@example.com',
    *   design: {
    *     counters: { u_row: 1, u_column: 1, u_content_text: 1 },
    *     body: {
@@ -81,6 +80,7 @@ export class EmailsV1 extends APIResource {
    *       ],
    *     },
    *   },
+   *   to: 'test@example.com',
    *   subject: 'Test Email',
    * });
    * ```
@@ -181,14 +181,14 @@ export interface EmailsV1RenderCreateParams {
 
 export interface EmailsV1SendCreateParams {
   /**
+   * Proprietary design format JSON
+   */
+  design: { [key: string]: unknown };
+
+  /**
    * Recipient email address
    */
   to: string;
-
-  /**
-   * Proprietary design format JSON
-   */
-  design?: { [key: string]: unknown };
 
   /**
    * HTML content to send
