@@ -113,6 +113,11 @@ import { isEmptyObj } from './internal/utils/values';
 
 export interface ClientOptions {
   /**
+   * Defaults to process.env['UNLAYER_API_KEY'].
+   */
+  apiKey?: string | undefined;
+
+  /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
    *
    * Defaults to process.env['UNLAYER_BASE_URL'].
@@ -185,6 +190,8 @@ export interface ClientOptions {
  * API Client for interfacing with the Unlayer API.
  */
 export class Unlayer {
+  apiKey: string;
+
   baseURL: string;
   maxRetries: number;
   timeout: number;
@@ -200,6 +207,7 @@ export class Unlayer {
   /**
    * API Client for interfacing with the Unlayer API.
    *
+   * @param {string | undefined} [opts.apiKey=process.env['UNLAYER_API_KEY'] ?? undefined]
    * @param {string} [opts.baseURL=process.env['UNLAYER_BASE_URL'] ?? https://api.unlayer.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
@@ -208,8 +216,19 @@ export class Unlayer {
    * @param {HeadersLike} opts.defaultHeaders - Default headers to include with every request to the API.
    * @param {Record<string, string | undefined>} opts.defaultQuery - Default query parameters to include with every request to the API.
    */
-  constructor({ baseURL = readEnv('UNLAYER_BASE_URL'), ...opts }: ClientOptions = {}) {
+  constructor({
+    baseURL = readEnv('UNLAYER_BASE_URL'),
+    apiKey = readEnv('UNLAYER_API_KEY'),
+    ...opts
+  }: ClientOptions = {}) {
+    if (apiKey === undefined) {
+      throw new Errors.UnlayerError(
+        "The UNLAYER_API_KEY environment variable is missing or empty; either provide it, or instantiate the Unlayer client with an apiKey option, like new Unlayer({ apiKey: 'My API Key' }).",
+      );
+    }
+
     const options: ClientOptions = {
+      apiKey,
       ...opts,
       baseURL: baseURL || `https://api.unlayer.com`,
     };
@@ -230,6 +249,8 @@ export class Unlayer {
     this.#encoder = Opts.FallbackEncoder;
 
     this._options = options;
+
+    this.apiKey = apiKey;
   }
 
   /**
@@ -245,6 +266,7 @@ export class Unlayer {
       logLevel: this.logLevel,
       fetch: this.fetch,
       fetchOptions: this.fetchOptions,
+      apiKey: this.apiKey,
       ...options,
     });
     return client;
@@ -263,6 +285,10 @@ export class Unlayer {
 
   protected validateHeaders({ values, nulls }: NullableHeaders) {
     return;
+  }
+
+  protected async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
+    return buildHeaders([{ Authorization: `Bearer ${this.apiKey}` }]);
   }
 
   /**
@@ -702,6 +728,7 @@ export class Unlayer {
         ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
         ...getPlatformHeaders(),
       },
+      await this.authHeaders(options),
       this._options.defaultHeaders,
       bodyHeaders,
       options.headers,
@@ -768,48 +795,56 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
-  emailsV1: API.EmailsV1 = new API.EmailsV1(this);
-  emails: API.Emails = new API.Emails(this);
-  projectV1: API.ProjectV1 = new API.ProjectV1(this);
-  project: API.Project = new API.Project(this);
   documentsV1: API.DocumentsV1 = new API.DocumentsV1(this);
   documents: API.Documents = new API.Documents(this);
   pagesV1: API.PagesV1 = new API.PagesV1(this);
   pages: API.Pages = new API.Pages(this);
+  projectV1: API.ProjectV1 = new API.ProjectV1(this);
+  project: API.Project = new API.Project(this);
+  emailsV1: API.EmailsV1 = new API.EmailsV1(this);
+  emails: API.Emails = new API.Emails(this);
 }
 
-Unlayer.EmailsV1 = EmailsV1;
-Unlayer.Emails = Emails;
-Unlayer.ProjectV1 = ProjectV1;
-Unlayer.Project = Project;
 Unlayer.DocumentsV1 = DocumentsV1;
 Unlayer.Documents = Documents;
 Unlayer.PagesV1 = PagesV1;
 Unlayer.Pages = Pages;
+Unlayer.ProjectV1 = ProjectV1;
+Unlayer.Project = Project;
+Unlayer.EmailsV1 = EmailsV1;
+Unlayer.Emails = Emails;
 
 export declare namespace Unlayer {
   export type RequestOptions = Opts.RequestOptions;
 
   export {
-    EmailsV1 as EmailsV1,
-    type EmailsV1EmailsRetrieveResponse as EmailsV1EmailsRetrieveResponse,
-    type EmailsV1RenderCreateResponse as EmailsV1RenderCreateResponse,
-    type EmailsV1SendCreateResponse as EmailsV1SendCreateResponse,
-    type EmailsV1SendTemplateTemplateResponse as EmailsV1SendTemplateTemplateResponse,
-    type EmailsV1RenderCreateParams as EmailsV1RenderCreateParams,
-    type EmailsV1SendCreateParams as EmailsV1SendCreateParams,
-    type EmailsV1SendTemplateTemplateParams as EmailsV1SendTemplateTemplateParams,
+    DocumentsV1 as DocumentsV1,
+    type DocumentsV1DocumentsRetrieveResponse as DocumentsV1DocumentsRetrieveResponse,
+    type DocumentsV1GenerateCreateResponse as DocumentsV1GenerateCreateResponse,
+    type DocumentsV1GenerateTemplateTemplateResponse as DocumentsV1GenerateTemplateTemplateResponse,
+    type DocumentsV1GenerateCreateParams as DocumentsV1GenerateCreateParams,
+    type DocumentsV1GenerateTemplateTemplateParams as DocumentsV1GenerateTemplateTemplateParams,
   };
 
   export {
-    Emails as Emails,
-    type EmailEmailsRetrieveResponse as EmailEmailsRetrieveResponse,
-    type EmailRenderCreateResponse as EmailRenderCreateResponse,
-    type EmailSendCreateResponse as EmailSendCreateResponse,
-    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
-    type EmailRenderCreateParams as EmailRenderCreateParams,
-    type EmailSendCreateParams as EmailSendCreateParams,
-    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
+    Documents as Documents,
+    type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
+    type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
+    type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
+    type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
+    type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
+  };
+
+  export {
+    PagesV1 as PagesV1,
+    type PagesV1RenderCreateResponse as PagesV1RenderCreateResponse,
+    type PagesV1RenderCreateParams as PagesV1RenderCreateParams,
+  };
+
+  export {
+    Pages as Pages,
+    type PageRenderCreateResponse as PageRenderCreateResponse,
+    type PageRenderCreateParams as PageRenderCreateParams,
   };
 
   export {
@@ -859,32 +894,24 @@ export declare namespace Unlayer {
   };
 
   export {
-    DocumentsV1 as DocumentsV1,
-    type DocumentsV1DocumentsRetrieveResponse as DocumentsV1DocumentsRetrieveResponse,
-    type DocumentsV1GenerateCreateResponse as DocumentsV1GenerateCreateResponse,
-    type DocumentsV1GenerateTemplateTemplateResponse as DocumentsV1GenerateTemplateTemplateResponse,
-    type DocumentsV1GenerateCreateParams as DocumentsV1GenerateCreateParams,
-    type DocumentsV1GenerateTemplateTemplateParams as DocumentsV1GenerateTemplateTemplateParams,
+    EmailsV1 as EmailsV1,
+    type EmailsV1EmailsRetrieveResponse as EmailsV1EmailsRetrieveResponse,
+    type EmailsV1RenderCreateResponse as EmailsV1RenderCreateResponse,
+    type EmailsV1SendCreateResponse as EmailsV1SendCreateResponse,
+    type EmailsV1SendTemplateTemplateResponse as EmailsV1SendTemplateTemplateResponse,
+    type EmailsV1RenderCreateParams as EmailsV1RenderCreateParams,
+    type EmailsV1SendCreateParams as EmailsV1SendCreateParams,
+    type EmailsV1SendTemplateTemplateParams as EmailsV1SendTemplateTemplateParams,
   };
 
   export {
-    Documents as Documents,
-    type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
-    type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
-    type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
-    type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
-    type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
-  };
-
-  export {
-    PagesV1 as PagesV1,
-    type PagesV1RenderCreateResponse as PagesV1RenderCreateResponse,
-    type PagesV1RenderCreateParams as PagesV1RenderCreateParams,
-  };
-
-  export {
-    Pages as Pages,
-    type PageRenderCreateResponse as PageRenderCreateResponse,
-    type PageRenderCreateParams as PageRenderCreateParams,
+    Emails as Emails,
+    type EmailEmailsRetrieveResponse as EmailEmailsRetrieveResponse,
+    type EmailRenderCreateResponse as EmailRenderCreateResponse,
+    type EmailSendCreateResponse as EmailSendCreateResponse,
+    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
+    type EmailRenderCreateParams as EmailRenderCreateParams,
+    type EmailSendCreateParams as EmailSendCreateParams,
+    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
   };
 }
