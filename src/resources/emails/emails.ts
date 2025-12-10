@@ -4,9 +4,9 @@ import { APIResource } from '../../core/resource';
 import * as V1API from './v1';
 import {
   V1,
-  V1EmailsRetrieveResponse,
   V1RenderCreateParams,
   V1RenderCreateResponse,
+  V1RetrieveResponse,
   V1SendCreateParams,
   V1SendCreateResponse,
   V1SendTemplateTemplateParams,
@@ -24,10 +24,10 @@ export class Emails extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.emails.emailsRetrieve('id');
+   * const email = await client.emails.retrieve('id');
    * ```
    */
-  emailsRetrieve(id: string, options?: RequestOptions): APIPromise<EmailEmailsRetrieveResponse> {
+  retrieve(id: string, options?: RequestOptions): APIPromise<EmailRetrieveResponse> {
     return this._client.get(path`/emails/v1/emails/${id}`, options);
   }
 
@@ -121,7 +121,7 @@ export class Emails extends APIResource {
   }
 }
 
-export interface EmailEmailsRetrieveResponse {
+export interface EmailRetrieveResponse {
   /**
    * Email message ID
    */
@@ -243,7 +243,7 @@ Emails.V1 = V1;
 
 export declare namespace Emails {
   export {
-    type EmailEmailsRetrieveResponse as EmailEmailsRetrieveResponse,
+    type EmailRetrieveResponse as EmailRetrieveResponse,
     type EmailRenderCreateResponse as EmailRenderCreateResponse,
     type EmailSendCreateResponse as EmailSendCreateResponse,
     type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
@@ -254,7 +254,7 @@ export declare namespace Emails {
 
   export {
     V1 as V1,
-    type V1EmailsRetrieveResponse as V1EmailsRetrieveResponse,
+    type V1RetrieveResponse as V1RetrieveResponse,
     type V1RenderCreateResponse as V1RenderCreateResponse,
     type V1SendCreateResponse as V1SendCreateResponse,
     type V1SendTemplateTemplateResponse as V1SendTemplateTemplateResponse,

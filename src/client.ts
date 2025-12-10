@@ -25,9 +25,9 @@ import {
   Documents,
 } from './resources/documents/documents';
 import {
-  EmailEmailsRetrieveResponse,
   EmailRenderCreateParams,
   EmailRenderCreateResponse,
+  EmailRetrieveResponse,
   EmailSendCreateParams,
   EmailSendCreateResponse,
   EmailSendTemplateTemplateParams,
@@ -793,7 +793,7 @@ export declare namespace Unlayer {
 
   export {
     Emails as Emails,
-    type EmailEmailsRetrieveResponse as EmailEmailsRetrieveResponse,
+    type EmailRetrieveResponse as EmailRetrieveResponse,
     type EmailRenderCreateResponse as EmailRenderCreateResponse,
     type EmailSendCreateResponse as EmailSendCreateResponse,
     type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,

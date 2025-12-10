@@ -10,7 +10,7 @@ export {
 } from './documents/documents';
 export {
   Emails,
-  type EmailEmailsRetrieveResponse,
+  type EmailRetrieveResponse,
   type EmailRenderCreateResponse,
   type EmailSendCreateResponse,
   type EmailSendTemplateTemplateResponse,
