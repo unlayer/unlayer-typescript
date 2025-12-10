@@ -81,7 +81,7 @@ export class EmailsV1 extends APIResource {
    *     },
    *   },
    *   to: 'test@example.com',
-   *   subject: 'Test Email',
+   *   subject: 'Test',
    * });
    * ```
    */
