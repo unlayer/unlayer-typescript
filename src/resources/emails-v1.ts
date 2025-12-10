@@ -8,6 +8,11 @@ import { path } from '../internal/utils/path';
 export class EmailsV1 extends APIResource {
   /**
    * Retrieve details of a previously sent email.
+   *
+   * @example
+   * ```ts
+   * const response = await client.emailsV1.emailsRetrieve('id');
+   * ```
    */
   emailsRetrieve(id: string, options?: RequestOptions): APIPromise<EmailsV1EmailsRetrieveResponse> {
     return this._client.get(path`/emails/v1/emails/${id}`, options);
@@ -15,6 +20,13 @@ export class EmailsV1 extends APIResource {
 
   /**
    * Convert design JSON to HTML with optional merge tags.
+   *
+   * @example
+   * ```ts
+   * const response = await client.emailsV1.renderCreate({
+   *   design: { counters: 'bar', body: 'bar' },
+   * });
+   * ```
    */
   renderCreate(
     body: EmailsV1RenderCreateParams,
@@ -25,6 +37,13 @@ export class EmailsV1 extends APIResource {
 
   /**
    * Send email with design JSON or HTML content.
+   *
+   * @example
+   * ```ts
+   * const response = await client.emailsV1.sendCreate({
+   *   to: 'dev@stainless.com',
+   * });
+   * ```
    */
   sendCreate(
     body: EmailsV1SendCreateParams,
@@ -35,6 +54,13 @@ export class EmailsV1 extends APIResource {
 
   /**
    * Send email using an existing template with merge tags.
+   *
+   * @example
+   * ```ts
+   * const response = await client.emailsV1.sendTemplateTemplate(
+   *   { templateId: 'templateId', to: 'dev@stainless.com' },
+   * );
+   * ```
    */
   sendTemplateTemplate(
     body: EmailsV1SendTemplateTemplateParams,

@@ -7,6 +7,13 @@ import { RequestOptions } from '../internal/request-options';
 export class Pages extends APIResource {
   /**
    * Convert page design JSON to HTML with optional merge tags.
+   *
+   * @example
+   * ```ts
+   * const response = await client.pages.renderCreate({
+   *   design: { counters: 'bar', body: 'bar' },
+   * });
+   * ```
    */
   renderCreate(body: PageRenderCreateParams, options?: RequestOptions): APIPromise<PageRenderCreateResponse> {
     return this._client.post('/pages/v1/render', { body, ...options });

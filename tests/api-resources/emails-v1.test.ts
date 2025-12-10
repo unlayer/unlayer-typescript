@@ -20,7 +20,7 @@ describe('resource emailsV1', () => {
   });
 
   test('renderCreate: only required params', async () => {
-    const responsePromise = client.emailsV1.renderCreate({ design: { foo: 'bar' } });
+    const responsePromise = client.emailsV1.renderCreate({ design: { counters: 'bar', body: 'bar' } });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -32,7 +32,7 @@ describe('resource emailsV1', () => {
 
   test('renderCreate: required and optional params', async () => {
     const response = await client.emailsV1.renderCreate({
-      design: { foo: 'bar' },
+      design: { counters: 'bar', body: 'bar' },
       mergeTags: { foo: 'string' },
     });
   });
@@ -51,7 +51,7 @@ describe('resource emailsV1', () => {
   test('sendCreate: required and optional params', async () => {
     const response = await client.emailsV1.sendCreate({
       to: 'dev@stainless.com',
-      design: { foo: 'bar' },
+      design: { counters: 'bar', body: 'bar' },
       html: 'html',
       mergeTags: { foo: 'string' },
       subject: 'subject',
