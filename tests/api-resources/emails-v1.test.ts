@@ -38,7 +38,10 @@ describe('resource emailsV1', () => {
   });
 
   test('sendCreate: only required params', async () => {
-    const responsePromise = client.emailsV1.sendCreate({ to: 'test@example.com' });
+    const responsePromise = client.emailsV1.sendCreate({
+      design: { counters: 'bar', body: 'bar' },
+      to: 'test@example.com',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -50,8 +53,8 @@ describe('resource emailsV1', () => {
 
   test('sendCreate: required and optional params', async () => {
     const response = await client.emailsV1.sendCreate({
-      to: 'test@example.com',
       design: { counters: 'bar', body: 'bar' },
+      to: 'test@example.com',
       html: 'html',
       mergeTags: { foo: 'string' },
       subject: 'Test Email',
