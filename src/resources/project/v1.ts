@@ -1,19 +1,16 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../core/resource';
-import { APIPromise } from '../core/api-promise';
-import { buildHeaders } from '../internal/headers';
-import { RequestOptions } from '../internal/request-options';
-import { path } from '../internal/utils/path';
+import { APIResource } from '../../core/resource';
+import { APIPromise } from '../../core/api-promise';
+import { buildHeaders } from '../../internal/headers';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
-export class ProjectV1 extends APIResource {
+export class V1 extends APIResource {
   /**
    * Create a new API key for the project.
    */
-  apiKeysCreate(
-    body: ProjectV1APIKeysCreateParams,
-    options?: RequestOptions,
-  ): APIPromise<ProjectV1APIKeysCreateResponse> {
+  apiKeysCreate(body: V1APIKeysCreateParams, options?: RequestOptions): APIPromise<V1APIKeysCreateResponse> {
     return this._client.post('/project/v1/api-keys', { body, ...options });
   }
 
@@ -30,14 +27,14 @@ export class ProjectV1 extends APIResource {
   /**
    * List all API keys for the project.
    */
-  apiKeysList(options?: RequestOptions): APIPromise<ProjectV1APIKeysListResponse> {
+  apiKeysList(options?: RequestOptions): APIPromise<V1APIKeysListResponse> {
     return this._client.get('/project/v1/api-keys', options);
   }
 
   /**
    * Get API key details by ID.
    */
-  apiKeysRetrieve(id: string, options?: RequestOptions): APIPromise<ProjectV1APIKeysRetrieveResponse> {
+  apiKeysRetrieve(id: string, options?: RequestOptions): APIPromise<V1APIKeysRetrieveResponse> {
     return this._client.get(path`/project/v1/api-keys/${id}`, options);
   }
 
@@ -46,26 +43,23 @@ export class ProjectV1 extends APIResource {
    */
   apiKeysUpdate(
     id: string,
-    body: ProjectV1APIKeysUpdateParams | null | undefined = {},
+    body: V1APIKeysUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ProjectV1APIKeysUpdateResponse> {
+  ): APIPromise<V1APIKeysUpdateResponse> {
     return this._client.put(path`/project/v1/api-keys/${id}`, { body, ...options });
   }
 
   /**
    * Get project details for the authenticated project.
    */
-  currentList(options?: RequestOptions): APIPromise<ProjectV1CurrentListResponse> {
+  currentList(options?: RequestOptions): APIPromise<V1CurrentListResponse> {
     return this._client.get('/project/v1/current', options);
   }
 
   /**
    * Add a new domain to the project.
    */
-  domainsCreate(
-    body: ProjectV1DomainsCreateParams,
-    options?: RequestOptions,
-  ): APIPromise<ProjectV1DomainsCreateResponse> {
+  domainsCreate(body: V1DomainsCreateParams, options?: RequestOptions): APIPromise<V1DomainsCreateResponse> {
     return this._client.post('/project/v1/domains', { body, ...options });
   }
 
@@ -82,14 +76,14 @@ export class ProjectV1 extends APIResource {
   /**
    * List all domains for the project.
    */
-  domainsList(options?: RequestOptions): APIPromise<ProjectV1DomainsListResponse> {
+  domainsList(options?: RequestOptions): APIPromise<V1DomainsListResponse> {
     return this._client.get('/project/v1/domains', options);
   }
 
   /**
    * Get domain details by ID.
    */
-  domainsRetrieve(id: string, options?: RequestOptions): APIPromise<ProjectV1DomainsRetrieveResponse> {
+  domainsRetrieve(id: string, options?: RequestOptions): APIPromise<V1DomainsRetrieveResponse> {
     return this._client.get(path`/project/v1/domains/${id}`, options);
   }
 
@@ -98,9 +92,9 @@ export class ProjectV1 extends APIResource {
    */
   domainsUpdate(
     id: string,
-    body: ProjectV1DomainsUpdateParams | null | undefined = {},
+    body: V1DomainsUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ProjectV1DomainsUpdateResponse> {
+  ): APIPromise<V1DomainsUpdateResponse> {
     return this._client.put(path`/project/v1/domains/${id}`, { body, ...options });
   }
 
@@ -108,9 +102,9 @@ export class ProjectV1 extends APIResource {
    * Create a new project template.
    */
   templatesCreate(
-    body: ProjectV1TemplatesCreateParams,
+    body: V1TemplatesCreateParams,
     options?: RequestOptions,
-  ): APIPromise<ProjectV1TemplatesCreateResponse> {
+  ): APIPromise<V1TemplatesCreateResponse> {
     return this._client.post('/project/v1/templates', { body, ...options });
   }
 
@@ -127,14 +121,14 @@ export class ProjectV1 extends APIResource {
   /**
    * Get all project templates.
    */
-  templatesList(options?: RequestOptions): APIPromise<ProjectV1TemplatesListResponse> {
+  templatesList(options?: RequestOptions): APIPromise<V1TemplatesListResponse> {
     return this._client.get('/project/v1/templates', options);
   }
 
   /**
    * Get project template by ID.
    */
-  templatesRetrieve(id: string, options?: RequestOptions): APIPromise<ProjectV1TemplatesRetrieveResponse> {
+  templatesRetrieve(id: string, options?: RequestOptions): APIPromise<V1TemplatesRetrieveResponse> {
     return this._client.get(path`/project/v1/templates/${id}`, options);
   }
 
@@ -143,18 +137,18 @@ export class ProjectV1 extends APIResource {
    */
   templatesUpdate(
     id: string,
-    body: ProjectV1TemplatesUpdateParams | null | undefined = {},
+    body: V1TemplatesUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ProjectV1TemplatesUpdateResponse> {
+  ): APIPromise<V1TemplatesUpdateResponse> {
     return this._client.put(path`/project/v1/templates/${id}`, { body, ...options });
   }
 }
 
-export interface ProjectV1APIKeysCreateResponse {
-  data?: ProjectV1APIKeysCreateResponse.Data;
+export interface V1APIKeysCreateResponse {
+  data?: V1APIKeysCreateResponse.Data;
 }
 
-export namespace ProjectV1APIKeysCreateResponse {
+export namespace V1APIKeysCreateResponse {
   export interface Data {
     id?: string;
 
@@ -170,33 +164,11 @@ export namespace ProjectV1APIKeysCreateResponse {
   }
 }
 
-export interface ProjectV1APIKeysListResponse {
-  data?: Array<ProjectV1APIKeysListResponse.Data>;
+export interface V1APIKeysListResponse {
+  data?: Array<V1APIKeysListResponse.Data>;
 }
 
-export namespace ProjectV1APIKeysListResponse {
-  export interface Data {
-    id?: string;
-
-    active?: boolean;
-
-    createdAt?: string;
-
-    domains?: Array<string>;
-
-    key?: string;
-
-    lastUsed?: string;
-
-    name?: string;
-  }
-}
-
-export interface ProjectV1APIKeysRetrieveResponse {
-  data?: ProjectV1APIKeysRetrieveResponse.Data;
-}
-
-export namespace ProjectV1APIKeysRetrieveResponse {
+export namespace V1APIKeysListResponse {
   export interface Data {
     id?: string;
 
@@ -214,11 +186,11 @@ export namespace ProjectV1APIKeysRetrieveResponse {
   }
 }
 
-export interface ProjectV1APIKeysUpdateResponse {
-  data?: ProjectV1APIKeysUpdateResponse.Data;
+export interface V1APIKeysRetrieveResponse {
+  data?: V1APIKeysRetrieveResponse.Data;
 }
 
-export namespace ProjectV1APIKeysUpdateResponse {
+export namespace V1APIKeysRetrieveResponse {
   export interface Data {
     id?: string;
 
@@ -236,11 +208,33 @@ export namespace ProjectV1APIKeysUpdateResponse {
   }
 }
 
-export interface ProjectV1CurrentListResponse {
-  data?: ProjectV1CurrentListResponse.Data;
+export interface V1APIKeysUpdateResponse {
+  data?: V1APIKeysUpdateResponse.Data;
 }
 
-export namespace ProjectV1CurrentListResponse {
+export namespace V1APIKeysUpdateResponse {
+  export interface Data {
+    id?: string;
+
+    active?: boolean;
+
+    createdAt?: string;
+
+    domains?: Array<string>;
+
+    key?: string;
+
+    lastUsed?: string;
+
+    name?: string;
+  }
+}
+
+export interface V1CurrentListResponse {
+  data?: V1CurrentListResponse.Data;
+}
+
+export namespace V1CurrentListResponse {
   export interface Data {
     id?: number;
 
@@ -262,11 +256,11 @@ export namespace ProjectV1CurrentListResponse {
   }
 }
 
-export interface ProjectV1DomainsCreateResponse {
-  data?: ProjectV1DomainsCreateResponse.Data;
+export interface V1DomainsCreateResponse {
+  data?: V1DomainsCreateResponse.Data;
 }
 
-export namespace ProjectV1DomainsCreateResponse {
+export namespace V1DomainsCreateResponse {
   export interface Data {
     id?: string;
 
@@ -280,11 +274,11 @@ export namespace ProjectV1DomainsCreateResponse {
   }
 }
 
-export interface ProjectV1DomainsListResponse {
-  data?: Array<ProjectV1DomainsListResponse.Data>;
+export interface V1DomainsListResponse {
+  data?: Array<V1DomainsListResponse.Data>;
 }
 
-export namespace ProjectV1DomainsListResponse {
+export namespace V1DomainsListResponse {
   export interface Data {
     id?: string;
 
@@ -298,11 +292,11 @@ export namespace ProjectV1DomainsListResponse {
   }
 }
 
-export interface ProjectV1DomainsRetrieveResponse {
-  data?: ProjectV1DomainsRetrieveResponse.Data;
+export interface V1DomainsRetrieveResponse {
+  data?: V1DomainsRetrieveResponse.Data;
 }
 
-export namespace ProjectV1DomainsRetrieveResponse {
+export namespace V1DomainsRetrieveResponse {
   export interface Data {
     id?: string;
 
@@ -316,11 +310,11 @@ export namespace ProjectV1DomainsRetrieveResponse {
   }
 }
 
-export interface ProjectV1DomainsUpdateResponse {
-  data?: ProjectV1DomainsUpdateResponse.Data;
+export interface V1DomainsUpdateResponse {
+  data?: V1DomainsUpdateResponse.Data;
 }
 
-export namespace ProjectV1DomainsUpdateResponse {
+export namespace V1DomainsUpdateResponse {
   export interface Data {
     id?: string;
 
@@ -334,11 +328,11 @@ export namespace ProjectV1DomainsUpdateResponse {
   }
 }
 
-export interface ProjectV1TemplatesCreateResponse {
-  data?: ProjectV1TemplatesCreateResponse.Data;
+export interface V1TemplatesCreateResponse {
+  data?: V1TemplatesCreateResponse.Data;
 }
 
-export namespace ProjectV1TemplatesCreateResponse {
+export namespace V1TemplatesCreateResponse {
   export interface Data {
     id?: string;
 
@@ -354,11 +348,11 @@ export namespace ProjectV1TemplatesCreateResponse {
   }
 }
 
-export interface ProjectV1TemplatesListResponse {
-  data?: Array<ProjectV1TemplatesListResponse.Data>;
+export interface V1TemplatesListResponse {
+  data?: Array<V1TemplatesListResponse.Data>;
 }
 
-export namespace ProjectV1TemplatesListResponse {
+export namespace V1TemplatesListResponse {
   export interface Data {
     id?: string;
 
@@ -374,11 +368,11 @@ export namespace ProjectV1TemplatesListResponse {
   }
 }
 
-export interface ProjectV1TemplatesRetrieveResponse {
-  data?: ProjectV1TemplatesRetrieveResponse.Data;
+export interface V1TemplatesRetrieveResponse {
+  data?: V1TemplatesRetrieveResponse.Data;
 }
 
-export namespace ProjectV1TemplatesRetrieveResponse {
+export namespace V1TemplatesRetrieveResponse {
   export interface Data {
     id?: string;
 
@@ -394,11 +388,11 @@ export namespace ProjectV1TemplatesRetrieveResponse {
   }
 }
 
-export interface ProjectV1TemplatesUpdateResponse {
-  data?: ProjectV1TemplatesUpdateResponse.Data;
+export interface V1TemplatesUpdateResponse {
+  data?: V1TemplatesUpdateResponse.Data;
 }
 
-export namespace ProjectV1TemplatesUpdateResponse {
+export namespace V1TemplatesUpdateResponse {
   export interface Data {
     id?: string;
 
@@ -414,7 +408,7 @@ export namespace ProjectV1TemplatesUpdateResponse {
   }
 }
 
-export interface ProjectV1APIKeysCreateParams {
+export interface V1APIKeysCreateParams {
   /**
    * Name for the API key
    */
@@ -426,7 +420,7 @@ export interface ProjectV1APIKeysCreateParams {
   domains?: Array<string>;
 }
 
-export interface ProjectV1APIKeysUpdateParams {
+export interface V1APIKeysUpdateParams {
   /**
    * Whether the API key is active
    */
@@ -443,21 +437,21 @@ export interface ProjectV1APIKeysUpdateParams {
   name?: string;
 }
 
-export interface ProjectV1DomainsCreateParams {
+export interface V1DomainsCreateParams {
   /**
    * Domain name to add
    */
   domain: string;
 }
 
-export interface ProjectV1DomainsUpdateParams {
+export interface V1DomainsUpdateParams {
   /**
    * Updated domain name
    */
   domain?: string;
 }
 
-export interface ProjectV1TemplatesCreateParams {
+export interface V1TemplatesCreateParams {
   /**
    * Template name
    */
@@ -474,7 +468,7 @@ export interface ProjectV1TemplatesCreateParams {
   subject?: string;
 }
 
-export interface ProjectV1TemplatesUpdateParams {
+export interface V1TemplatesUpdateParams {
   /**
    * Updated email body content
    */
@@ -491,26 +485,26 @@ export interface ProjectV1TemplatesUpdateParams {
   subject?: string;
 }
 
-export declare namespace ProjectV1 {
+export declare namespace V1 {
   export {
-    type ProjectV1APIKeysCreateResponse as ProjectV1APIKeysCreateResponse,
-    type ProjectV1APIKeysListResponse as ProjectV1APIKeysListResponse,
-    type ProjectV1APIKeysRetrieveResponse as ProjectV1APIKeysRetrieveResponse,
-    type ProjectV1APIKeysUpdateResponse as ProjectV1APIKeysUpdateResponse,
-    type ProjectV1CurrentListResponse as ProjectV1CurrentListResponse,
-    type ProjectV1DomainsCreateResponse as ProjectV1DomainsCreateResponse,
-    type ProjectV1DomainsListResponse as ProjectV1DomainsListResponse,
-    type ProjectV1DomainsRetrieveResponse as ProjectV1DomainsRetrieveResponse,
-    type ProjectV1DomainsUpdateResponse as ProjectV1DomainsUpdateResponse,
-    type ProjectV1TemplatesCreateResponse as ProjectV1TemplatesCreateResponse,
-    type ProjectV1TemplatesListResponse as ProjectV1TemplatesListResponse,
-    type ProjectV1TemplatesRetrieveResponse as ProjectV1TemplatesRetrieveResponse,
-    type ProjectV1TemplatesUpdateResponse as ProjectV1TemplatesUpdateResponse,
-    type ProjectV1APIKeysCreateParams as ProjectV1APIKeysCreateParams,
-    type ProjectV1APIKeysUpdateParams as ProjectV1APIKeysUpdateParams,
-    type ProjectV1DomainsCreateParams as ProjectV1DomainsCreateParams,
-    type ProjectV1DomainsUpdateParams as ProjectV1DomainsUpdateParams,
-    type ProjectV1TemplatesCreateParams as ProjectV1TemplatesCreateParams,
-    type ProjectV1TemplatesUpdateParams as ProjectV1TemplatesUpdateParams,
+    type V1APIKeysCreateResponse as V1APIKeysCreateResponse,
+    type V1APIKeysListResponse as V1APIKeysListResponse,
+    type V1APIKeysRetrieveResponse as V1APIKeysRetrieveResponse,
+    type V1APIKeysUpdateResponse as V1APIKeysUpdateResponse,
+    type V1CurrentListResponse as V1CurrentListResponse,
+    type V1DomainsCreateResponse as V1DomainsCreateResponse,
+    type V1DomainsListResponse as V1DomainsListResponse,
+    type V1DomainsRetrieveResponse as V1DomainsRetrieveResponse,
+    type V1DomainsUpdateResponse as V1DomainsUpdateResponse,
+    type V1TemplatesCreateResponse as V1TemplatesCreateResponse,
+    type V1TemplatesListResponse as V1TemplatesListResponse,
+    type V1TemplatesRetrieveResponse as V1TemplatesRetrieveResponse,
+    type V1TemplatesUpdateResponse as V1TemplatesUpdateResponse,
+    type V1APIKeysCreateParams as V1APIKeysCreateParams,
+    type V1APIKeysUpdateParams as V1APIKeysUpdateParams,
+    type V1DomainsCreateParams as V1DomainsCreateParams,
+    type V1DomainsUpdateParams as V1DomainsUpdateParams,
+    type V1TemplatesCreateParams as V1TemplatesCreateParams,
+    type V1TemplatesUpdateParams as V1TemplatesUpdateParams,
   };
 }

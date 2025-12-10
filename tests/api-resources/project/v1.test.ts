@@ -7,9 +7,9 @@ const client = new Unlayer({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource projectV1', () => {
+describe('resource v1', () => {
   test('apiKeysCreate: only required params', async () => {
-    const responsePromise = client.projectV1.apiKeysCreate({ name: 'name' });
+    const responsePromise = client.project.v1.apiKeysCreate({ name: 'name' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,11 +20,11 @@ describe('resource projectV1', () => {
   });
 
   test('apiKeysCreate: required and optional params', async () => {
-    const response = await client.projectV1.apiKeysCreate({ name: 'name', domains: ['string'] });
+    const response = await client.project.v1.apiKeysCreate({ name: 'name', domains: ['string'] });
   });
 
   test('apiKeysDelete', async () => {
-    const responsePromise = client.projectV1.apiKeysDelete('id');
+    const responsePromise = client.project.v1.apiKeysDelete('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -35,7 +35,7 @@ describe('resource projectV1', () => {
   });
 
   test('apiKeysList', async () => {
-    const responsePromise = client.projectV1.apiKeysList();
+    const responsePromise = client.project.v1.apiKeysList();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -46,7 +46,7 @@ describe('resource projectV1', () => {
   });
 
   test('apiKeysRetrieve', async () => {
-    const responsePromise = client.projectV1.apiKeysRetrieve('id');
+    const responsePromise = client.project.v1.apiKeysRetrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -57,7 +57,7 @@ describe('resource projectV1', () => {
   });
 
   test('apiKeysUpdate', async () => {
-    const responsePromise = client.projectV1.apiKeysUpdate('id');
+    const responsePromise = client.project.v1.apiKeysUpdate('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -70,7 +70,7 @@ describe('resource projectV1', () => {
   test('apiKeysUpdate: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.projectV1.apiKeysUpdate(
+      client.project.v1.apiKeysUpdate(
         'id',
         { active: true, domains: ['string'], name: 'name' },
         { path: '/_stainless_unknown_path' },
@@ -79,7 +79,7 @@ describe('resource projectV1', () => {
   });
 
   test('currentList', async () => {
-    const responsePromise = client.projectV1.currentList();
+    const responsePromise = client.project.v1.currentList();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -90,7 +90,7 @@ describe('resource projectV1', () => {
   });
 
   test('domainsCreate: only required params', async () => {
-    const responsePromise = client.projectV1.domainsCreate({ domain: 'domain' });
+    const responsePromise = client.project.v1.domainsCreate({ domain: 'domain' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -101,11 +101,11 @@ describe('resource projectV1', () => {
   });
 
   test('domainsCreate: required and optional params', async () => {
-    const response = await client.projectV1.domainsCreate({ domain: 'domain' });
+    const response = await client.project.v1.domainsCreate({ domain: 'domain' });
   });
 
   test('domainsDelete', async () => {
-    const responsePromise = client.projectV1.domainsDelete('id');
+    const responsePromise = client.project.v1.domainsDelete('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -116,7 +116,7 @@ describe('resource projectV1', () => {
   });
 
   test('domainsList', async () => {
-    const responsePromise = client.projectV1.domainsList();
+    const responsePromise = client.project.v1.domainsList();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -127,7 +127,7 @@ describe('resource projectV1', () => {
   });
 
   test('domainsRetrieve', async () => {
-    const responsePromise = client.projectV1.domainsRetrieve('id');
+    const responsePromise = client.project.v1.domainsRetrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -138,7 +138,7 @@ describe('resource projectV1', () => {
   });
 
   test('domainsUpdate', async () => {
-    const responsePromise = client.projectV1.domainsUpdate('id');
+    const responsePromise = client.project.v1.domainsUpdate('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -151,12 +151,12 @@ describe('resource projectV1', () => {
   test('domainsUpdate: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.projectV1.domainsUpdate('id', { domain: 'domain' }, { path: '/_stainless_unknown_path' }),
+      client.project.v1.domainsUpdate('id', { domain: 'domain' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Unlayer.NotFoundError);
   });
 
   test('templatesCreate: only required params', async () => {
-    const responsePromise = client.projectV1.templatesCreate({ name: 'name' });
+    const responsePromise = client.project.v1.templatesCreate({ name: 'name' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -167,7 +167,7 @@ describe('resource projectV1', () => {
   });
 
   test('templatesCreate: required and optional params', async () => {
-    const response = await client.projectV1.templatesCreate({
+    const response = await client.project.v1.templatesCreate({
       name: 'name',
       body: 'body',
       subject: 'subject',
@@ -175,7 +175,7 @@ describe('resource projectV1', () => {
   });
 
   test('templatesDelete', async () => {
-    const responsePromise = client.projectV1.templatesDelete('id');
+    const responsePromise = client.project.v1.templatesDelete('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -186,7 +186,7 @@ describe('resource projectV1', () => {
   });
 
   test('templatesList', async () => {
-    const responsePromise = client.projectV1.templatesList();
+    const responsePromise = client.project.v1.templatesList();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -197,7 +197,7 @@ describe('resource projectV1', () => {
   });
 
   test('templatesRetrieve', async () => {
-    const responsePromise = client.projectV1.templatesRetrieve('id');
+    const responsePromise = client.project.v1.templatesRetrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -208,7 +208,7 @@ describe('resource projectV1', () => {
   });
 
   test('templatesUpdate', async () => {
-    const responsePromise = client.projectV1.templatesUpdate('id');
+    const responsePromise = client.project.v1.templatesUpdate('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -221,7 +221,7 @@ describe('resource projectV1', () => {
   test('templatesUpdate: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.projectV1.templatesUpdate(
+      client.project.v1.templatesUpdate(
         'id',
         { body: 'body', name: 'name', subject: 'subject' },
         { path: '/_stainless_unknown_path' },

@@ -1,25 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
-  Documents,
-  type DocumentDocumentsRetrieveResponse,
-  type DocumentGenerateCreateResponse,
-  type DocumentGenerateTemplateTemplateResponse,
-  type DocumentGenerateCreateParams,
-  type DocumentGenerateTemplateTemplateParams,
-} from './documents/documents';
-export {
-  Emails,
-  type EmailEmailsRetrieveResponse,
-  type EmailRenderCreateResponse,
-  type EmailSendCreateResponse,
-  type EmailSendTemplateTemplateResponse,
-  type EmailRenderCreateParams,
-  type EmailSendCreateParams,
-  type EmailSendTemplateTemplateParams,
-} from './emails/emails';
-export { Pages, type PageRenderCreateResponse, type PageRenderCreateParams } from './pages/pages';
-export {
   Project,
   type ProjectAPIKeysCreateResponse,
   type ProjectAPIKeysListResponse,
@@ -40,4 +21,26 @@ export {
   type ProjectDomainsUpdateParams,
   type ProjectTemplatesCreateParams,
   type ProjectTemplatesUpdateParams,
-} from './project/project';
+} from './project';
+export {
+  V1,
+  type V1APIKeysCreateResponse,
+  type V1APIKeysListResponse,
+  type V1APIKeysRetrieveResponse,
+  type V1APIKeysUpdateResponse,
+  type V1CurrentListResponse,
+  type V1DomainsCreateResponse,
+  type V1DomainsListResponse,
+  type V1DomainsRetrieveResponse,
+  type V1DomainsUpdateResponse,
+  type V1TemplatesCreateResponse,
+  type V1TemplatesListResponse,
+  type V1TemplatesRetrieveResponse,
+  type V1TemplatesUpdateResponse,
+  type V1APIKeysCreateParams,
+  type V1APIKeysUpdateParams,
+  type V1DomainsCreateParams,
+  type V1DomainsUpdateParams,
+  type V1TemplatesCreateParams,
+  type V1TemplatesUpdateParams,
+} from './v1';

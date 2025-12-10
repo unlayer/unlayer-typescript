@@ -1,16 +1,20 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../core/resource';
-import { APIPromise } from '../core/api-promise';
-import { RequestOptions } from '../internal/request-options';
+import { APIResource } from '../../core/resource';
+import * as V1API from './v1';
+import { V1, V1RenderCreateParams, V1RenderCreateResponse } from './v1';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
 
-export class PagesV1 extends APIResource {
+export class Pages extends APIResource {
+  v1: V1API.V1 = new V1API.V1(this._client);
+
   /**
    * Convert page design JSON to HTML with optional merge tags.
    *
    * @example
    * ```ts
-   * const response = await client.pagesV1.renderCreate({
+   * const response = await client.pages.renderCreate({
    *   design: {
    *     counters: { u_row: 1, u_column: 1, u_content_text: 1 },
    *     body: {
@@ -34,22 +38,19 @@ export class PagesV1 extends APIResource {
    * });
    * ```
    */
-  renderCreate(
-    body: PagesV1RenderCreateParams,
-    options?: RequestOptions,
-  ): APIPromise<PagesV1RenderCreateResponse> {
+  renderCreate(body: PageRenderCreateParams, options?: RequestOptions): APIPromise<PageRenderCreateResponse> {
     return this._client.post('/pages/v1/render', { body, ...options });
   }
 }
 
-export interface PagesV1RenderCreateResponse {
+export interface PageRenderCreateResponse {
   /**
    * Rendered HTML content
    */
   html?: string;
 }
 
-export interface PagesV1RenderCreateParams {
+export interface PageRenderCreateParams {
   /**
    * Proprietary design format JSON
    */
@@ -61,9 +62,17 @@ export interface PagesV1RenderCreateParams {
   mergeTags?: { [key: string]: string };
 }
 
-export declare namespace PagesV1 {
+Pages.V1 = V1;
+
+export declare namespace Pages {
   export {
-    type PagesV1RenderCreateResponse as PagesV1RenderCreateResponse,
-    type PagesV1RenderCreateParams as PagesV1RenderCreateParams,
+    type PageRenderCreateResponse as PageRenderCreateResponse,
+    type PageRenderCreateParams as PageRenderCreateParams,
+  };
+
+  export {
+    V1 as V1,
+    type V1RenderCreateResponse as V1RenderCreateResponse,
+    type V1RenderCreateParams as V1RenderCreateParams,
   };
 }

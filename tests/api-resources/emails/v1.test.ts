@@ -7,9 +7,9 @@ const client = new Unlayer({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource emailsV1', () => {
+describe('resource v1', () => {
   test('emailsRetrieve', async () => {
-    const responsePromise = client.emailsV1.emailsRetrieve('id');
+    const responsePromise = client.emails.v1.emailsRetrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource emailsV1', () => {
   });
 
   test('renderCreate: only required params', async () => {
-    const responsePromise = client.emailsV1.renderCreate({ design: { counters: 'bar', body: 'bar' } });
+    const responsePromise = client.emails.v1.renderCreate({ design: { counters: 'bar', body: 'bar' } });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -31,14 +31,14 @@ describe('resource emailsV1', () => {
   });
 
   test('renderCreate: required and optional params', async () => {
-    const response = await client.emailsV1.renderCreate({
+    const response = await client.emails.v1.renderCreate({
       design: { counters: 'bar', body: 'bar' },
       mergeTags: { foo: 'string' },
     });
   });
 
   test('sendCreate: only required params', async () => {
-    const responsePromise = client.emailsV1.sendCreate({
+    const responsePromise = client.emails.v1.sendCreate({
       design: { counters: 'bar', body: 'bar' },
       to: 'test@example.com',
     });
@@ -52,7 +52,7 @@ describe('resource emailsV1', () => {
   });
 
   test('sendCreate: required and optional params', async () => {
-    const response = await client.emailsV1.sendCreate({
+    const response = await client.emails.v1.sendCreate({
       design: { counters: 'bar', body: 'bar' },
       to: 'test@example.com',
       html: 'html',
@@ -62,7 +62,7 @@ describe('resource emailsV1', () => {
   });
 
   test('sendTemplateTemplate: only required params', async () => {
-    const responsePromise = client.emailsV1.sendTemplateTemplate({
+    const responsePromise = client.emails.v1.sendTemplateTemplate({
       templateId: 'templateId',
       to: 'dev@stainless.com',
     });
@@ -76,7 +76,7 @@ describe('resource emailsV1', () => {
   });
 
   test('sendTemplateTemplate: required and optional params', async () => {
-    const response = await client.emailsV1.sendTemplateTemplate({
+    const response = await client.emails.v1.sendTemplateTemplate({
       templateId: 'templateId',
       to: 'dev@stainless.com',
       mergeTags: { foo: 'string' },
