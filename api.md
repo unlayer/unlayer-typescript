@@ -1,35 +1,3 @@
-# EmailsV1
-
-Types:
-
-- <code><a href="./src/resources/emails-v1.ts">EmailsV1EmailsRetrieveResponse</a></code>
-- <code><a href="./src/resources/emails-v1.ts">EmailsV1RenderCreateResponse</a></code>
-- <code><a href="./src/resources/emails-v1.ts">EmailsV1SendCreateResponse</a></code>
-- <code><a href="./src/resources/emails-v1.ts">EmailsV1SendTemplateTemplateResponse</a></code>
-
-Methods:
-
-- <code title="get /emails/v1/emails/{id}">client.emailsV1.<a href="./src/resources/emails-v1.ts">emailsRetrieve</a>(id) -> EmailsV1EmailsRetrieveResponse</code>
-- <code title="post /emails/v1/render">client.emailsV1.<a href="./src/resources/emails-v1.ts">renderCreate</a>({ ...params }) -> EmailsV1RenderCreateResponse</code>
-- <code title="post /emails/v1/send">client.emailsV1.<a href="./src/resources/emails-v1.ts">sendCreate</a>({ ...params }) -> EmailsV1SendCreateResponse</code>
-- <code title="post /emails/v1/send/template">client.emailsV1.<a href="./src/resources/emails-v1.ts">sendTemplateTemplate</a>({ ...params }) -> EmailsV1SendTemplateTemplateResponse</code>
-
-# Emails
-
-Types:
-
-- <code><a href="./src/resources/emails.ts">EmailEmailsRetrieveResponse</a></code>
-- <code><a href="./src/resources/emails.ts">EmailRenderCreateResponse</a></code>
-- <code><a href="./src/resources/emails.ts">EmailSendCreateResponse</a></code>
-- <code><a href="./src/resources/emails.ts">EmailSendTemplateTemplateResponse</a></code>
-
-Methods:
-
-- <code title="get /emails/v1/emails/{id}">client.emails.<a href="./src/resources/emails.ts">emailsRetrieve</a>(id) -> EmailEmailsRetrieveResponse</code>
-- <code title="post /emails/v1/render">client.emails.<a href="./src/resources/emails.ts">renderCreate</a>({ ...params }) -> EmailRenderCreateResponse</code>
-- <code title="post /emails/v1/send">client.emails.<a href="./src/resources/emails.ts">sendCreate</a>({ ...params }) -> EmailSendCreateResponse</code>
-- <code title="post /emails/v1/send/template">client.emails.<a href="./src/resources/emails.ts">sendTemplateTemplate</a>({ ...params }) -> EmailSendTemplateTemplateResponse</code>
-
 # ProjectV1
 
 Types:
@@ -103,6 +71,38 @@ Methods:
 - <code title="get /project/v1/templates">client.project.<a href="./src/resources/project.ts">templatesList</a>() -> ProjectTemplatesListResponse</code>
 - <code title="get /project/v1/templates/{id}">client.project.<a href="./src/resources/project.ts">templatesRetrieve</a>(id) -> ProjectTemplatesRetrieveResponse</code>
 - <code title="put /project/v1/templates/{id}">client.project.<a href="./src/resources/project.ts">templatesUpdate</a>(id, { ...params }) -> ProjectTemplatesUpdateResponse</code>
+
+# EmailsV1
+
+Types:
+
+- <code><a href="./src/resources/emails-v1.ts">EmailsV1EmailsRetrieveResponse</a></code>
+- <code><a href="./src/resources/emails-v1.ts">EmailsV1RenderCreateResponse</a></code>
+- <code><a href="./src/resources/emails-v1.ts">EmailsV1SendCreateResponse</a></code>
+- <code><a href="./src/resources/emails-v1.ts">EmailsV1SendTemplateTemplateResponse</a></code>
+
+Methods:
+
+- <code title="get /emails/v1/emails/{id}">client.emailsV1.<a href="./src/resources/emails-v1.ts">emailsRetrieve</a>(id) -> EmailsV1EmailsRetrieveResponse</code>
+- <code title="post /emails/v1/render">client.emailsV1.<a href="./src/resources/emails-v1.ts">renderCreate</a>({ ...params }) -> EmailsV1RenderCreateResponse</code>
+- <code title="post /emails/v1/send">client.emailsV1.<a href="./src/resources/emails-v1.ts">sendCreate</a>({ ...params }) -> EmailsV1SendCreateResponse</code>
+- <code title="post /emails/v1/send/template">client.emailsV1.<a href="./src/resources/emails-v1.ts">sendTemplateTemplate</a>({ ...params }) -> EmailsV1SendTemplateTemplateResponse</code>
+
+# Emails
+
+Types:
+
+- <code><a href="./src/resources/emails.ts">EmailEmailsRetrieveResponse</a></code>
+- <code><a href="./src/resources/emails.ts">EmailRenderCreateResponse</a></code>
+- <code><a href="./src/resources/emails.ts">EmailSendCreateResponse</a></code>
+- <code><a href="./src/resources/emails.ts">EmailSendTemplateTemplateResponse</a></code>
+
+Methods:
+
+- <code title="get /emails/v1/emails/{id}">client.emails.<a href="./src/resources/emails.ts">emailsRetrieve</a>(id) -> EmailEmailsRetrieveResponse</code>
+- <code title="post /emails/v1/render">client.emails.<a href="./src/resources/emails.ts">renderCreate</a>({ ...params }) -> EmailRenderCreateResponse</code>
+- <code title="post /emails/v1/send">client.emails.<a href="./src/resources/emails.ts">sendCreate</a>({ ...params }) -> EmailSendCreateResponse</code>
+- <code title="post /emails/v1/send/template">client.emails.<a href="./src/resources/emails.ts">sendTemplateTemplate</a>({ ...params }) -> EmailSendTemplateTemplateResponse</code>
 
 # DocumentsV1
 

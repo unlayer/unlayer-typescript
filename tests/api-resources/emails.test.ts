@@ -38,7 +38,7 @@ describe('resource emails', () => {
   });
 
   test('sendCreate: only required params', async () => {
-    const responsePromise = client.emails.sendCreate({ to: 'dev@stainless.com' });
+    const responsePromise = client.emails.sendCreate({ to: 'test@example.com' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -50,11 +50,11 @@ describe('resource emails', () => {
 
   test('sendCreate: required and optional params', async () => {
     const response = await client.emails.sendCreate({
-      to: 'dev@stainless.com',
+      to: 'test@example.com',
       design: { counters: 'bar', body: 'bar' },
       html: 'html',
       mergeTags: { foo: 'string' },
-      subject: 'subject',
+      subject: 'Test Email',
     });
   });
 

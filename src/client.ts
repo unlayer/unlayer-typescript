@@ -795,20 +795,20 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
-  emailsV1: API.EmailsV1 = new API.EmailsV1(this);
-  emails: API.Emails = new API.Emails(this);
   projectV1: API.ProjectV1 = new API.ProjectV1(this);
   project: API.Project = new API.Project(this);
+  emailsV1: API.EmailsV1 = new API.EmailsV1(this);
+  emails: API.Emails = new API.Emails(this);
   documentsV1: API.DocumentsV1 = new API.DocumentsV1(this);
   documents: API.Documents = new API.Documents(this);
   pagesV1: API.PagesV1 = new API.PagesV1(this);
   pages: API.Pages = new API.Pages(this);
 }
 
-Unlayer.EmailsV1 = EmailsV1;
-Unlayer.Emails = Emails;
 Unlayer.ProjectV1 = ProjectV1;
 Unlayer.Project = Project;
+Unlayer.EmailsV1 = EmailsV1;
+Unlayer.Emails = Emails;
 Unlayer.DocumentsV1 = DocumentsV1;
 Unlayer.Documents = Documents;
 Unlayer.PagesV1 = PagesV1;
@@ -816,28 +816,6 @@ Unlayer.Pages = Pages;
 
 export declare namespace Unlayer {
   export type RequestOptions = Opts.RequestOptions;
-
-  export {
-    EmailsV1 as EmailsV1,
-    type EmailsV1EmailsRetrieveResponse as EmailsV1EmailsRetrieveResponse,
-    type EmailsV1RenderCreateResponse as EmailsV1RenderCreateResponse,
-    type EmailsV1SendCreateResponse as EmailsV1SendCreateResponse,
-    type EmailsV1SendTemplateTemplateResponse as EmailsV1SendTemplateTemplateResponse,
-    type EmailsV1RenderCreateParams as EmailsV1RenderCreateParams,
-    type EmailsV1SendCreateParams as EmailsV1SendCreateParams,
-    type EmailsV1SendTemplateTemplateParams as EmailsV1SendTemplateTemplateParams,
-  };
-
-  export {
-    Emails as Emails,
-    type EmailEmailsRetrieveResponse as EmailEmailsRetrieveResponse,
-    type EmailRenderCreateResponse as EmailRenderCreateResponse,
-    type EmailSendCreateResponse as EmailSendCreateResponse,
-    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
-    type EmailRenderCreateParams as EmailRenderCreateParams,
-    type EmailSendCreateParams as EmailSendCreateParams,
-    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
-  };
 
   export {
     ProjectV1 as ProjectV1,
@@ -883,6 +861,28 @@ export declare namespace Unlayer {
     type ProjectDomainsUpdateParams as ProjectDomainsUpdateParams,
     type ProjectTemplatesCreateParams as ProjectTemplatesCreateParams,
     type ProjectTemplatesUpdateParams as ProjectTemplatesUpdateParams,
+  };
+
+  export {
+    EmailsV1 as EmailsV1,
+    type EmailsV1EmailsRetrieveResponse as EmailsV1EmailsRetrieveResponse,
+    type EmailsV1RenderCreateResponse as EmailsV1RenderCreateResponse,
+    type EmailsV1SendCreateResponse as EmailsV1SendCreateResponse,
+    type EmailsV1SendTemplateTemplateResponse as EmailsV1SendTemplateTemplateResponse,
+    type EmailsV1RenderCreateParams as EmailsV1RenderCreateParams,
+    type EmailsV1SendCreateParams as EmailsV1SendCreateParams,
+    type EmailsV1SendTemplateTemplateParams as EmailsV1SendTemplateTemplateParams,
+  };
+
+  export {
+    Emails as Emails,
+    type EmailEmailsRetrieveResponse as EmailEmailsRetrieveResponse,
+    type EmailRenderCreateResponse as EmailRenderCreateResponse,
+    type EmailSendCreateResponse as EmailSendCreateResponse,
+    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
+    type EmailRenderCreateParams as EmailRenderCreateParams,
+    type EmailSendCreateParams as EmailSendCreateParams,
+    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
   };
 
   export {
