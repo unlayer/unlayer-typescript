@@ -118,7 +118,7 @@ export interface DocumentGenerateCreateParams {
   /**
    * Proprietary design format JSON
    */
-  design?: unknown;
+  design?: { [key: string]: unknown };
 
   /**
    * Optional filename for the generated PDF

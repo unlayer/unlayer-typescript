@@ -1,51 +1,3 @@
-# DocumentsV1
-
-Types:
-
-- <code><a href="./src/resources/documents-v1.ts">DocumentsV1DocumentsRetrieveResponse</a></code>
-- <code><a href="./src/resources/documents-v1.ts">DocumentsV1GenerateCreateResponse</a></code>
-- <code><a href="./src/resources/documents-v1.ts">DocumentsV1GenerateTemplateTemplateResponse</a></code>
-
-Methods:
-
-- <code title="get /documents/v1/documents/{id}">client.documentsV1.<a href="./src/resources/documents-v1.ts">documentsRetrieve</a>(id) -> DocumentsV1DocumentsRetrieveResponse</code>
-- <code title="post /documents/v1/generate">client.documentsV1.<a href="./src/resources/documents-v1.ts">generateCreate</a>({ ...params }) -> DocumentsV1GenerateCreateResponse</code>
-- <code title="post /documents/v1/generate/template">client.documentsV1.<a href="./src/resources/documents-v1.ts">generateTemplateTemplate</a>({ ...params }) -> DocumentsV1GenerateTemplateTemplateResponse</code>
-
-# Documents
-
-Types:
-
-- <code><a href="./src/resources/documents.ts">DocumentDocumentsRetrieveResponse</a></code>
-- <code><a href="./src/resources/documents.ts">DocumentGenerateCreateResponse</a></code>
-- <code><a href="./src/resources/documents.ts">DocumentGenerateTemplateTemplateResponse</a></code>
-
-Methods:
-
-- <code title="get /documents/v1/documents/{id}">client.documents.<a href="./src/resources/documents.ts">documentsRetrieve</a>(id) -> DocumentDocumentsRetrieveResponse</code>
-- <code title="post /documents/v1/generate">client.documents.<a href="./src/resources/documents.ts">generateCreate</a>({ ...params }) -> DocumentGenerateCreateResponse</code>
-- <code title="post /documents/v1/generate/template">client.documents.<a href="./src/resources/documents.ts">generateTemplateTemplate</a>({ ...params }) -> DocumentGenerateTemplateTemplateResponse</code>
-
-# PagesV1
-
-Types:
-
-- <code><a href="./src/resources/pages-v1.ts">PagesV1RenderCreateResponse</a></code>
-
-Methods:
-
-- <code title="post /pages/v1/render">client.pagesV1.<a href="./src/resources/pages-v1.ts">renderCreate</a>({ ...params }) -> PagesV1RenderCreateResponse</code>
-
-# Pages
-
-Types:
-
-- <code><a href="./src/resources/pages.ts">PageRenderCreateResponse</a></code>
-
-Methods:
-
-- <code title="post /pages/v1/render">client.pages.<a href="./src/resources/pages.ts">renderCreate</a>({ ...params }) -> PageRenderCreateResponse</code>
-
 # ProjectV1
 
 Types:
@@ -151,3 +103,51 @@ Methods:
 - <code title="post /emails/v1/render">client.emails.<a href="./src/resources/emails.ts">renderCreate</a>({ ...params }) -> EmailRenderCreateResponse</code>
 - <code title="post /emails/v1/send">client.emails.<a href="./src/resources/emails.ts">sendCreate</a>({ ...params }) -> EmailSendCreateResponse</code>
 - <code title="post /emails/v1/send/template">client.emails.<a href="./src/resources/emails.ts">sendTemplateTemplate</a>({ ...params }) -> EmailSendTemplateTemplateResponse</code>
+
+# DocumentsV1
+
+Types:
+
+- <code><a href="./src/resources/documents-v1.ts">DocumentsV1DocumentsRetrieveResponse</a></code>
+- <code><a href="./src/resources/documents-v1.ts">DocumentsV1GenerateCreateResponse</a></code>
+- <code><a href="./src/resources/documents-v1.ts">DocumentsV1GenerateTemplateTemplateResponse</a></code>
+
+Methods:
+
+- <code title="get /documents/v1/documents/{id}">client.documentsV1.<a href="./src/resources/documents-v1.ts">documentsRetrieve</a>(id) -> DocumentsV1DocumentsRetrieveResponse</code>
+- <code title="post /documents/v1/generate">client.documentsV1.<a href="./src/resources/documents-v1.ts">generateCreate</a>({ ...params }) -> DocumentsV1GenerateCreateResponse</code>
+- <code title="post /documents/v1/generate/template">client.documentsV1.<a href="./src/resources/documents-v1.ts">generateTemplateTemplate</a>({ ...params }) -> DocumentsV1GenerateTemplateTemplateResponse</code>
+
+# Documents
+
+Types:
+
+- <code><a href="./src/resources/documents.ts">DocumentDocumentsRetrieveResponse</a></code>
+- <code><a href="./src/resources/documents.ts">DocumentGenerateCreateResponse</a></code>
+- <code><a href="./src/resources/documents.ts">DocumentGenerateTemplateTemplateResponse</a></code>
+
+Methods:
+
+- <code title="get /documents/v1/documents/{id}">client.documents.<a href="./src/resources/documents.ts">documentsRetrieve</a>(id) -> DocumentDocumentsRetrieveResponse</code>
+- <code title="post /documents/v1/generate">client.documents.<a href="./src/resources/documents.ts">generateCreate</a>({ ...params }) -> DocumentGenerateCreateResponse</code>
+- <code title="post /documents/v1/generate/template">client.documents.<a href="./src/resources/documents.ts">generateTemplateTemplate</a>({ ...params }) -> DocumentGenerateTemplateTemplateResponse</code>
+
+# PagesV1
+
+Types:
+
+- <code><a href="./src/resources/pages-v1.ts">PagesV1RenderCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /pages/v1/render">client.pagesV1.<a href="./src/resources/pages-v1.ts">renderCreate</a>({ ...params }) -> PagesV1RenderCreateResponse</code>
+
+# Pages
+
+Types:
+
+- <code><a href="./src/resources/pages.ts">PageRenderCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /pages/v1/render">client.pages.<a href="./src/resources/pages.ts">renderCreate</a>({ ...params }) -> PageRenderCreateResponse</code>

@@ -35,7 +35,7 @@ describe('resource documentsV1', () => {
     await expect(
       client.documentsV1.generateCreate(
         {
-          design: {},
+          design: { foo: 'bar' },
           filename: 'filename',
           html: 'html',
           mergeTags: { foo: 'string' },
