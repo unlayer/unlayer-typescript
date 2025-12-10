@@ -24,7 +24,7 @@ export interface PageRenderCreateParams {
   /**
    * Proprietary design format JSON
    */
-  design: unknown;
+  design: { [key: string]: unknown };
 
   /**
    * Optional merge tags for personalization

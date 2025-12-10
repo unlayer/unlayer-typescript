@@ -9,7 +9,7 @@ const client = new Unlayer({
 
 describe('resource pagesV1', () => {
   test('renderCreate: only required params', async () => {
-    const responsePromise = client.pagesV1.renderCreate({ design: {} });
+    const responsePromise = client.pagesV1.renderCreate({ design: { foo: 'bar' } });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,6 +20,9 @@ describe('resource pagesV1', () => {
   });
 
   test('renderCreate: required and optional params', async () => {
-    const response = await client.pagesV1.renderCreate({ design: {}, mergeTags: { foo: 'string' } });
+    const response = await client.pagesV1.renderCreate({
+      design: { foo: 'bar' },
+      mergeTags: { foo: 'string' },
+    });
   });
 });

@@ -102,7 +102,7 @@ export interface EmailRenderCreateParams {
   /**
    * Proprietary design format JSON
    */
-  design: unknown;
+  design: { [key: string]: unknown };
 
   /**
    * Optional merge tags for personalization
@@ -119,7 +119,7 @@ export interface EmailSendCreateParams {
   /**
    * Proprietary design format JSON
    */
-  design?: unknown;
+  design?: { [key: string]: unknown };
 
   /**
    * HTML content to send
