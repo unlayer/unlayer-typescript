@@ -57,7 +57,7 @@ describe('resource emailsV1', () => {
       to: 'test@example.com',
       html: 'html',
       mergeTags: { foo: 'string' },
-      subject: 'Test Email',
+      subject: 'Test',
     });
   });
 
