@@ -25,7 +25,9 @@ The full API of this library can be found in [api.md](api.md).
 ```js
 import Unlayer from '@unlayer/sdk';
 
-const client = new Unlayer();
+const client = new Unlayer({
+  apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
+});
 
 const response = await client.projectV1.currentList();
 
@@ -40,7 +42,9 @@ This library includes TypeScript definitions for all request params and response
 ```ts
 import Unlayer from '@unlayer/sdk';
 
-const client = new Unlayer();
+const client = new Unlayer({
+  apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
+});
 
 const response: Unlayer.ProjectV1CurrentListResponse = await client.projectV1.currentList();
 ```
