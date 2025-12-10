@@ -25,7 +25,28 @@ export class Documents extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.documents.generateCreate();
+   * const response = await client.documents.generateCreate({
+   *   design: {
+   *     counters: { u_row: 1, u_column: 1, u_content_text: 1 },
+   *     body: {
+   *       rows: [
+   *         {
+   *           cells: [1],
+   *           columns: [
+   *             {
+   *               contents: [
+   *                 {
+   *                   type: 'text',
+   *                   values: { text: 'Hello World' },
+   *                 },
+   *               ],
+   *             },
+   *           ],
+   *         },
+   *       ],
+   *     },
+   *   },
+   * });
    * ```
    */
   generateCreate(

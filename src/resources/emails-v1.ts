@@ -24,7 +24,26 @@ export class EmailsV1 extends APIResource {
    * @example
    * ```ts
    * const response = await client.emailsV1.renderCreate({
-   *   design: { counters: 'bar', body: 'bar' },
+   *   design: {
+   *     counters: { u_row: 1, u_column: 1, u_content_text: 1 },
+   *     body: {
+   *       rows: [
+   *         {
+   *           cells: [1],
+   *           columns: [
+   *             {
+   *               contents: [
+   *                 {
+   *                   type: 'text',
+   *                   values: { text: 'Hello World' },
+   *                 },
+   *               ],
+   *             },
+   *           ],
+   *         },
+   *       ],
+   *     },
+   *   },
    * });
    * ```
    */
@@ -41,7 +60,28 @@ export class EmailsV1 extends APIResource {
    * @example
    * ```ts
    * const response = await client.emailsV1.sendCreate({
-   *   to: 'dev@stainless.com',
+   *   to: 'test@example.com',
+   *   design: {
+   *     counters: { u_row: 1, u_column: 1, u_content_text: 1 },
+   *     body: {
+   *       rows: [
+   *         {
+   *           cells: [1],
+   *           columns: [
+   *             {
+   *               contents: [
+   *                 {
+   *                   type: 'text',
+   *                   values: { text: 'Hello World' },
+   *                 },
+   *               ],
+   *             },
+   *           ],
+   *         },
+   *       ],
+   *     },
+   *   },
+   *   subject: 'Test Email',
    * });
    * ```
    */
