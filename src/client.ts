@@ -795,27 +795,73 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
+  projectV1: API.ProjectV1 = new API.ProjectV1(this);
+  project: API.Project = new API.Project(this);
   emailsV1: API.EmailsV1 = new API.EmailsV1(this);
   emails: API.Emails = new API.Emails(this);
   documentsV1: API.DocumentsV1 = new API.DocumentsV1(this);
   documents: API.Documents = new API.Documents(this);
   pagesV1: API.PagesV1 = new API.PagesV1(this);
   pages: API.Pages = new API.Pages(this);
-  projectV1: API.ProjectV1 = new API.ProjectV1(this);
-  project: API.Project = new API.Project(this);
 }
 
+Unlayer.ProjectV1 = ProjectV1;
+Unlayer.Project = Project;
 Unlayer.EmailsV1 = EmailsV1;
 Unlayer.Emails = Emails;
 Unlayer.DocumentsV1 = DocumentsV1;
 Unlayer.Documents = Documents;
 Unlayer.PagesV1 = PagesV1;
 Unlayer.Pages = Pages;
-Unlayer.ProjectV1 = ProjectV1;
-Unlayer.Project = Project;
 
 export declare namespace Unlayer {
   export type RequestOptions = Opts.RequestOptions;
+
+  export {
+    ProjectV1 as ProjectV1,
+    type ProjectV1APIKeysCreateResponse as ProjectV1APIKeysCreateResponse,
+    type ProjectV1APIKeysListResponse as ProjectV1APIKeysListResponse,
+    type ProjectV1APIKeysRetrieveResponse as ProjectV1APIKeysRetrieveResponse,
+    type ProjectV1APIKeysUpdateResponse as ProjectV1APIKeysUpdateResponse,
+    type ProjectV1CurrentListResponse as ProjectV1CurrentListResponse,
+    type ProjectV1DomainsCreateResponse as ProjectV1DomainsCreateResponse,
+    type ProjectV1DomainsListResponse as ProjectV1DomainsListResponse,
+    type ProjectV1DomainsRetrieveResponse as ProjectV1DomainsRetrieveResponse,
+    type ProjectV1DomainsUpdateResponse as ProjectV1DomainsUpdateResponse,
+    type ProjectV1TemplatesCreateResponse as ProjectV1TemplatesCreateResponse,
+    type ProjectV1TemplatesListResponse as ProjectV1TemplatesListResponse,
+    type ProjectV1TemplatesRetrieveResponse as ProjectV1TemplatesRetrieveResponse,
+    type ProjectV1TemplatesUpdateResponse as ProjectV1TemplatesUpdateResponse,
+    type ProjectV1APIKeysCreateParams as ProjectV1APIKeysCreateParams,
+    type ProjectV1APIKeysUpdateParams as ProjectV1APIKeysUpdateParams,
+    type ProjectV1DomainsCreateParams as ProjectV1DomainsCreateParams,
+    type ProjectV1DomainsUpdateParams as ProjectV1DomainsUpdateParams,
+    type ProjectV1TemplatesCreateParams as ProjectV1TemplatesCreateParams,
+    type ProjectV1TemplatesUpdateParams as ProjectV1TemplatesUpdateParams,
+  };
+
+  export {
+    Project as Project,
+    type ProjectAPIKeysCreateResponse as ProjectAPIKeysCreateResponse,
+    type ProjectAPIKeysListResponse as ProjectAPIKeysListResponse,
+    type ProjectAPIKeysRetrieveResponse as ProjectAPIKeysRetrieveResponse,
+    type ProjectAPIKeysUpdateResponse as ProjectAPIKeysUpdateResponse,
+    type ProjectCurrentListResponse as ProjectCurrentListResponse,
+    type ProjectDomainsCreateResponse as ProjectDomainsCreateResponse,
+    type ProjectDomainsListResponse as ProjectDomainsListResponse,
+    type ProjectDomainsRetrieveResponse as ProjectDomainsRetrieveResponse,
+    type ProjectDomainsUpdateResponse as ProjectDomainsUpdateResponse,
+    type ProjectTemplatesCreateResponse as ProjectTemplatesCreateResponse,
+    type ProjectTemplatesListResponse as ProjectTemplatesListResponse,
+    type ProjectTemplatesRetrieveResponse as ProjectTemplatesRetrieveResponse,
+    type ProjectTemplatesUpdateResponse as ProjectTemplatesUpdateResponse,
+    type ProjectAPIKeysCreateParams as ProjectAPIKeysCreateParams,
+    type ProjectAPIKeysUpdateParams as ProjectAPIKeysUpdateParams,
+    type ProjectDomainsCreateParams as ProjectDomainsCreateParams,
+    type ProjectDomainsUpdateParams as ProjectDomainsUpdateParams,
+    type ProjectTemplatesCreateParams as ProjectTemplatesCreateParams,
+    type ProjectTemplatesUpdateParams as ProjectTemplatesUpdateParams,
+  };
 
   export {
     EmailsV1 as EmailsV1,
@@ -867,51 +913,5 @@ export declare namespace Unlayer {
     Pages as Pages,
     type PageRenderCreateResponse as PageRenderCreateResponse,
     type PageRenderCreateParams as PageRenderCreateParams,
-  };
-
-  export {
-    ProjectV1 as ProjectV1,
-    type ProjectV1APIKeysCreateResponse as ProjectV1APIKeysCreateResponse,
-    type ProjectV1APIKeysListResponse as ProjectV1APIKeysListResponse,
-    type ProjectV1APIKeysRetrieveResponse as ProjectV1APIKeysRetrieveResponse,
-    type ProjectV1APIKeysUpdateResponse as ProjectV1APIKeysUpdateResponse,
-    type ProjectV1CurrentListResponse as ProjectV1CurrentListResponse,
-    type ProjectV1DomainsCreateResponse as ProjectV1DomainsCreateResponse,
-    type ProjectV1DomainsListResponse as ProjectV1DomainsListResponse,
-    type ProjectV1DomainsRetrieveResponse as ProjectV1DomainsRetrieveResponse,
-    type ProjectV1DomainsUpdateResponse as ProjectV1DomainsUpdateResponse,
-    type ProjectV1TemplatesCreateResponse as ProjectV1TemplatesCreateResponse,
-    type ProjectV1TemplatesListResponse as ProjectV1TemplatesListResponse,
-    type ProjectV1TemplatesRetrieveResponse as ProjectV1TemplatesRetrieveResponse,
-    type ProjectV1TemplatesUpdateResponse as ProjectV1TemplatesUpdateResponse,
-    type ProjectV1APIKeysCreateParams as ProjectV1APIKeysCreateParams,
-    type ProjectV1APIKeysUpdateParams as ProjectV1APIKeysUpdateParams,
-    type ProjectV1DomainsCreateParams as ProjectV1DomainsCreateParams,
-    type ProjectV1DomainsUpdateParams as ProjectV1DomainsUpdateParams,
-    type ProjectV1TemplatesCreateParams as ProjectV1TemplatesCreateParams,
-    type ProjectV1TemplatesUpdateParams as ProjectV1TemplatesUpdateParams,
-  };
-
-  export {
-    Project as Project,
-    type ProjectAPIKeysCreateResponse as ProjectAPIKeysCreateResponse,
-    type ProjectAPIKeysListResponse as ProjectAPIKeysListResponse,
-    type ProjectAPIKeysRetrieveResponse as ProjectAPIKeysRetrieveResponse,
-    type ProjectAPIKeysUpdateResponse as ProjectAPIKeysUpdateResponse,
-    type ProjectCurrentListResponse as ProjectCurrentListResponse,
-    type ProjectDomainsCreateResponse as ProjectDomainsCreateResponse,
-    type ProjectDomainsListResponse as ProjectDomainsListResponse,
-    type ProjectDomainsRetrieveResponse as ProjectDomainsRetrieveResponse,
-    type ProjectDomainsUpdateResponse as ProjectDomainsUpdateResponse,
-    type ProjectTemplatesCreateResponse as ProjectTemplatesCreateResponse,
-    type ProjectTemplatesListResponse as ProjectTemplatesListResponse,
-    type ProjectTemplatesRetrieveResponse as ProjectTemplatesRetrieveResponse,
-    type ProjectTemplatesUpdateResponse as ProjectTemplatesUpdateResponse,
-    type ProjectAPIKeysCreateParams as ProjectAPIKeysCreateParams,
-    type ProjectAPIKeysUpdateParams as ProjectAPIKeysUpdateParams,
-    type ProjectDomainsCreateParams as ProjectDomainsCreateParams,
-    type ProjectDomainsUpdateParams as ProjectDomainsUpdateParams,
-    type ProjectTemplatesCreateParams as ProjectTemplatesCreateParams,
-    type ProjectTemplatesUpdateParams as ProjectTemplatesUpdateParams,
   };
 }
