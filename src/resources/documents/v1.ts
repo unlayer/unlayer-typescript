@@ -1,22 +1,21 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../core/resource';
-import { APIPromise } from '../core/api-promise';
-import { RequestOptions } from '../internal/request-options';
-import { path } from '../internal/utils/path';
+import { APIResource } from '../../core/resource';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
-export class DocumentsV1 extends APIResource {
+export class V1 extends APIResource {
   /**
    * Retrieve details of a previously generated document.
    *
    * @example
    * ```ts
-   * const response = await client.documentsV1.documentsRetrieve(
-   *   'id',
-   * );
+   * const response =
+   *   await client.documents.v1.documentsRetrieve('id');
    * ```
    */
-  documentsRetrieve(id: string, options?: RequestOptions): APIPromise<DocumentsV1DocumentsRetrieveResponse> {
+  documentsRetrieve(id: string, options?: RequestOptions): APIPromise<V1DocumentsRetrieveResponse> {
     return this._client.get(path`/documents/v1/documents/${id}`, options);
   }
 
@@ -25,7 +24,7 @@ export class DocumentsV1 extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.documentsV1.generateCreate({
+   * const response = await client.documents.v1.generateCreate({
    *   design: {
    *     counters: { u_row: 1, u_column: 1, u_content_text: 1 },
    *     body: {
@@ -50,9 +49,9 @@ export class DocumentsV1 extends APIResource {
    * ```
    */
   generateCreate(
-    body: DocumentsV1GenerateCreateParams,
+    body: V1GenerateCreateParams,
     options?: RequestOptions,
-  ): APIPromise<DocumentsV1GenerateCreateResponse> {
+  ): APIPromise<V1GenerateCreateResponse> {
     return this._client.post('/documents/v1/generate', { body, ...options });
   }
 
@@ -62,20 +61,20 @@ export class DocumentsV1 extends APIResource {
    * @example
    * ```ts
    * const response =
-   *   await client.documentsV1.generateTemplateTemplate({
+   *   await client.documents.v1.generateTemplateTemplate({
    *     templateId: 'templateId',
    *   });
    * ```
    */
   generateTemplateTemplate(
-    body: DocumentsV1GenerateTemplateTemplateParams,
+    body: V1GenerateTemplateTemplateParams,
     options?: RequestOptions,
-  ): APIPromise<DocumentsV1GenerateTemplateTemplateResponse> {
+  ): APIPromise<V1GenerateTemplateTemplateResponse> {
     return this._client.post('/documents/v1/generate/template', { body, ...options });
   }
 }
 
-export interface DocumentsV1DocumentsRetrieveResponse {
+export interface V1DocumentsRetrieveResponse {
   /**
    * Document ID
    */
@@ -117,7 +116,7 @@ export interface DocumentsV1DocumentsRetrieveResponse {
   status?: 'generating' | 'completed' | 'failed';
 }
 
-export interface DocumentsV1GenerateCreateResponse {
+export interface V1GenerateCreateResponse {
   /**
    * Unique document identifier
    */
@@ -136,7 +135,7 @@ export interface DocumentsV1GenerateCreateResponse {
   status?: 'generating' | 'completed' | 'failed';
 }
 
-export interface DocumentsV1GenerateTemplateTemplateResponse {
+export interface V1GenerateTemplateTemplateResponse {
   /**
    * Unique document identifier
    */
@@ -155,7 +154,7 @@ export interface DocumentsV1GenerateTemplateTemplateResponse {
   status?: 'generating' | 'completed' | 'failed';
 }
 
-export interface DocumentsV1GenerateCreateParams {
+export interface V1GenerateCreateParams {
   /**
    * Proprietary design format JSON
    */
@@ -182,7 +181,7 @@ export interface DocumentsV1GenerateCreateParams {
   url?: string;
 }
 
-export interface DocumentsV1GenerateTemplateTemplateParams {
+export interface V1GenerateTemplateTemplateParams {
   /**
    * ID of the template to use for generation
    */
@@ -199,12 +198,12 @@ export interface DocumentsV1GenerateTemplateTemplateParams {
   mergeTags?: { [key: string]: string };
 }
 
-export declare namespace DocumentsV1 {
+export declare namespace V1 {
   export {
-    type DocumentsV1DocumentsRetrieveResponse as DocumentsV1DocumentsRetrieveResponse,
-    type DocumentsV1GenerateCreateResponse as DocumentsV1GenerateCreateResponse,
-    type DocumentsV1GenerateTemplateTemplateResponse as DocumentsV1GenerateTemplateTemplateResponse,
-    type DocumentsV1GenerateCreateParams as DocumentsV1GenerateCreateParams,
-    type DocumentsV1GenerateTemplateTemplateParams as DocumentsV1GenerateTemplateTemplateParams,
+    type V1DocumentsRetrieveResponse as V1DocumentsRetrieveResponse,
+    type V1GenerateCreateResponse as V1GenerateCreateResponse,
+    type V1GenerateTemplateTemplateResponse as V1GenerateTemplateTemplateResponse,
+    type V1GenerateCreateParams as V1GenerateCreateParams,
+    type V1GenerateTemplateTemplateParams as V1GenerateTemplateTemplateParams,
   };
 }

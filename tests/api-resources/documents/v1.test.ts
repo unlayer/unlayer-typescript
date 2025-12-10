@@ -7,9 +7,9 @@ const client = new Unlayer({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource documentsV1', () => {
+describe('resource v1', () => {
   test('documentsRetrieve', async () => {
-    const responsePromise = client.documentsV1.documentsRetrieve('id');
+    const responsePromise = client.documents.v1.documentsRetrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource documentsV1', () => {
   });
 
   test('generateCreate: only required params', async () => {
-    const responsePromise = client.documentsV1.generateCreate({ design: { counters: 'bar', body: 'bar' } });
+    const responsePromise = client.documents.v1.generateCreate({ design: { counters: 'bar', body: 'bar' } });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -31,7 +31,7 @@ describe('resource documentsV1', () => {
   });
 
   test('generateCreate: required and optional params', async () => {
-    const response = await client.documentsV1.generateCreate({
+    const response = await client.documents.v1.generateCreate({
       design: { counters: 'bar', body: 'bar' },
       filename: 'filename',
       html: 'html',
@@ -41,7 +41,7 @@ describe('resource documentsV1', () => {
   });
 
   test('generateTemplateTemplate: only required params', async () => {
-    const responsePromise = client.documentsV1.generateTemplateTemplate({ templateId: 'templateId' });
+    const responsePromise = client.documents.v1.generateTemplateTemplate({ templateId: 'templateId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -52,7 +52,7 @@ describe('resource documentsV1', () => {
   });
 
   test('generateTemplateTemplate: required and optional params', async () => {
-    const response = await client.documentsV1.generateTemplateTemplate({
+    const response = await client.documents.v1.generateTemplateTemplate({
       templateId: 'templateId',
       filename: 'filename',
       mergeTags: { foo: 'string' },

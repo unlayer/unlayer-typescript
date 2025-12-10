@@ -23,15 +23,7 @@ import {
   DocumentGenerateTemplateTemplateParams,
   DocumentGenerateTemplateTemplateResponse,
   Documents,
-} from './resources/documents';
-import {
-  DocumentsV1,
-  DocumentsV1DocumentsRetrieveResponse,
-  DocumentsV1GenerateCreateParams,
-  DocumentsV1GenerateCreateResponse,
-  DocumentsV1GenerateTemplateTemplateParams,
-  DocumentsV1GenerateTemplateTemplateResponse,
-} from './resources/documents-v1';
+} from './resources/documents/documents';
 import {
   EmailEmailsRetrieveResponse,
   EmailRenderCreateParams,
@@ -41,19 +33,8 @@ import {
   EmailSendTemplateTemplateParams,
   EmailSendTemplateTemplateResponse,
   Emails,
-} from './resources/emails';
-import {
-  EmailsV1,
-  EmailsV1EmailsRetrieveResponse,
-  EmailsV1RenderCreateParams,
-  EmailsV1RenderCreateResponse,
-  EmailsV1SendCreateParams,
-  EmailsV1SendCreateResponse,
-  EmailsV1SendTemplateTemplateParams,
-  EmailsV1SendTemplateTemplateResponse,
-} from './resources/emails-v1';
-import { PageRenderCreateParams, PageRenderCreateResponse, Pages } from './resources/pages';
-import { PagesV1, PagesV1RenderCreateParams, PagesV1RenderCreateResponse } from './resources/pages-v1';
+} from './resources/emails/emails';
+import { PageRenderCreateParams, PageRenderCreateResponse, Pages } from './resources/pages/pages';
 import {
   Project,
   ProjectAPIKeysCreateParams,
@@ -75,29 +56,7 @@ import {
   ProjectTemplatesRetrieveResponse,
   ProjectTemplatesUpdateParams,
   ProjectTemplatesUpdateResponse,
-} from './resources/project';
-import {
-  ProjectV1,
-  ProjectV1APIKeysCreateParams,
-  ProjectV1APIKeysCreateResponse,
-  ProjectV1APIKeysListResponse,
-  ProjectV1APIKeysRetrieveResponse,
-  ProjectV1APIKeysUpdateParams,
-  ProjectV1APIKeysUpdateResponse,
-  ProjectV1CurrentListResponse,
-  ProjectV1DomainsCreateParams,
-  ProjectV1DomainsCreateResponse,
-  ProjectV1DomainsListResponse,
-  ProjectV1DomainsRetrieveResponse,
-  ProjectV1DomainsUpdateParams,
-  ProjectV1DomainsUpdateResponse,
-  ProjectV1TemplatesCreateParams,
-  ProjectV1TemplatesCreateResponse,
-  ProjectV1TemplatesListResponse,
-  ProjectV1TemplatesRetrieveResponse,
-  ProjectV1TemplatesUpdateParams,
-  ProjectV1TemplatesUpdateResponse,
-} from './resources/project-v1';
+} from './resources/project/project';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -795,72 +754,19 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
-  emailsV1: API.EmailsV1 = new API.EmailsV1(this);
-  emails: API.Emails = new API.Emails(this);
-  projectV1: API.ProjectV1 = new API.ProjectV1(this);
   project: API.Project = new API.Project(this);
-  documentsV1: API.DocumentsV1 = new API.DocumentsV1(this);
+  emails: API.Emails = new API.Emails(this);
   documents: API.Documents = new API.Documents(this);
-  pagesV1: API.PagesV1 = new API.PagesV1(this);
   pages: API.Pages = new API.Pages(this);
 }
 
-Unlayer.EmailsV1 = EmailsV1;
-Unlayer.Emails = Emails;
-Unlayer.ProjectV1 = ProjectV1;
 Unlayer.Project = Project;
-Unlayer.DocumentsV1 = DocumentsV1;
+Unlayer.Emails = Emails;
 Unlayer.Documents = Documents;
-Unlayer.PagesV1 = PagesV1;
 Unlayer.Pages = Pages;
 
 export declare namespace Unlayer {
   export type RequestOptions = Opts.RequestOptions;
-
-  export {
-    EmailsV1 as EmailsV1,
-    type EmailsV1EmailsRetrieveResponse as EmailsV1EmailsRetrieveResponse,
-    type EmailsV1RenderCreateResponse as EmailsV1RenderCreateResponse,
-    type EmailsV1SendCreateResponse as EmailsV1SendCreateResponse,
-    type EmailsV1SendTemplateTemplateResponse as EmailsV1SendTemplateTemplateResponse,
-    type EmailsV1RenderCreateParams as EmailsV1RenderCreateParams,
-    type EmailsV1SendCreateParams as EmailsV1SendCreateParams,
-    type EmailsV1SendTemplateTemplateParams as EmailsV1SendTemplateTemplateParams,
-  };
-
-  export {
-    Emails as Emails,
-    type EmailEmailsRetrieveResponse as EmailEmailsRetrieveResponse,
-    type EmailRenderCreateResponse as EmailRenderCreateResponse,
-    type EmailSendCreateResponse as EmailSendCreateResponse,
-    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
-    type EmailRenderCreateParams as EmailRenderCreateParams,
-    type EmailSendCreateParams as EmailSendCreateParams,
-    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
-  };
-
-  export {
-    ProjectV1 as ProjectV1,
-    type ProjectV1APIKeysCreateResponse as ProjectV1APIKeysCreateResponse,
-    type ProjectV1APIKeysListResponse as ProjectV1APIKeysListResponse,
-    type ProjectV1APIKeysRetrieveResponse as ProjectV1APIKeysRetrieveResponse,
-    type ProjectV1APIKeysUpdateResponse as ProjectV1APIKeysUpdateResponse,
-    type ProjectV1CurrentListResponse as ProjectV1CurrentListResponse,
-    type ProjectV1DomainsCreateResponse as ProjectV1DomainsCreateResponse,
-    type ProjectV1DomainsListResponse as ProjectV1DomainsListResponse,
-    type ProjectV1DomainsRetrieveResponse as ProjectV1DomainsRetrieveResponse,
-    type ProjectV1DomainsUpdateResponse as ProjectV1DomainsUpdateResponse,
-    type ProjectV1TemplatesCreateResponse as ProjectV1TemplatesCreateResponse,
-    type ProjectV1TemplatesListResponse as ProjectV1TemplatesListResponse,
-    type ProjectV1TemplatesRetrieveResponse as ProjectV1TemplatesRetrieveResponse,
-    type ProjectV1TemplatesUpdateResponse as ProjectV1TemplatesUpdateResponse,
-    type ProjectV1APIKeysCreateParams as ProjectV1APIKeysCreateParams,
-    type ProjectV1APIKeysUpdateParams as ProjectV1APIKeysUpdateParams,
-    type ProjectV1DomainsCreateParams as ProjectV1DomainsCreateParams,
-    type ProjectV1DomainsUpdateParams as ProjectV1DomainsUpdateParams,
-    type ProjectV1TemplatesCreateParams as ProjectV1TemplatesCreateParams,
-    type ProjectV1TemplatesUpdateParams as ProjectV1TemplatesUpdateParams,
-  };
 
   export {
     Project as Project,
@@ -886,12 +792,14 @@ export declare namespace Unlayer {
   };
 
   export {
-    DocumentsV1 as DocumentsV1,
-    type DocumentsV1DocumentsRetrieveResponse as DocumentsV1DocumentsRetrieveResponse,
-    type DocumentsV1GenerateCreateResponse as DocumentsV1GenerateCreateResponse,
-    type DocumentsV1GenerateTemplateTemplateResponse as DocumentsV1GenerateTemplateTemplateResponse,
-    type DocumentsV1GenerateCreateParams as DocumentsV1GenerateCreateParams,
-    type DocumentsV1GenerateTemplateTemplateParams as DocumentsV1GenerateTemplateTemplateParams,
+    Emails as Emails,
+    type EmailEmailsRetrieveResponse as EmailEmailsRetrieveResponse,
+    type EmailRenderCreateResponse as EmailRenderCreateResponse,
+    type EmailSendCreateResponse as EmailSendCreateResponse,
+    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
+    type EmailRenderCreateParams as EmailRenderCreateParams,
+    type EmailSendCreateParams as EmailSendCreateParams,
+    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
   };
 
   export {
@@ -901,12 +809,6 @@ export declare namespace Unlayer {
     type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
     type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
     type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
-  };
-
-  export {
-    PagesV1 as PagesV1,
-    type PagesV1RenderCreateResponse as PagesV1RenderCreateResponse,
-    type PagesV1RenderCreateParams as PagesV1RenderCreateParams,
   };
 
   export {

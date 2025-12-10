@@ -1,20 +1,22 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../core/resource';
-import { APIPromise } from '../core/api-promise';
-import { RequestOptions } from '../internal/request-options';
-import { path } from '../internal/utils/path';
+import { APIResource } from '../../core/resource';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
-export class EmailsV1 extends APIResource {
+export class V1 extends APIResource {
   /**
    * Retrieve details of a previously sent email.
    *
    * @example
    * ```ts
-   * const response = await client.emailsV1.emailsRetrieve('id');
+   * const response = await client.emails.v1.emailsRetrieve(
+   *   'id',
+   * );
    * ```
    */
-  emailsRetrieve(id: string, options?: RequestOptions): APIPromise<EmailsV1EmailsRetrieveResponse> {
+  emailsRetrieve(id: string, options?: RequestOptions): APIPromise<V1EmailsRetrieveResponse> {
     return this._client.get(path`/emails/v1/emails/${id}`, options);
   }
 
@@ -23,7 +25,7 @@ export class EmailsV1 extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.emailsV1.renderCreate({
+   * const response = await client.emails.v1.renderCreate({
    *   design: {
    *     counters: { u_row: 1, u_column: 1, u_content_text: 1 },
    *     body: {
@@ -47,10 +49,7 @@ export class EmailsV1 extends APIResource {
    * });
    * ```
    */
-  renderCreate(
-    body: EmailsV1RenderCreateParams,
-    options?: RequestOptions,
-  ): APIPromise<EmailsV1RenderCreateResponse> {
+  renderCreate(body: V1RenderCreateParams, options?: RequestOptions): APIPromise<V1RenderCreateResponse> {
     return this._client.post('/emails/v1/render', { body, ...options });
   }
 
@@ -59,7 +58,7 @@ export class EmailsV1 extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.emailsV1.sendCreate({
+   * const response = await client.emails.v1.sendCreate({
    *   design: {
    *     counters: { u_row: 1, u_column: 1, u_content_text: 1 },
    *     body: {
@@ -85,10 +84,7 @@ export class EmailsV1 extends APIResource {
    * });
    * ```
    */
-  sendCreate(
-    body: EmailsV1SendCreateParams,
-    options?: RequestOptions,
-  ): APIPromise<EmailsV1SendCreateResponse> {
+  sendCreate(body: V1SendCreateParams, options?: RequestOptions): APIPromise<V1SendCreateResponse> {
     return this._client.post('/emails/v1/send', { body, ...options });
   }
 
@@ -97,20 +93,22 @@ export class EmailsV1 extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.emailsV1.sendTemplateTemplate(
-   *   { templateId: 'templateId', to: 'dev@stainless.com' },
-   * );
+   * const response =
+   *   await client.emails.v1.sendTemplateTemplate({
+   *     templateId: 'templateId',
+   *     to: 'dev@stainless.com',
+   *   });
    * ```
    */
   sendTemplateTemplate(
-    body: EmailsV1SendTemplateTemplateParams,
+    body: V1SendTemplateTemplateParams,
     options?: RequestOptions,
-  ): APIPromise<EmailsV1SendTemplateTemplateResponse> {
+  ): APIPromise<V1SendTemplateTemplateResponse> {
     return this._client.post('/emails/v1/send/template', { body, ...options });
   }
 }
 
-export interface EmailsV1EmailsRetrieveResponse {
+export interface V1EmailsRetrieveResponse {
   /**
    * Email message ID
    */
@@ -142,14 +140,14 @@ export interface EmailsV1EmailsRetrieveResponse {
   to?: string;
 }
 
-export interface EmailsV1RenderCreateResponse {
+export interface V1RenderCreateResponse {
   /**
    * Rendered HTML content
    */
   html?: string;
 }
 
-export interface EmailsV1SendCreateResponse {
+export interface V1SendCreateResponse {
   /**
    * Unique message identifier
    */
@@ -158,7 +156,7 @@ export interface EmailsV1SendCreateResponse {
   status?: 'sent' | 'queued' | 'failed';
 }
 
-export interface EmailsV1SendTemplateTemplateResponse {
+export interface V1SendTemplateTemplateResponse {
   /**
    * Unique message identifier
    */
@@ -167,7 +165,7 @@ export interface EmailsV1SendTemplateTemplateResponse {
   status?: 'sent' | 'queued' | 'failed';
 }
 
-export interface EmailsV1RenderCreateParams {
+export interface V1RenderCreateParams {
   /**
    * Proprietary design format JSON
    */
@@ -179,7 +177,7 @@ export interface EmailsV1RenderCreateParams {
   mergeTags?: { [key: string]: string };
 }
 
-export interface EmailsV1SendCreateParams {
+export interface V1SendCreateParams {
   /**
    * Proprietary design format JSON
    */
@@ -206,7 +204,7 @@ export interface EmailsV1SendCreateParams {
   subject?: string;
 }
 
-export interface EmailsV1SendTemplateTemplateParams {
+export interface V1SendTemplateTemplateParams {
   /**
    * ID of the template to use
    */
@@ -228,14 +226,14 @@ export interface EmailsV1SendTemplateTemplateParams {
   subject?: string;
 }
 
-export declare namespace EmailsV1 {
+export declare namespace V1 {
   export {
-    type EmailsV1EmailsRetrieveResponse as EmailsV1EmailsRetrieveResponse,
-    type EmailsV1RenderCreateResponse as EmailsV1RenderCreateResponse,
-    type EmailsV1SendCreateResponse as EmailsV1SendCreateResponse,
-    type EmailsV1SendTemplateTemplateResponse as EmailsV1SendTemplateTemplateResponse,
-    type EmailsV1RenderCreateParams as EmailsV1RenderCreateParams,
-    type EmailsV1SendCreateParams as EmailsV1SendCreateParams,
-    type EmailsV1SendTemplateTemplateParams as EmailsV1SendTemplateTemplateParams,
+    type V1EmailsRetrieveResponse as V1EmailsRetrieveResponse,
+    type V1RenderCreateResponse as V1RenderCreateResponse,
+    type V1SendCreateResponse as V1SendCreateResponse,
+    type V1SendTemplateTemplateResponse as V1SendTemplateTemplateResponse,
+    type V1RenderCreateParams as V1RenderCreateParams,
+    type V1SendCreateParams as V1SendCreateParams,
+    type V1SendTemplateTemplateParams as V1SendTemplateTemplateParams,
   };
 }
