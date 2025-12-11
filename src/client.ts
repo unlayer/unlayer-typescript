@@ -23,7 +23,7 @@ import {
   DocumentGenerateTemplateTemplateParams,
   DocumentGenerateTemplateTemplateResponse,
   Documents,
-} from './resources/documents/documents';
+} from './resources/documents';
 import {
   EmailRenderCreateParams,
   EmailRenderCreateResponse,
@@ -33,8 +33,8 @@ import {
   EmailSendTemplateTemplateParams,
   EmailSendTemplateTemplateResponse,
   Emails,
-} from './resources/emails/emails';
-import { PageRenderCreateParams, PageRenderCreateResponse, Pages } from './resources/pages/pages';
+} from './resources/emails';
+import { PageRenderCreateParams, PageRenderCreateResponse, Pages } from './resources/pages';
 import {
   Project,
   ProjectAPIKeysCreateParams,
@@ -56,7 +56,7 @@ import {
   ProjectTemplatesRetrieveResponse,
   ProjectTemplatesUpdateParams,
   ProjectTemplatesUpdateResponse,
-} from './resources/project/project';
+} from './resources/project';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -755,15 +755,15 @@ export class Unlayer {
   static toFile = Uploads.toFile;
 
   project: API.Project = new API.Project(this);
-  emails: API.Emails = new API.Emails(this);
   documents: API.Documents = new API.Documents(this);
   pages: API.Pages = new API.Pages(this);
+  emails: API.Emails = new API.Emails(this);
 }
 
 Unlayer.Project = Project;
-Unlayer.Emails = Emails;
 Unlayer.Documents = Documents;
 Unlayer.Pages = Pages;
+Unlayer.Emails = Emails;
 
 export declare namespace Unlayer {
   export type RequestOptions = Opts.RequestOptions;
@@ -792,17 +792,6 @@ export declare namespace Unlayer {
   };
 
   export {
-    Emails as Emails,
-    type EmailRetrieveResponse as EmailRetrieveResponse,
-    type EmailRenderCreateResponse as EmailRenderCreateResponse,
-    type EmailSendCreateResponse as EmailSendCreateResponse,
-    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
-    type EmailRenderCreateParams as EmailRenderCreateParams,
-    type EmailSendCreateParams as EmailSendCreateParams,
-    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
-  };
-
-  export {
     Documents as Documents,
     type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
     type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
@@ -815,5 +804,16 @@ export declare namespace Unlayer {
     Pages as Pages,
     type PageRenderCreateResponse as PageRenderCreateResponse,
     type PageRenderCreateParams as PageRenderCreateParams,
+  };
+
+  export {
+    Emails as Emails,
+    type EmailRetrieveResponse as EmailRetrieveResponse,
+    type EmailRenderCreateResponse as EmailRenderCreateResponse,
+    type EmailSendCreateResponse as EmailSendCreateResponse,
+    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
+    type EmailRenderCreateParams as EmailRenderCreateParams,
+    type EmailSendCreateParams as EmailSendCreateParams,
+    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
   };
 }
