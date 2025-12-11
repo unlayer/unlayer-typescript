@@ -7,7 +7,7 @@ export {
   type DocumentGenerateTemplateTemplateResponse,
   type DocumentGenerateCreateParams,
   type DocumentGenerateTemplateTemplateParams,
-} from './documents/documents';
+} from './documents';
 export {
   Emails,
   type EmailRetrieveResponse,
@@ -17,8 +17,8 @@ export {
   type EmailRenderCreateParams,
   type EmailSendCreateParams,
   type EmailSendTemplateTemplateParams,
-} from './emails/emails';
-export { Pages, type PageRenderCreateResponse, type PageRenderCreateParams } from './pages/pages';
+} from './emails';
+export { Pages, type PageRenderCreateResponse, type PageRenderCreateParams } from './pages';
 export {
   Project,
   type ProjectAPIKeysCreateResponse,
@@ -40,4 +40,4 @@ export {
   type ProjectDomainsUpdateParams,
   type ProjectTemplatesCreateParams,
   type ProjectTemplatesUpdateParams,
-} from './project/project';
+} from './project';
