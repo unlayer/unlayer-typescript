@@ -27,6 +27,7 @@ import Unlayer from '@unlayer/sdk';
 
 const client = new Unlayer({
   apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
+  environment: 'qa', // or 'production' | 'dev'; defaults to 'production'
 });
 
 const response = await client.project.currentList();
@@ -44,6 +45,7 @@ import Unlayer from '@unlayer/sdk';
 
 const client = new Unlayer({
   apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
+  environment: 'qa', // or 'production' | 'dev'; defaults to 'production'
 });
 
 const response: Unlayer.ProjectCurrentListResponse = await client.project.currentList();
