@@ -780,34 +780,19 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
-  pages: API.Pages = new API.Pages(this);
-  documents: API.Documents = new API.Documents(this);
   emails: API.Emails = new API.Emails(this);
   project: API.Project = new API.Project(this);
+  documents: API.Documents = new API.Documents(this);
+  pages: API.Pages = new API.Pages(this);
 }
 
-Unlayer.Pages = Pages;
-Unlayer.Documents = Documents;
 Unlayer.Emails = Emails;
 Unlayer.Project = Project;
+Unlayer.Documents = Documents;
+Unlayer.Pages = Pages;
 
 export declare namespace Unlayer {
   export type RequestOptions = Opts.RequestOptions;
-
-  export {
-    Pages as Pages,
-    type PageRenderCreateResponse as PageRenderCreateResponse,
-    type PageRenderCreateParams as PageRenderCreateParams,
-  };
-
-  export {
-    Documents as Documents,
-    type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
-    type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
-    type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
-    type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
-    type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
-  };
 
   export {
     Emails as Emails,
@@ -841,5 +826,20 @@ export declare namespace Unlayer {
     type ProjectDomainsUpdateParams as ProjectDomainsUpdateParams,
     type ProjectTemplatesCreateParams as ProjectTemplatesCreateParams,
     type ProjectTemplatesUpdateParams as ProjectTemplatesUpdateParams,
+  };
+
+  export {
+    Documents as Documents,
+    type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
+    type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
+    type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
+    type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
+    type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
+  };
+
+  export {
+    Pages as Pages,
+    type PageRenderCreateResponse as PageRenderCreateResponse,
+    type PageRenderCreateParams as PageRenderCreateParams,
   };
 }
