@@ -12,7 +12,11 @@ export class Pages extends APIResource {
    * ```ts
    * const response = await client.pages.renderCreate({
    *   design: {
-   *     counters: { u_row: 1, u_column: 1, u_content_text: 1 },
+   *     counters: {
+   *       u_row: 1,
+   *       u_column: 1,
+   *       u_content_text: 1,
+   *     },
    *     body: {
    *       rows: [
    *         {
