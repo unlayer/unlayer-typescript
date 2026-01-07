@@ -72,7 +72,11 @@ describe('resource project', () => {
     await expect(
       client.project.apiKeysUpdate(
         'id',
-        { active: true, domains: ['string'], name: 'name' },
+        {
+          active: true,
+          domains: ['string'],
+          name: 'name',
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Unlayer.NotFoundError);
@@ -167,7 +171,11 @@ describe('resource project', () => {
   });
 
   test('templatesCreate: required and optional params', async () => {
-    const response = await client.project.templatesCreate({ name: 'name', body: 'body', subject: 'subject' });
+    const response = await client.project.templatesCreate({
+      name: 'name',
+      body: 'body',
+      subject: 'subject',
+    });
   });
 
   test('templatesDelete', async () => {
@@ -219,7 +227,11 @@ describe('resource project', () => {
     await expect(
       client.project.templatesUpdate(
         'id',
-        { body: 'body', name: 'name', subject: 'subject' },
+        {
+          body: 'body',
+          name: 'name',
+          subject: 'subject',
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Unlayer.NotFoundError);

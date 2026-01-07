@@ -25,7 +25,11 @@ export class Emails extends APIResource {
    * ```ts
    * const response = await client.emails.renderCreate({
    *   design: {
-   *     counters: { u_row: 1, u_column: 1, u_content_text: 1 },
+   *     counters: {
+   *       u_row: 1,
+   *       u_column: 1,
+   *       u_content_text: 1,
+   *     },
    *     body: {
    *       rows: [
    *         {
@@ -61,7 +65,11 @@ export class Emails extends APIResource {
    * ```ts
    * const response = await client.emails.sendCreate({
    *   design: {
-   *     counters: { u_row: 1, u_column: 1, u_content_text: 1 },
+   *     counters: {
+   *       u_row: 1,
+   *       u_column: 1,
+   *       u_content_text: 1,
+   *     },
    *     body: {
    *       rows: [
    *         {
