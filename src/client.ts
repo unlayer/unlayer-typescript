@@ -780,19 +780,36 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
-  project: API.Project = new API.Project(this);
-  emails: API.Emails = new API.Emails(this);
   pages: API.Pages = new API.Pages(this);
+  emails: API.Emails = new API.Emails(this);
+  project: API.Project = new API.Project(this);
   documents: API.Documents = new API.Documents(this);
 }
 
-Unlayer.Project = Project;
-Unlayer.Emails = Emails;
 Unlayer.Pages = Pages;
+Unlayer.Emails = Emails;
+Unlayer.Project = Project;
 Unlayer.Documents = Documents;
 
 export declare namespace Unlayer {
   export type RequestOptions = Opts.RequestOptions;
+
+  export {
+    Pages as Pages,
+    type PageRenderCreateResponse as PageRenderCreateResponse,
+    type PageRenderCreateParams as PageRenderCreateParams,
+  };
+
+  export {
+    Emails as Emails,
+    type EmailRetrieveResponse as EmailRetrieveResponse,
+    type EmailRenderCreateResponse as EmailRenderCreateResponse,
+    type EmailSendCreateResponse as EmailSendCreateResponse,
+    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
+    type EmailRenderCreateParams as EmailRenderCreateParams,
+    type EmailSendCreateParams as EmailSendCreateParams,
+    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
+  };
 
   export {
     Project as Project,
@@ -815,23 +832,6 @@ export declare namespace Unlayer {
     type ProjectDomainsUpdateParams as ProjectDomainsUpdateParams,
     type ProjectTemplatesCreateParams as ProjectTemplatesCreateParams,
     type ProjectTemplatesUpdateParams as ProjectTemplatesUpdateParams,
-  };
-
-  export {
-    Emails as Emails,
-    type EmailRetrieveResponse as EmailRetrieveResponse,
-    type EmailRenderCreateResponse as EmailRenderCreateResponse,
-    type EmailSendCreateResponse as EmailSendCreateResponse,
-    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
-    type EmailRenderCreateParams as EmailRenderCreateParams,
-    type EmailSendCreateParams as EmailSendCreateParams,
-    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
-  };
-
-  export {
-    Pages as Pages,
-    type PageRenderCreateResponse as PageRenderCreateResponse,
-    type PageRenderCreateParams as PageRenderCreateParams,
   };
 
   export {
