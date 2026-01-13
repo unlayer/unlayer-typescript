@@ -16,8 +16,12 @@ export class Documents extends APIResource {
    * );
    * ```
    */
-  documentsRetrieve(id: string, options?: RequestOptions): APIPromise<DocumentDocumentsRetrieveResponse> {
-    return this._client.get(path`/documents/v1/documents/${id}`, options);
+  documentsRetrieve(
+    id: string,
+    query: DocumentDocumentsRetrieveParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<DocumentDocumentsRetrieveResponse> {
+    return this._client.get(path`/documents/v1/documents/${id}`, { query, ...options });
   }
 
   /**
@@ -54,10 +58,11 @@ export class Documents extends APIResource {
    * ```
    */
   generateCreate(
-    body: DocumentGenerateCreateParams,
+    params: DocumentGenerateCreateParams,
     options?: RequestOptions,
   ): APIPromise<DocumentGenerateCreateResponse> {
-    return this._client.post('/documents/v1/generate', { body, ...options });
+    const { projectId, ...body } = params;
+    return this._client.post('/documents/v1/generate', { query: { projectId }, body, ...options });
   }
 
   /**
@@ -72,10 +77,11 @@ export class Documents extends APIResource {
    * ```
    */
   generateTemplateTemplate(
-    body: DocumentGenerateTemplateTemplateParams,
+    params: DocumentGenerateTemplateTemplateParams,
     options?: RequestOptions,
   ): APIPromise<DocumentGenerateTemplateTemplateResponse> {
-    return this._client.post('/documents/v1/generate/template', { body, ...options });
+    const { projectId, ...body } = params;
+    return this._client.post('/documents/v1/generate/template', { query: { projectId }, body, ...options });
   }
 }
 
@@ -159,46 +165,63 @@ export interface DocumentGenerateTemplateTemplateResponse {
   status?: 'generating' | 'completed' | 'failed';
 }
 
+export interface DocumentDocumentsRetrieveParams {
+  /**
+   * The project ID (required for PAT auth, not needed for API Key auth)
+   */
+  projectId?: string;
+}
+
 export interface DocumentGenerateCreateParams {
   /**
-   * Proprietary design format JSON
+   * Body param: Proprietary design format JSON
    */
   design: { [key: string]: unknown };
 
   /**
-   * Optional filename for the generated PDF
+   * Query param: The project ID (required for PAT auth, not needed for API Key auth)
+   */
+  projectId?: string;
+
+  /**
+   * Body param: Optional filename for the generated PDF
    */
   filename?: string;
 
   /**
-   * HTML content to convert to PDF
+   * Body param: HTML content to convert to PDF
    */
   html?: string;
 
   /**
-   * Optional merge tags for personalization
+   * Body param: Optional merge tags for personalization
    */
   mergeTags?: { [key: string]: string };
 
   /**
-   * URL to convert to PDF
+   * Body param: URL to convert to PDF
    */
   url?: string;
 }
 
 export interface DocumentGenerateTemplateTemplateParams {
   /**
-   * ID of the template to use for generation
+   * Body param: ID of the template to use for generation
    */
   templateId: string;
 
   /**
-   * Optional filename for the generated PDF
+   * Query param: The project ID (required for PAT auth, not needed for API Key auth)
+   */
+  projectId?: string;
+
+  /**
+   * Body param: Optional filename for the generated PDF
    */
   filename?: string;
 
   /**
-   * Optional merge tags for personalization
+   * Body param: Optional merge tags for personalization
    */
   mergeTags?: { [key: string]: string };
 }
@@ -208,6 +231,7 @@ export declare namespace Documents {
     type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
     type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
     type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
+    type DocumentDocumentsRetrieveParams as DocumentDocumentsRetrieveParams,
     type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
     type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
   };

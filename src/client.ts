@@ -17,6 +17,7 @@ import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
 import {
+  DocumentDocumentsRetrieveParams,
   DocumentDocumentsRetrieveResponse,
   DocumentGenerateCreateParams,
   DocumentGenerateCreateResponse,
@@ -27,6 +28,7 @@ import {
 import {
   EmailRenderCreateParams,
   EmailRenderCreateResponse,
+  EmailRetrieveParams,
   EmailRetrieveResponse,
   EmailSendCreateParams,
   EmailSendCreateResponse,
@@ -39,23 +41,31 @@ import {
   Project,
   ProjectAPIKeysCreateParams,
   ProjectAPIKeysCreateResponse,
+  ProjectAPIKeysListParams,
   ProjectAPIKeysListResponse,
   ProjectAPIKeysRetrieveResponse,
   ProjectAPIKeysUpdateParams,
   ProjectAPIKeysUpdateResponse,
+  ProjectCurrentListParams,
   ProjectCurrentListResponse,
   ProjectDomainsCreateParams,
   ProjectDomainsCreateResponse,
+  ProjectDomainsListParams,
   ProjectDomainsListResponse,
   ProjectDomainsRetrieveResponse,
   ProjectDomainsUpdateParams,
   ProjectDomainsUpdateResponse,
   ProjectTemplatesCreateParams,
   ProjectTemplatesCreateResponse,
+  ProjectTemplatesListParams,
   ProjectTemplatesListResponse,
   ProjectTemplatesRetrieveResponse,
   ProjectTemplatesUpdateParams,
   ProjectTemplatesUpdateResponse,
+  ProjectTokensDeleteResponse,
+  ProjectTokensListResponse,
+  ProjectWorkspacesListResponse,
+  ProjectWorkspacesRetrieveResponse,
 } from './resources/project';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
@@ -780,19 +790,31 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
-  project: API.Project = new API.Project(this);
   emails: API.Emails = new API.Emails(this);
-  documents: API.Documents = new API.Documents(this);
+  project: API.Project = new API.Project(this);
   pages: API.Pages = new API.Pages(this);
+  documents: API.Documents = new API.Documents(this);
 }
 
-Unlayer.Project = Project;
 Unlayer.Emails = Emails;
-Unlayer.Documents = Documents;
+Unlayer.Project = Project;
 Unlayer.Pages = Pages;
+Unlayer.Documents = Documents;
 
 export declare namespace Unlayer {
   export type RequestOptions = Opts.RequestOptions;
+
+  export {
+    Emails as Emails,
+    type EmailRetrieveResponse as EmailRetrieveResponse,
+    type EmailRenderCreateResponse as EmailRenderCreateResponse,
+    type EmailSendCreateResponse as EmailSendCreateResponse,
+    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
+    type EmailRetrieveParams as EmailRetrieveParams,
+    type EmailRenderCreateParams as EmailRenderCreateParams,
+    type EmailSendCreateParams as EmailSendCreateParams,
+    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
+  };
 
   export {
     Project as Project,
@@ -809,23 +831,26 @@ export declare namespace Unlayer {
     type ProjectTemplatesListResponse as ProjectTemplatesListResponse,
     type ProjectTemplatesRetrieveResponse as ProjectTemplatesRetrieveResponse,
     type ProjectTemplatesUpdateResponse as ProjectTemplatesUpdateResponse,
+    type ProjectTokensDeleteResponse as ProjectTokensDeleteResponse,
+    type ProjectTokensListResponse as ProjectTokensListResponse,
+    type ProjectWorkspacesListResponse as ProjectWorkspacesListResponse,
+    type ProjectWorkspacesRetrieveResponse as ProjectWorkspacesRetrieveResponse,
     type ProjectAPIKeysCreateParams as ProjectAPIKeysCreateParams,
+    type ProjectAPIKeysListParams as ProjectAPIKeysListParams,
     type ProjectAPIKeysUpdateParams as ProjectAPIKeysUpdateParams,
+    type ProjectCurrentListParams as ProjectCurrentListParams,
     type ProjectDomainsCreateParams as ProjectDomainsCreateParams,
+    type ProjectDomainsListParams as ProjectDomainsListParams,
     type ProjectDomainsUpdateParams as ProjectDomainsUpdateParams,
     type ProjectTemplatesCreateParams as ProjectTemplatesCreateParams,
+    type ProjectTemplatesListParams as ProjectTemplatesListParams,
     type ProjectTemplatesUpdateParams as ProjectTemplatesUpdateParams,
   };
 
   export {
-    Emails as Emails,
-    type EmailRetrieveResponse as EmailRetrieveResponse,
-    type EmailRenderCreateResponse as EmailRenderCreateResponse,
-    type EmailSendCreateResponse as EmailSendCreateResponse,
-    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
-    type EmailRenderCreateParams as EmailRenderCreateParams,
-    type EmailSendCreateParams as EmailSendCreateParams,
-    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
+    Pages as Pages,
+    type PageRenderCreateResponse as PageRenderCreateResponse,
+    type PageRenderCreateParams as PageRenderCreateParams,
   };
 
   export {
@@ -833,13 +858,8 @@ export declare namespace Unlayer {
     type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
     type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
     type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
+    type DocumentDocumentsRetrieveParams as DocumentDocumentsRetrieveParams,
     type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
     type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
-  };
-
-  export {
-    Pages as Pages,
-    type PageRenderCreateResponse as PageRenderCreateResponse,
-    type PageRenderCreateParams as PageRenderCreateParams,
   };
 }

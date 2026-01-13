@@ -14,8 +14,12 @@ export class Emails extends APIResource {
    * const email = await client.emails.retrieve('id');
    * ```
    */
-  retrieve(id: string, options?: RequestOptions): APIPromise<EmailRetrieveResponse> {
-    return this._client.get(path`/emails/v1/emails/${id}`, options);
+  retrieve(
+    id: string,
+    query: EmailRetrieveParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<EmailRetrieveResponse> {
+    return this._client.get(path`/emails/v1/emails/${id}`, { query, ...options });
   }
 
   /**
@@ -52,10 +56,11 @@ export class Emails extends APIResource {
    * ```
    */
   renderCreate(
-    body: EmailRenderCreateParams,
+    params: EmailRenderCreateParams,
     options?: RequestOptions,
   ): APIPromise<EmailRenderCreateResponse> {
-    return this._client.post('/emails/v1/render', { body, ...options });
+    const { projectId, ...body } = params;
+    return this._client.post('/emails/v1/render', { query: { projectId }, body, ...options });
   }
 
   /**
@@ -93,8 +98,9 @@ export class Emails extends APIResource {
    * });
    * ```
    */
-  sendCreate(body: EmailSendCreateParams, options?: RequestOptions): APIPromise<EmailSendCreateResponse> {
-    return this._client.post('/emails/v1/send', { body, ...options });
+  sendCreate(params: EmailSendCreateParams, options?: RequestOptions): APIPromise<EmailSendCreateResponse> {
+    const { projectId, ...body } = params;
+    return this._client.post('/emails/v1/send', { query: { projectId }, body, ...options });
   }
 
   /**
@@ -109,10 +115,11 @@ export class Emails extends APIResource {
    * ```
    */
   sendTemplateTemplate(
-    body: EmailSendTemplateTemplateParams,
+    params: EmailSendTemplateTemplateParams,
     options?: RequestOptions,
   ): APIPromise<EmailSendTemplateTemplateResponse> {
-    return this._client.post('/emails/v1/send/template', { body, ...options });
+    const { projectId, ...body } = params;
+    return this._client.post('/emails/v1/send/template', { query: { projectId }, body, ...options });
   }
 }
 
@@ -173,63 +180,85 @@ export interface EmailSendTemplateTemplateResponse {
   status?: 'sent' | 'queued' | 'failed';
 }
 
+export interface EmailRetrieveParams {
+  /**
+   * The project ID (required for PAT auth, not needed for API Key auth)
+   */
+  projectId?: string;
+}
+
 export interface EmailRenderCreateParams {
   /**
-   * Proprietary design format JSON
+   * Body param: Proprietary design format JSON
    */
   design: { [key: string]: unknown };
 
   /**
-   * Optional merge tags for personalization
+   * Query param: The project ID (required for PAT auth, not needed for API Key auth)
+   */
+  projectId?: string;
+
+  /**
+   * Body param: Optional merge tags for personalization
    */
   mergeTags?: { [key: string]: string };
 }
 
 export interface EmailSendCreateParams {
   /**
-   * Proprietary design format JSON
+   * Body param: Proprietary design format JSON
    */
   design: { [key: string]: unknown };
 
   /**
-   * Recipient email address
+   * Body param: Recipient email address
    */
   to: string;
 
   /**
-   * HTML content to send
+   * Query param: The project ID (required for PAT auth, not needed for API Key auth)
+   */
+  projectId?: string;
+
+  /**
+   * Body param: HTML content to send
    */
   html?: string;
 
   /**
-   * Optional merge tags for personalization
+   * Body param: Optional merge tags for personalization
    */
   mergeTags?: { [key: string]: string };
 
   /**
-   * Email subject line
+   * Body param: Email subject line
    */
   subject?: string;
 }
 
 export interface EmailSendTemplateTemplateParams {
   /**
-   * ID of the template to use
+   * Body param: ID of the template to use
    */
   templateId: string;
 
   /**
-   * Recipient email address
+   * Body param: Recipient email address
    */
   to: string;
 
   /**
-   * Optional merge tags for personalization
+   * Query param: The project ID (required for PAT auth, not needed for API Key auth)
+   */
+  projectId?: string;
+
+  /**
+   * Body param: Optional merge tags for personalization
    */
   mergeTags?: { [key: string]: string };
 
   /**
-   * Email subject line (optional, uses template default if not provided)
+   * Body param: Email subject line (optional, uses template default if not provided)
    */
   subject?: string;
 }
@@ -240,6 +269,7 @@ export declare namespace Emails {
     type EmailRenderCreateResponse as EmailRenderCreateResponse,
     type EmailSendCreateResponse as EmailSendCreateResponse,
     type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
+    type EmailRetrieveParams as EmailRetrieveParams,
     type EmailRenderCreateParams as EmailRenderCreateParams,
     type EmailSendCreateParams as EmailSendCreateParams,
     type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,

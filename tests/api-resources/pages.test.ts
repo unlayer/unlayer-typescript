@@ -22,6 +22,7 @@ describe('resource pages', () => {
   test('renderCreate: required and optional params', async () => {
     const response = await client.pages.renderCreate({
       design: { counters: 'bar', body: 'bar' },
+      projectId: 'projectId',
       mergeTags: { foo: 'string' },
     });
   });
