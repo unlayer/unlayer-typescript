@@ -9,7 +9,7 @@ const client = new Unlayer({
 
 describe('resource project', () => {
   test('apiKeysCreate: only required params', async () => {
-    const responsePromise = client.project.apiKeysCreate({ name: 'name' });
+    const responsePromise = client.project.apiKeysCreate({ projectId: 'projectId', name: 'name' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,11 @@ describe('resource project', () => {
   });
 
   test('apiKeysCreate: required and optional params', async () => {
-    const response = await client.project.apiKeysCreate({ name: 'name', domains: ['string'] });
+    const response = await client.project.apiKeysCreate({
+      projectId: 'projectId',
+      name: 'name',
+      domains: ['string'],
+    });
   });
 
   test('apiKeysDelete', async () => {
@@ -34,8 +38,8 @@ describe('resource project', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('apiKeysList', async () => {
-    const responsePromise = client.project.apiKeysList();
+  test('apiKeysList: only required params', async () => {
+    const responsePromise = client.project.apiKeysList({ projectId: 'projectId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -43,6 +47,10 @@ describe('resource project', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('apiKeysList: required and optional params', async () => {
+    const response = await client.project.apiKeysList({ projectId: 'projectId' });
   });
 
   test('apiKeysRetrieve', async () => {
@@ -82,8 +90,8 @@ describe('resource project', () => {
     ).rejects.toThrow(Unlayer.NotFoundError);
   });
 
-  test('currentList', async () => {
-    const responsePromise = client.project.currentList();
+  test('currentList: only required params', async () => {
+    const responsePromise = client.project.currentList({ projectId: 'projectId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -93,8 +101,12 @@ describe('resource project', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('currentList: required and optional params', async () => {
+    const response = await client.project.currentList({ projectId: 'projectId' });
+  });
+
   test('domainsCreate: only required params', async () => {
-    const responsePromise = client.project.domainsCreate({ domain: 'domain' });
+    const responsePromise = client.project.domainsCreate({ projectId: 'projectId', domain: 'domain' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -105,7 +117,7 @@ describe('resource project', () => {
   });
 
   test('domainsCreate: required and optional params', async () => {
-    const response = await client.project.domainsCreate({ domain: 'domain' });
+    const response = await client.project.domainsCreate({ projectId: 'projectId', domain: 'domain' });
   });
 
   test('domainsDelete', async () => {
@@ -119,8 +131,8 @@ describe('resource project', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('domainsList', async () => {
-    const responsePromise = client.project.domainsList();
+  test('domainsList: only required params', async () => {
+    const responsePromise = client.project.domainsList({ projectId: 'projectId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -128,6 +140,10 @@ describe('resource project', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('domainsList: required and optional params', async () => {
+    const response = await client.project.domainsList({ projectId: 'projectId' });
   });
 
   test('domainsRetrieve', async () => {
@@ -160,7 +176,7 @@ describe('resource project', () => {
   });
 
   test('templatesCreate: only required params', async () => {
-    const responsePromise = client.project.templatesCreate({ name: 'name' });
+    const responsePromise = client.project.templatesCreate({ projectId: 'projectId', name: 'name' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -172,6 +188,7 @@ describe('resource project', () => {
 
   test('templatesCreate: required and optional params', async () => {
     const response = await client.project.templatesCreate({
+      projectId: 'projectId',
       name: 'name',
       body: 'body',
       subject: 'subject',
@@ -189,8 +206,8 @@ describe('resource project', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('templatesList', async () => {
-    const responsePromise = client.project.templatesList();
+  test('templatesList: only required params', async () => {
+    const responsePromise = client.project.templatesList({ projectId: 'projectId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -198,6 +215,10 @@ describe('resource project', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('templatesList: required and optional params', async () => {
+    const response = await client.project.templatesList({ projectId: 'projectId' });
   });
 
   test('templatesRetrieve', async () => {
@@ -235,5 +256,49 @@ describe('resource project', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Unlayer.NotFoundError);
+  });
+
+  test('tokensDelete', async () => {
+    const responsePromise = client.project.tokensDelete('tokenId');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('tokensList', async () => {
+    const responsePromise = client.project.tokensList();
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('workspacesList', async () => {
+    const responsePromise = client.project.workspacesList();
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('workspacesRetrieve', async () => {
+    const responsePromise = client.project.workspacesRetrieve('workspaceId');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

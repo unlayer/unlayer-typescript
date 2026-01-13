@@ -38,8 +38,12 @@ export class Pages extends APIResource {
    * });
    * ```
    */
-  renderCreate(body: PageRenderCreateParams, options?: RequestOptions): APIPromise<PageRenderCreateResponse> {
-    return this._client.post('/pages/v1/render', { body, ...options });
+  renderCreate(
+    params: PageRenderCreateParams,
+    options?: RequestOptions,
+  ): APIPromise<PageRenderCreateResponse> {
+    const { projectId, ...body } = params;
+    return this._client.post('/pages/v1/render', { query: { projectId }, body, ...options });
   }
 }
 
@@ -52,12 +56,17 @@ export interface PageRenderCreateResponse {
 
 export interface PageRenderCreateParams {
   /**
-   * Proprietary design format JSON
+   * Body param: Proprietary design format JSON
    */
   design: { [key: string]: unknown };
 
   /**
-   * Optional merge tags for personalization
+   * Query param: The project ID (required for PAT auth, not needed for API Key auth)
+   */
+  projectId?: string;
+
+  /**
+   * Body param: Optional merge tags for personalization
    */
   mergeTags?: { [key: string]: string };
 }

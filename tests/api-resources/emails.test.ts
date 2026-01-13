@@ -19,6 +19,13 @@ describe('resource emails', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('retrieve: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.emails.retrieve('id', { projectId: 'projectId' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Unlayer.NotFoundError);
+  });
+
   test('renderCreate: only required params', async () => {
     const responsePromise = client.emails.renderCreate({ design: { counters: 'bar', body: 'bar' } });
     const rawResponse = await responsePromise.asResponse();
@@ -33,6 +40,7 @@ describe('resource emails', () => {
   test('renderCreate: required and optional params', async () => {
     const response = await client.emails.renderCreate({
       design: { counters: 'bar', body: 'bar' },
+      projectId: 'projectId',
       mergeTags: { foo: 'string' },
     });
   });
@@ -55,6 +63,7 @@ describe('resource emails', () => {
     const response = await client.emails.sendCreate({
       design: { counters: 'bar', body: 'bar' },
       to: 'test@example.com',
+      projectId: 'projectId',
       html: 'html',
       mergeTags: { foo: 'string' },
       subject: 'Test',
@@ -79,6 +88,7 @@ describe('resource emails', () => {
     const response = await client.emails.sendTemplateTemplate({
       templateId: 'templateId',
       to: 'dev@stainless.com',
+      projectId: 'projectId',
       mergeTags: { foo: 'string' },
       subject: 'subject',
     });

@@ -19,6 +19,17 @@ describe('resource documents', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('documentsRetrieve: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.documents.documentsRetrieve(
+        'id',
+        { projectId: 'projectId' },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Unlayer.NotFoundError);
+  });
+
   test('generateCreate: only required params', async () => {
     const responsePromise = client.documents.generateCreate({ design: { counters: 'bar', body: 'bar' } });
     const rawResponse = await responsePromise.asResponse();
@@ -33,6 +44,7 @@ describe('resource documents', () => {
   test('generateCreate: required and optional params', async () => {
     const response = await client.documents.generateCreate({
       design: { counters: 'bar', body: 'bar' },
+      projectId: 'projectId',
       filename: 'filename',
       html: 'html',
       mergeTags: { foo: 'string' },
@@ -54,6 +66,7 @@ describe('resource documents', () => {
   test('generateTemplateTemplate: required and optional params', async () => {
     const response = await client.documents.generateTemplateTemplate({
       templateId: 'templateId',
+      projectId: 'projectId',
       filename: 'filename',
       mergeTags: { foo: 'string' },
     });

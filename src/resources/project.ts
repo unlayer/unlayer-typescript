@@ -11,10 +11,11 @@ export class Project extends APIResource {
    * Create a new API key for the project.
    */
   apiKeysCreate(
-    body: ProjectAPIKeysCreateParams,
+    params: ProjectAPIKeysCreateParams,
     options?: RequestOptions,
   ): APIPromise<ProjectAPIKeysCreateResponse> {
-    return this._client.post('/project/v1/api-keys', { body, ...options });
+    const { projectId, ...body } = params;
+    return this._client.post('/project/v1/api-keys', { query: { projectId }, body, ...options });
   }
 
   /**
@@ -30,8 +31,11 @@ export class Project extends APIResource {
   /**
    * List all API keys for the project.
    */
-  apiKeysList(options?: RequestOptions): APIPromise<ProjectAPIKeysListResponse> {
-    return this._client.get('/project/v1/api-keys', options);
+  apiKeysList(
+    query: ProjectAPIKeysListParams,
+    options?: RequestOptions,
+  ): APIPromise<ProjectAPIKeysListResponse> {
+    return this._client.get('/project/v1/api-keys', { query, ...options });
   }
 
   /**
@@ -53,20 +57,24 @@ export class Project extends APIResource {
   }
 
   /**
-   * Get project details for the authenticated project.
+   * Get project details for the specified project.
    */
-  currentList(options?: RequestOptions): APIPromise<ProjectCurrentListResponse> {
-    return this._client.get('/project/v1/current', options);
+  currentList(
+    query: ProjectCurrentListParams,
+    options?: RequestOptions,
+  ): APIPromise<ProjectCurrentListResponse> {
+    return this._client.get('/project/v1/current', { query, ...options });
   }
 
   /**
    * Add a new domain to the project.
    */
   domainsCreate(
-    body: ProjectDomainsCreateParams,
+    params: ProjectDomainsCreateParams,
     options?: RequestOptions,
   ): APIPromise<ProjectDomainsCreateResponse> {
-    return this._client.post('/project/v1/domains', { body, ...options });
+    const { projectId, ...body } = params;
+    return this._client.post('/project/v1/domains', { query: { projectId }, body, ...options });
   }
 
   /**
@@ -82,8 +90,11 @@ export class Project extends APIResource {
   /**
    * List all domains for the project.
    */
-  domainsList(options?: RequestOptions): APIPromise<ProjectDomainsListResponse> {
-    return this._client.get('/project/v1/domains', options);
+  domainsList(
+    query: ProjectDomainsListParams,
+    options?: RequestOptions,
+  ): APIPromise<ProjectDomainsListResponse> {
+    return this._client.get('/project/v1/domains', { query, ...options });
   }
 
   /**
@@ -108,10 +119,11 @@ export class Project extends APIResource {
    * Create a new project template.
    */
   templatesCreate(
-    body: ProjectTemplatesCreateParams,
+    params: ProjectTemplatesCreateParams,
     options?: RequestOptions,
   ): APIPromise<ProjectTemplatesCreateResponse> {
-    return this._client.post('/project/v1/templates', { body, ...options });
+    const { projectId, ...body } = params;
+    return this._client.post('/project/v1/templates', { query: { projectId }, body, ...options });
   }
 
   /**
@@ -127,8 +139,11 @@ export class Project extends APIResource {
   /**
    * Get all project templates.
    */
-  templatesList(options?: RequestOptions): APIPromise<ProjectTemplatesListResponse> {
-    return this._client.get('/project/v1/templates', options);
+  templatesList(
+    query: ProjectTemplatesListParams,
+    options?: RequestOptions,
+  ): APIPromise<ProjectTemplatesListResponse> {
+    return this._client.get('/project/v1/templates', { query, ...options });
   }
 
   /**
@@ -147,6 +162,37 @@ export class Project extends APIResource {
     options?: RequestOptions,
   ): APIPromise<ProjectTemplatesUpdateResponse> {
     return this._client.put(path`/project/v1/templates/${id}`, { body, ...options });
+  }
+
+  /**
+   * Delete a personal access token. You can only delete your own tokens.
+   */
+  tokensDelete(tokenID: string, options?: RequestOptions): APIPromise<ProjectTokensDeleteResponse> {
+    return this._client.delete(path`/project/v1/tokens/${tokenID}`, options);
+  }
+
+  /**
+   * List all personal access tokens for the authenticated user.
+   */
+  tokensList(options?: RequestOptions): APIPromise<ProjectTokensListResponse> {
+    return this._client.get('/project/v1/tokens', options);
+  }
+
+  /**
+   * Get all workspaces accessible by the current token.
+   */
+  workspacesList(options?: RequestOptions): APIPromise<ProjectWorkspacesListResponse> {
+    return this._client.get('/project/v1/workspaces', options);
+  }
+
+  /**
+   * Get a specific workspace by ID with its projects.
+   */
+  workspacesRetrieve(
+    workspaceID: string,
+    options?: RequestOptions,
+  ): APIPromise<ProjectWorkspacesRetrieveResponse> {
+    return this._client.get(path`/project/v1/workspaces/${workspaceID}`, options);
   }
 }
 
@@ -414,16 +460,94 @@ export namespace ProjectTemplatesUpdateResponse {
   }
 }
 
+export interface ProjectTokensDeleteResponse {
+  message?: string;
+
+  success?: boolean;
+}
+
+export interface ProjectTokensListResponse {
+  data?: Array<ProjectTokensListResponse.Data>;
+}
+
+export namespace ProjectTokensListResponse {
+  export interface Data {
+    id?: number;
+
+    createdAt?: string;
+
+    expiresAt?: string | null;
+
+    lastUsedAt?: string | null;
+
+    name?: string;
+
+    scope?: string;
+
+    workspaceId?: number | null;
+
+    workspaceName?: string | null;
+  }
+}
+
+export interface ProjectWorkspacesListResponse {
+  data?: Array<ProjectWorkspacesListResponse.Data>;
+}
+
+export namespace ProjectWorkspacesListResponse {
+  export interface Data {
+    id?: number;
+
+    name?: string;
+  }
+}
+
+export interface ProjectWorkspacesRetrieveResponse {
+  data?: ProjectWorkspacesRetrieveResponse.Data;
+}
+
+export namespace ProjectWorkspacesRetrieveResponse {
+  export interface Data {
+    id?: number;
+
+    name?: string;
+
+    projects?: Array<Data.Project>;
+  }
+
+  export namespace Data {
+    export interface Project {
+      id?: number;
+
+      name?: string;
+
+      status?: string;
+    }
+  }
+}
+
 export interface ProjectAPIKeysCreateParams {
   /**
-   * Name for the API key
+   * Query param: The project ID to create API key for
+   */
+  projectId: string;
+
+  /**
+   * Body param: Name for the API key
    */
   name: string;
 
   /**
-   * Allowed domains for this API key
+   * Body param: Allowed domains for this API key
    */
   domains?: Array<string>;
+}
+
+export interface ProjectAPIKeysListParams {
+  /**
+   * The project ID to get API keys for
+   */
+  projectId: string;
 }
 
 export interface ProjectAPIKeysUpdateParams {
@@ -443,11 +567,30 @@ export interface ProjectAPIKeysUpdateParams {
   name?: string;
 }
 
+export interface ProjectCurrentListParams {
+  /**
+   * The project ID
+   */
+  projectId: string;
+}
+
 export interface ProjectDomainsCreateParams {
   /**
-   * Domain name to add
+   * Query param: The project ID to add domain to
+   */
+  projectId: string;
+
+  /**
+   * Body param: Domain name to add
    */
   domain: string;
+}
+
+export interface ProjectDomainsListParams {
+  /**
+   * The project ID to get domains for
+   */
+  projectId: string;
 }
 
 export interface ProjectDomainsUpdateParams {
@@ -459,19 +602,31 @@ export interface ProjectDomainsUpdateParams {
 
 export interface ProjectTemplatesCreateParams {
   /**
-   * Template name
+   * Query param: The project ID to create template for
+   */
+  projectId: string;
+
+  /**
+   * Body param: Template name
    */
   name: string;
 
   /**
-   * Email body content
+   * Body param: Email body content
    */
   body?: string;
 
   /**
-   * Email subject line
+   * Body param: Email subject line
    */
   subject?: string;
+}
+
+export interface ProjectTemplatesListParams {
+  /**
+   * The project ID to get templates for
+   */
+  projectId: string;
 }
 
 export interface ProjectTemplatesUpdateParams {
@@ -506,11 +661,19 @@ export declare namespace Project {
     type ProjectTemplatesListResponse as ProjectTemplatesListResponse,
     type ProjectTemplatesRetrieveResponse as ProjectTemplatesRetrieveResponse,
     type ProjectTemplatesUpdateResponse as ProjectTemplatesUpdateResponse,
+    type ProjectTokensDeleteResponse as ProjectTokensDeleteResponse,
+    type ProjectTokensListResponse as ProjectTokensListResponse,
+    type ProjectWorkspacesListResponse as ProjectWorkspacesListResponse,
+    type ProjectWorkspacesRetrieveResponse as ProjectWorkspacesRetrieveResponse,
     type ProjectAPIKeysCreateParams as ProjectAPIKeysCreateParams,
+    type ProjectAPIKeysListParams as ProjectAPIKeysListParams,
     type ProjectAPIKeysUpdateParams as ProjectAPIKeysUpdateParams,
+    type ProjectCurrentListParams as ProjectCurrentListParams,
     type ProjectDomainsCreateParams as ProjectDomainsCreateParams,
+    type ProjectDomainsListParams as ProjectDomainsListParams,
     type ProjectDomainsUpdateParams as ProjectDomainsUpdateParams,
     type ProjectTemplatesCreateParams as ProjectTemplatesCreateParams,
+    type ProjectTemplatesListParams as ProjectTemplatesListParams,
     type ProjectTemplatesUpdateParams as ProjectTemplatesUpdateParams,
   };
 }

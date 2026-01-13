@@ -30,7 +30,7 @@ const client = new Unlayer({
   environment: 'qa', // or 'production' | 'dev'; defaults to 'production'
 });
 
-const response = await client.project.currentList();
+const response = await client.project.currentList({ projectId: 'projectId' });
 
 console.log(response.data);
 ```
@@ -48,7 +48,8 @@ const client = new Unlayer({
   environment: 'qa', // or 'production' | 'dev'; defaults to 'production'
 });
 
-const response: Unlayer.ProjectCurrentListResponse = await client.project.currentList();
+const params: Unlayer.ProjectCurrentListParams = { projectId: 'projectId' };
+const response: Unlayer.ProjectCurrentListResponse = await client.project.currentList(params);
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -61,7 +62,7 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-const response = await client.project.currentList().catch(async (err) => {
+const response = await client.project.currentList({ projectId: 'projectId' }).catch(async (err) => {
   if (err instanceof Unlayer.APIError) {
     console.log(err.status); // 400
     console.log(err.name); // BadRequestError
@@ -101,7 +102,7 @@ const client = new Unlayer({
 });
 
 // Or, configure per-request:
-await client.project.currentList({
+await client.project.currentList({ projectId: 'projectId' }, {
   maxRetries: 5,
 });
 ```
@@ -118,7 +119,7 @@ const client = new Unlayer({
 });
 
 // Override per-request:
-await client.project.currentList({
+await client.project.currentList({ projectId: 'projectId' }, {
   timeout: 5 * 1000,
 });
 ```
@@ -141,11 +142,13 @@ Unlike `.asResponse()` this method consumes the body, returning once it is parse
 ```ts
 const client = new Unlayer();
 
-const response = await client.project.currentList().asResponse();
+const response = await client.project.currentList({ projectId: 'projectId' }).asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: response, response: raw } = await client.project.currentList().withResponse();
+const { data: response, response: raw } = await client.project
+  .currentList({ projectId: 'projectId' })
+  .withResponse();
 console.log(raw.headers.get('X-My-Header'));
 console.log(response.data);
 ```
