@@ -791,15 +791,15 @@ export class Unlayer {
   static toFile = Uploads.toFile;
 
   emails: API.Emails = new API.Emails(this);
-  project: API.Project = new API.Project(this);
   pages: API.Pages = new API.Pages(this);
   documents: API.Documents = new API.Documents(this);
+  project: API.Project = new API.Project(this);
 }
 
 Unlayer.Emails = Emails;
-Unlayer.Project = Project;
 Unlayer.Pages = Pages;
 Unlayer.Documents = Documents;
+Unlayer.Project = Project;
 
 export declare namespace Unlayer {
   export type RequestOptions = Opts.RequestOptions;
@@ -814,6 +814,22 @@ export declare namespace Unlayer {
     type EmailRenderCreateParams as EmailRenderCreateParams,
     type EmailSendCreateParams as EmailSendCreateParams,
     type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
+  };
+
+  export {
+    Pages as Pages,
+    type PageRenderCreateResponse as PageRenderCreateResponse,
+    type PageRenderCreateParams as PageRenderCreateParams,
+  };
+
+  export {
+    Documents as Documents,
+    type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
+    type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
+    type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
+    type DocumentDocumentsRetrieveParams as DocumentDocumentsRetrieveParams,
+    type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
+    type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
   };
 
   export {
@@ -845,21 +861,5 @@ export declare namespace Unlayer {
     type ProjectTemplatesCreateParams as ProjectTemplatesCreateParams,
     type ProjectTemplatesListParams as ProjectTemplatesListParams,
     type ProjectTemplatesUpdateParams as ProjectTemplatesUpdateParams,
-  };
-
-  export {
-    Pages as Pages,
-    type PageRenderCreateResponse as PageRenderCreateResponse,
-    type PageRenderCreateParams as PageRenderCreateParams,
-  };
-
-  export {
-    Documents as Documents,
-    type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
-    type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
-    type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
-    type DocumentDocumentsRetrieveParams as DocumentDocumentsRetrieveParams,
-    type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
-    type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
   };
 }
