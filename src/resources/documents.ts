@@ -8,17 +8,10 @@ import { path } from '../internal/utils/path';
 export class Documents extends APIResource {
   /**
    * Retrieve details of a previously generated document.
-   *
-   * @example
-   * ```ts
-   * const response = await client.documents.documentsRetrieve(
-   *   'id',
-   * );
-   * ```
    */
   documentsRetrieve(
     id: string,
-    query: DocumentDocumentsRetrieveParams | null | undefined = {},
+    query: DocumentDocumentsRetrieveParams,
     options?: RequestOptions,
   ): APIPromise<DocumentDocumentsRetrieveResponse> {
     return this._client.get(path`/documents/v1/documents/${id}`, { query, ...options });
@@ -26,36 +19,6 @@ export class Documents extends APIResource {
 
   /**
    * Generate PDF document from JSON design, HTML content, or URL.
-   *
-   * @example
-   * ```ts
-   * const response = await client.documents.generateCreate({
-   *   design: {
-   *     counters: {
-   *       u_row: 1,
-   *       u_column: 1,
-   *       u_content_text: 1,
-   *     },
-   *     body: {
-   *       rows: [
-   *         {
-   *           cells: [1],
-   *           columns: [
-   *             {
-   *               contents: [
-   *                 {
-   *                   type: 'text',
-   *                   values: { text: 'Hello World' },
-   *                 },
-   *               ],
-   *             },
-   *           ],
-   *         },
-   *       ],
-   *     },
-   *   },
-   * });
-   * ```
    */
   generateCreate(
     params: DocumentGenerateCreateParams,
@@ -67,14 +30,6 @@ export class Documents extends APIResource {
 
   /**
    * Generate PDF document from an existing template with merge tags.
-   *
-   * @example
-   * ```ts
-   * const response =
-   *   await client.documents.generateTemplateTemplate({
-   *     templateId: 'templateId',
-   *   });
-   * ```
    */
   generateTemplateTemplate(
     params: DocumentGenerateTemplateTemplateParams,
@@ -86,102 +41,120 @@ export class Documents extends APIResource {
 }
 
 export interface DocumentDocumentsRetrieveResponse {
-  /**
-   * Document ID
-   */
-  id?: string;
+  data?: DocumentDocumentsRetrieveResponse.Data;
+}
 
-  /**
-   * When the document generation was completed
-   */
-  completedAt?: string;
+export namespace DocumentDocumentsRetrieveResponse {
+  export interface Data {
+    /**
+     * Document ID
+     */
+    id?: string;
 
-  /**
-   * When the document was created
-   */
-  createdAt?: string;
+    /**
+     * When the document generation was completed
+     */
+    completedAt?: string;
 
-  /**
-   * Generated filename
-   */
-  filename?: string;
+    /**
+     * When the document was created
+     */
+    createdAt?: string;
 
-  /**
-   * File size in bytes
-   */
-  fileSize?: number;
+    /**
+     * Generated filename
+     */
+    filename?: string;
 
-  /**
-   * Number of pages in the PDF
-   */
-  pageCount?: number;
+    /**
+     * File size in bytes
+     */
+    fileSize?: number;
 
-  /**
-   * URL to download the PDF
-   */
-  pdfUrl?: string;
+    /**
+     * Number of pages in the PDF
+     */
+    pageCount?: number;
 
-  /**
-   * Current document status
-   */
-  status?: 'generating' | 'completed' | 'failed';
+    /**
+     * URL to download the PDF
+     */
+    pdfUrl?: string;
+
+    /**
+     * Current document status
+     */
+    status?: 'generating' | 'completed' | 'failed';
+  }
 }
 
 export interface DocumentGenerateCreateResponse {
-  /**
-   * Unique document identifier
-   */
-  documentId?: string;
+  data?: DocumentGenerateCreateResponse.Data;
+}
 
-  /**
-   * Generated filename
-   */
-  filename?: string;
+export namespace DocumentGenerateCreateResponse {
+  export interface Data {
+    /**
+     * Unique document identifier
+     */
+    documentId?: string;
 
-  /**
-   * URL to download the generated PDF
-   */
-  pdfUrl?: string;
+    /**
+     * Generated filename
+     */
+    filename?: string;
 
-  status?: 'generating' | 'completed' | 'failed';
+    /**
+     * URL to download the generated PDF
+     */
+    pdfUrl?: string;
+
+    status?: 'generating' | 'completed' | 'failed';
+  }
 }
 
 export interface DocumentGenerateTemplateTemplateResponse {
-  /**
-   * Unique document identifier
-   */
-  documentId?: string;
+  data?: DocumentGenerateTemplateTemplateResponse.Data;
+}
 
-  /**
-   * Generated filename
-   */
-  filename?: string;
+export namespace DocumentGenerateTemplateTemplateResponse {
+  export interface Data {
+    /**
+     * Unique document identifier
+     */
+    documentId?: string;
 
-  /**
-   * URL to download the generated PDF
-   */
-  pdfUrl?: string;
+    /**
+     * Generated filename
+     */
+    filename?: string;
 
-  status?: 'generating' | 'completed' | 'failed';
+    /**
+     * URL to download the generated PDF
+     */
+    pdfUrl?: string;
+
+    status?: 'generating' | 'completed' | 'failed';
+  }
 }
 
 export interface DocumentDocumentsRetrieveParams {
   /**
-   * The project ID (required for PAT auth, not needed for API Key auth)
+   * The project ID
    */
-  projectId?: string;
+  projectId: string;
 }
 
 export interface DocumentGenerateCreateParams {
   /**
-   * Body param: Proprietary design format JSON
+   * Query param: The project ID
    */
-  design: { [key: string]: unknown };
+  projectId: string;
 
   /**
-   * Query param: The project ID (required for PAT auth, not needed for API Key auth)
+   * Body param: Proprietary design format JSON
    */
-  projectId?: string;
+  design?: { [key: string]: unknown };
 
   /**
    * Body param: Optional filename for the generated PDF
@@ -206,14 +179,14 @@ export interface DocumentGenerateCreateParams {
 
 export interface DocumentGenerateTemplateTemplateParams {
   /**
+   * Query param: The project ID
+   */
+  projectId: string;
+
+  /**
    * Body param: ID of the template to use for generation
    */
   templateId: string;
-
-  /**
-   * Query param: The project ID (required for PAT auth, not needed for API Key auth)
-   */
-  projectId?: string;
 
   /**
    * Body param: Optional filename for the generated PDF

@@ -3,13 +3,16 @@
 import Unlayer from '@unlayer/sdk';
 
 const client = new Unlayer({
-  apiKey: 'My API Key',
+  accessToken: 'My Access Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource pages', () => {
   test('renderCreate: only required params', async () => {
-    const responsePromise = client.pages.renderCreate({ design: { counters: 'bar', body: 'bar' } });
+    const responsePromise = client.pages.renderCreate({
+      projectId: 'projectId',
+      design: { foo: 'bar' },
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,8 +24,8 @@ describe('resource pages', () => {
 
   test('renderCreate: required and optional params', async () => {
     const response = await client.pages.renderCreate({
-      design: { counters: 'bar', body: 'bar' },
       projectId: 'projectId',
+      design: { foo: 'bar' },
       mergeTags: { foo: 'string' },
     });
   });

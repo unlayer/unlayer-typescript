@@ -7,36 +7,6 @@ import { RequestOptions } from '../internal/request-options';
 export class Pages extends APIResource {
   /**
    * Convert page design JSON to HTML with optional merge tags.
-   *
-   * @example
-   * ```ts
-   * const response = await client.pages.renderCreate({
-   *   design: {
-   *     counters: {
-   *       u_row: 1,
-   *       u_column: 1,
-   *       u_content_text: 1,
-   *     },
-   *     body: {
-   *       rows: [
-   *         {
-   *           cells: [1],
-   *           columns: [
-   *             {
-   *               contents: [
-   *                 {
-   *                   type: 'text',
-   *                   values: { text: 'Hello World' },
-   *                 },
-   *               ],
-   *             },
-   *           ],
-   *         },
-   *       ],
-   *     },
-   *   },
-   * });
-   * ```
    */
   renderCreate(
     params: PageRenderCreateParams,
@@ -48,22 +18,28 @@ export class Pages extends APIResource {
 }
 
 export interface PageRenderCreateResponse {
-  /**
-   * Rendered HTML content
-   */
-  html?: string;
+  data?: PageRenderCreateResponse.Data;
+}
+
+export namespace PageRenderCreateResponse {
+  export interface Data {
+    /**
+     * Rendered HTML content
+     */
+    html?: string;
+  }
 }
 
 export interface PageRenderCreateParams {
   /**
+   * Query param: The project ID
+   */
+  projectId: string;
+
+  /**
    * Body param: Proprietary design format JSON
    */
   design: { [key: string]: unknown };
-
-  /**
-   * Query param: The project ID (required for PAT auth, not needed for API Key auth)
-   */
-  projectId?: string;
 
   /**
    * Body param: Optional merge tags for personalization
