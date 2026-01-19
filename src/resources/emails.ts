@@ -8,15 +8,10 @@ import { path } from '../internal/utils/path';
 export class Emails extends APIResource {
   /**
    * Retrieve details of a previously sent email.
-   *
-   * @example
-   * ```ts
-   * const email = await client.emails.retrieve('id');
-   * ```
    */
   retrieve(
     id: string,
-    query: EmailRetrieveParams | null | undefined = {},
+    query: EmailRetrieveParams,
     options?: RequestOptions,
   ): APIPromise<EmailRetrieveResponse> {
     return this._client.get(path`/emails/v1/emails/${id}`, { query, ...options });
@@ -24,36 +19,6 @@ export class Emails extends APIResource {
 
   /**
    * Convert design JSON to HTML with optional merge tags.
-   *
-   * @example
-   * ```ts
-   * const response = await client.emails.renderCreate({
-   *   design: {
-   *     counters: {
-   *       u_row: 1,
-   *       u_column: 1,
-   *       u_content_text: 1,
-   *     },
-   *     body: {
-   *       rows: [
-   *         {
-   *           cells: [1],
-   *           columns: [
-   *             {
-   *               contents: [
-   *                 {
-   *                   type: 'text',
-   *                   values: { text: 'Hello World' },
-   *                 },
-   *               ],
-   *             },
-   *           ],
-   *         },
-   *       ],
-   *     },
-   *   },
-   * });
-   * ```
    */
   renderCreate(
     params: EmailRenderCreateParams,
@@ -65,38 +30,6 @@ export class Emails extends APIResource {
 
   /**
    * Send email with design JSON or HTML content.
-   *
-   * @example
-   * ```ts
-   * const response = await client.emails.sendCreate({
-   *   design: {
-   *     counters: {
-   *       u_row: 1,
-   *       u_column: 1,
-   *       u_content_text: 1,
-   *     },
-   *     body: {
-   *       rows: [
-   *         {
-   *           cells: [1],
-   *           columns: [
-   *             {
-   *               contents: [
-   *                 {
-   *                   type: 'text',
-   *                   values: { text: 'Hello World' },
-   *                 },
-   *               ],
-   *             },
-   *           ],
-   *         },
-   *       ],
-   *     },
-   *   },
-   *   to: 'test@example.com',
-   *   subject: 'Test',
-   * });
-   * ```
    */
   sendCreate(params: EmailSendCreateParams, options?: RequestOptions): APIPromise<EmailSendCreateResponse> {
     const { projectId, ...body } = params;
@@ -105,14 +38,6 @@ export class Emails extends APIResource {
 
   /**
    * Send email using an existing template with merge tags.
-   *
-   * @example
-   * ```ts
-   * const response = await client.emails.sendTemplateTemplate({
-   *   templateId: 'templateId',
-   *   to: 'dev@stainless.com',
-   * });
-   * ```
    */
   sendTemplateTemplate(
     params: EmailSendTemplateTemplateParams,
@@ -124,79 +49,103 @@ export class Emails extends APIResource {
 }
 
 export interface EmailRetrieveResponse {
-  /**
-   * Email message ID
-   */
-  id?: string;
+  data?: EmailRetrieveResponse.Data;
+}
 
-  /**
-   * HTML content of the email (optional)
-   */
-  html?: string;
+export namespace EmailRetrieveResponse {
+  export interface Data {
+    /**
+     * Email message ID
+     */
+    id?: string;
 
-  /**
-   * When the email was sent
-   */
-  sentAt?: string;
+    /**
+     * HTML content of the email (optional)
+     */
+    html?: string;
 
-  /**
-   * Current email status
-   */
-  status?: 'sent' | 'delivered' | 'opened' | 'clicked' | 'bounced' | 'failed';
+    /**
+     * When the email was sent
+     */
+    sentAt?: string;
 
-  /**
-   * Email subject line
-   */
-  subject?: string;
+    /**
+     * Current email status
+     */
+    status?: 'sent' | 'delivered' | 'opened' | 'clicked' | 'bounced' | 'failed';
 
-  /**
-   * Recipient email address
-   */
-  to?: string;
+    /**
+     * Email subject line
+     */
+    subject?: string;
+
+    /**
+     * Recipient email address
+     */
+    to?: string;
+  }
 }
 
 export interface EmailRenderCreateResponse {
-  /**
-   * Rendered HTML content
-   */
-  html?: string;
+  data?: EmailRenderCreateResponse.Data;
+}
+
+export namespace EmailRenderCreateResponse {
+  export interface Data {
+    /**
+     * Rendered HTML content
+     */
+    html?: string;
+  }
 }
 
 export interface EmailSendCreateResponse {
-  /**
-   * Unique message identifier
-   */
-  messageId?: string;
+  data?: EmailSendCreateResponse.Data;
+}
 
-  status?: 'sent' | 'queued' | 'failed';
+export namespace EmailSendCreateResponse {
+  export interface Data {
+    /**
+     * Unique message identifier
+     */
+    messageId?: string;
+
+    status?: 'sent' | 'queued' | 'failed';
+  }
 }
 
 export interface EmailSendTemplateTemplateResponse {
-  /**
-   * Unique message identifier
-   */
-  messageId?: string;
+  data?: EmailSendTemplateTemplateResponse.Data;
+}
 
-  status?: 'sent' | 'queued' | 'failed';
+export namespace EmailSendTemplateTemplateResponse {
+  export interface Data {
+    /**
+     * Unique message identifier
+     */
+    messageId?: string;
+
+    status?: 'sent' | 'queued' | 'failed';
+  }
 }
 
 export interface EmailRetrieveParams {
   /**
-   * The project ID (required for PAT auth, not needed for API Key auth)
+   * The project ID
    */
-  projectId?: string;
+  projectId: string;
 }
 
 export interface EmailRenderCreateParams {
   /**
+   * Query param: The project ID
+   */
+  projectId: string;
+
+  /**
    * Body param: Proprietary design format JSON
    */
   design: { [key: string]: unknown };
-
-  /**
-   * Query param: The project ID (required for PAT auth, not needed for API Key auth)
-   */
-  projectId?: string;
 
   /**
    * Body param: Optional merge tags for personalization
@@ -206,9 +155,9 @@ export interface EmailRenderCreateParams {
 
 export interface EmailSendCreateParams {
   /**
-   * Body param: Proprietary design format JSON
+   * Query param: The project ID
    */
-  design: { [key: string]: unknown };
+  projectId: string;
 
   /**
    * Body param: Recipient email address
@@ -216,9 +165,9 @@ export interface EmailSendCreateParams {
   to: string;
 
   /**
-   * Query param: The project ID (required for PAT auth, not needed for API Key auth)
+   * Body param: Proprietary design format JSON
    */
-  projectId?: string;
+  design?: { [key: string]: unknown };
 
   /**
    * Body param: HTML content to send
@@ -238,6 +187,11 @@ export interface EmailSendCreateParams {
 
 export interface EmailSendTemplateTemplateParams {
   /**
+   * Query param: The project ID
+   */
+  projectId: string;
+
+  /**
    * Body param: ID of the template to use
    */
   templateId: string;
@@ -246,11 +200,6 @@ export interface EmailSendTemplateTemplateParams {
    * Body param: Recipient email address
    */
   to: string;
-
-  /**
-   * Query param: The project ID (required for PAT auth, not needed for API Key auth)
-   */
-  projectId?: string;
 
   /**
    * Body param: Optional merge tags for personalization

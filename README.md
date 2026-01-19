@@ -26,11 +26,11 @@ The full API of this library can be found in [api.md](api.md).
 import Unlayer from '@unlayer/sdk';
 
 const client = new Unlayer({
-  apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
-  environment: 'qa', // or 'production' | 'dev'; defaults to 'production'
+  accessToken: process.env['UNLAYER_ACCESS_TOKEN'], // This is the default and can be omitted
+  environment: 'stage', // or 'production' | 'qa' | 'dev'; defaults to 'production'
 });
 
-const response = await client.project.currentList({ projectId: 'projectId' });
+const response = await client.project.currentList({ projectId: 'your-project-id' });
 
 console.log(response.data);
 ```
@@ -44,11 +44,11 @@ This library includes TypeScript definitions for all request params and response
 import Unlayer from '@unlayer/sdk';
 
 const client = new Unlayer({
-  apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
-  environment: 'qa', // or 'production' | 'dev'; defaults to 'production'
+  accessToken: process.env['UNLAYER_ACCESS_TOKEN'], // This is the default and can be omitted
+  environment: 'stage', // or 'production' | 'qa' | 'dev'; defaults to 'production'
 });
 
-const params: Unlayer.ProjectCurrentListParams = { projectId: 'projectId' };
+const params: Unlayer.ProjectCurrentListParams = { projectId: 'your-project-id' };
 const response: Unlayer.ProjectCurrentListResponse = await client.project.currentList(params);
 ```
 
@@ -62,15 +62,17 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-const response = await client.project.currentList({ projectId: 'projectId' }).catch(async (err) => {
-  if (err instanceof Unlayer.APIError) {
-    console.log(err.status); // 400
-    console.log(err.name); // BadRequestError
-    console.log(err.headers); // {server: 'nginx', ...}
-  } else {
-    throw err;
-  }
-});
+const response = await client.project
+  .currentList({ projectId: 'your-project-id' })
+  .catch(async (err) => {
+    if (err instanceof Unlayer.APIError) {
+      console.log(err.status); // 400
+      console.log(err.name); // BadRequestError
+      console.log(err.headers); // {server: 'nginx', ...}
+    } else {
+      throw err;
+    }
+  });
 ```
 
 Error codes are as follows:
@@ -102,7 +104,7 @@ const client = new Unlayer({
 });
 
 // Or, configure per-request:
-await client.project.currentList({ projectId: 'projectId' }, {
+await client.project.currentList({ projectId: 'your-project-id' }, {
   maxRetries: 5,
 });
 ```
@@ -119,7 +121,7 @@ const client = new Unlayer({
 });
 
 // Override per-request:
-await client.project.currentList({ projectId: 'projectId' }, {
+await client.project.currentList({ projectId: 'your-project-id' }, {
   timeout: 5 * 1000,
 });
 ```
@@ -127,6 +129,40 @@ await client.project.currentList({ projectId: 'projectId' }, {
 On timeout, an `APIConnectionTimeoutError` is thrown.
 
 Note that requests which time out will be [retried twice by default](#retries).
+
+## Auto-pagination
+
+List methods in the Unlayer API are paginated.
+You can use the `for await … of` syntax to iterate through items across all pages:
+
+```ts
+async function fetchAllProjectTemplatesListResponses(params) {
+  const allProjectTemplatesListResponses = [];
+  // Automatically fetches more pages as needed.
+  for await (const projectTemplatesListResponse of client.project.templatesList({
+    projectId: 'your-project-id',
+    limit: 10,
+  })) {
+    allProjectTemplatesListResponses.push(projectTemplatesListResponse);
+  }
+  return allProjectTemplatesListResponses;
+}
+```
+
+Alternatively, you can request a single page at a time:
+
+```ts
+let page = await client.project.templatesList({ projectId: 'your-project-id', limit: 10 });
+for (const projectTemplatesListResponse of page.data) {
+  console.log(projectTemplatesListResponse);
+}
+
+// Convenience methods are provided for manually paginating:
+while (page.hasNextPage()) {
+  page = await page.getNextPage();
+  // ...
+}
+```
 
 ## Advanced Usage
 
@@ -142,12 +178,12 @@ Unlike `.asResponse()` this method consumes the body, returning once it is parse
 ```ts
 const client = new Unlayer();
 
-const response = await client.project.currentList({ projectId: 'projectId' }).asResponse();
+const response = await client.project.currentList({ projectId: 'your-project-id' }).asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
 const { data: response, response: raw } = await client.project
-  .currentList({ projectId: 'projectId' })
+  .currentList({ projectId: 'your-project-id' })
   .withResponse();
 console.log(raw.headers.get('X-My-Header'));
 console.log(response.data);

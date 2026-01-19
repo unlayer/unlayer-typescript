@@ -7,9 +7,9 @@ const client = new Unlayer({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource emails', () => {
-  test('retrieve: only required params', async () => {
-    const responsePromise = client.emails.retrieve('id', { projectId: 'projectId' });
+describe('resource export', () => {
+  test('htmlList: only required params', async () => {
+    const responsePromise = client.export.htmlList({ projectId: 'projectId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,15 +19,12 @@ describe('resource emails', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieve: required and optional params', async () => {
-    const response = await client.emails.retrieve('id', { projectId: 'projectId' });
+  test('htmlList: required and optional params', async () => {
+    const response = await client.export.htmlList({ projectId: 'projectId' });
   });
 
-  test('renderCreate: only required params', async () => {
-    const responsePromise = client.emails.renderCreate({
-      projectId: 'projectId',
-      design: { foo: 'bar' },
-    });
+  test('imageList: only required params', async () => {
+    const responsePromise = client.export.imageList({ projectId: 'projectId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -37,16 +34,12 @@ describe('resource emails', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('renderCreate: required and optional params', async () => {
-    const response = await client.emails.renderCreate({
-      projectId: 'projectId',
-      design: { foo: 'bar' },
-      mergeTags: { foo: 'string' },
-    });
+  test('imageList: required and optional params', async () => {
+    const response = await client.export.imageList({ projectId: 'projectId' });
   });
 
-  test('sendCreate: only required params', async () => {
-    const responsePromise = client.emails.sendCreate({ projectId: 'projectId', to: 'dev@stainless.com' });
+  test('pdfList: only required params', async () => {
+    const responsePromise = client.export.pdfList({ projectId: 'projectId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -56,23 +49,12 @@ describe('resource emails', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('sendCreate: required and optional params', async () => {
-    const response = await client.emails.sendCreate({
-      projectId: 'projectId',
-      to: 'dev@stainless.com',
-      design: { foo: 'bar' },
-      html: 'html',
-      mergeTags: { foo: 'string' },
-      subject: 'subject',
-    });
+  test('pdfList: required and optional params', async () => {
+    const response = await client.export.pdfList({ projectId: 'projectId' });
   });
 
-  test('sendTemplateTemplate: only required params', async () => {
-    const responsePromise = client.emails.sendTemplateTemplate({
-      projectId: 'projectId',
-      templateId: 'templateId',
-      to: 'dev@stainless.com',
-    });
+  test('zipList: only required params', async () => {
+    const responsePromise = client.export.zipList({ projectId: 'projectId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -82,13 +64,7 @@ describe('resource emails', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('sendTemplateTemplate: required and optional params', async () => {
-    const response = await client.emails.sendTemplateTemplate({
-      projectId: 'projectId',
-      templateId: 'templateId',
-      to: 'dev@stainless.com',
-      mergeTags: { foo: 'string' },
-      subject: 'subject',
-    });
+  test('zipList: required and optional params', async () => {
+    const response = await client.export.zipList({ projectId: 'projectId' });
   });
 });

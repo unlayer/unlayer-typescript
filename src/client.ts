@@ -13,6 +13,8 @@ import * as Shims from './internal/shims';
 import * as Opts from './internal/request-options';
 import { VERSION } from './version';
 import * as Errors from './core/error';
+import * as Pagination from './core/pagination';
+import { AbstractPage, type CursorPageParams, CursorPageResponse } from './core/pagination';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
@@ -36,16 +38,20 @@ import {
   EmailSendTemplateTemplateResponse,
   Emails,
 } from './resources/emails';
+import {
+  Export,
+  ExportHTMLListParams,
+  ExportHTMLListResponse,
+  ExportImageListParams,
+  ExportImageListResponse,
+  ExportPdfListParams,
+  ExportPdfListResponse,
+  ExportZipListParams,
+  ExportZipListResponse,
+} from './resources/export';
 import { PageRenderCreateParams, PageRenderCreateResponse, Pages } from './resources/pages';
 import {
   Project,
-  ProjectAPIKeysCreateParams,
-  ProjectAPIKeysCreateResponse,
-  ProjectAPIKeysListParams,
-  ProjectAPIKeysListResponse,
-  ProjectAPIKeysRetrieveResponse,
-  ProjectAPIKeysUpdateParams,
-  ProjectAPIKeysUpdateResponse,
   ProjectCurrentListParams,
   ProjectCurrentListResponse,
   ProjectDomainsCreateParams,
@@ -59,11 +65,10 @@ import {
   ProjectTemplatesCreateResponse,
   ProjectTemplatesListParams,
   ProjectTemplatesListResponse,
+  ProjectTemplatesListResponsesCursorPage,
   ProjectTemplatesRetrieveResponse,
   ProjectTemplatesUpdateParams,
   ProjectTemplatesUpdateResponse,
-  ProjectTokensDeleteResponse,
-  ProjectTokensListResponse,
   ProjectWorkspacesListResponse,
   ProjectWorkspacesRetrieveResponse,
 } from './resources/project';
@@ -82,6 +87,7 @@ import { isEmptyObj } from './internal/utils/values';
 
 const environments = {
   production: 'https://api.unlayer.com',
+  stage: 'https://api.stage.unlayer.com',
   qa: 'https://api.qa.unlayer.com',
   dev: 'https://api.dev.unlayer.com',
 };
@@ -89,15 +95,16 @@ type Environment = keyof typeof environments;
 
 export interface ClientOptions {
   /**
-   * Defaults to process.env['UNLAYER_API_KEY'].
+   * Defaults to process.env['UNLAYER_ACCESS_TOKEN'].
    */
-  apiKey?: string | undefined;
+  accessToken?: string | undefined;
 
   /**
    * Specifies the environment to use for the API.
    *
    * Each environment maps to a different base URL:
    * - `production` corresponds to `https://api.unlayer.com`
+   * - `stage` corresponds to `https://api.stage.unlayer.com`
    * - `qa` corresponds to `https://api.qa.unlayer.com`
    * - `dev` corresponds to `https://api.dev.unlayer.com`
    */
@@ -176,7 +183,7 @@ export interface ClientOptions {
  * API Client for interfacing with the Unlayer API.
  */
 export class Unlayer {
-  apiKey: string;
+  accessToken: string;
 
   baseURL: string;
   maxRetries: number;
@@ -193,7 +200,7 @@ export class Unlayer {
   /**
    * API Client for interfacing with the Unlayer API.
    *
-   * @param {string | undefined} [opts.apiKey=process.env['UNLAYER_API_KEY'] ?? undefined]
+   * @param {string | undefined} [opts.accessToken=process.env['UNLAYER_ACCESS_TOKEN'] ?? undefined]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
    * @param {string} [opts.baseURL=process.env['UNLAYER_BASE_URL'] ?? https://api.unlayer.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
@@ -205,17 +212,17 @@ export class Unlayer {
    */
   constructor({
     baseURL = readEnv('UNLAYER_BASE_URL'),
-    apiKey = readEnv('UNLAYER_API_KEY'),
+    accessToken = readEnv('UNLAYER_ACCESS_TOKEN'),
     ...opts
   }: ClientOptions = {}) {
-    if (apiKey === undefined) {
+    if (accessToken === undefined) {
       throw new Errors.UnlayerError(
-        "The UNLAYER_API_KEY environment variable is missing or empty; either provide it, or instantiate the Unlayer client with an apiKey option, like new Unlayer({ apiKey: 'My API Key' }).",
+        "The UNLAYER_ACCESS_TOKEN environment variable is missing or empty; either provide it, or instantiate the Unlayer client with an accessToken option, like new Unlayer({ accessToken: 'My Access Token' }).",
       );
     }
 
     const options: ClientOptions = {
-      apiKey,
+      accessToken,
       ...opts,
       baseURL,
       environment: opts.environment ?? 'production',
@@ -244,7 +251,7 @@ export class Unlayer {
 
     this._options = options;
 
-    this.apiKey = apiKey;
+    this.accessToken = accessToken;
   }
 
   /**
@@ -261,7 +268,7 @@ export class Unlayer {
       logLevel: this.logLevel,
       fetch: this.fetch,
       fetchOptions: this.fetchOptions,
-      apiKey: this.apiKey,
+      accessToken: this.accessToken,
       ...options,
     });
     return client;
@@ -283,7 +290,7 @@ export class Unlayer {
   }
 
   protected async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    return buildHeaders([{ Authorization: `Bearer ${this.apiKey}` }]);
+    return buildHeaders([{ Authorization: `Bearer ${this.accessToken}` }]);
   }
 
   /**
@@ -558,6 +565,25 @@ export class Unlayer {
     return { response, options, controller, requestLogID, retryOfRequestLogID, startTime };
   }
 
+  getAPIList<Item, PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>>(
+    path: string,
+    Page: new (...args: any[]) => PageClass,
+    opts?: RequestOptions,
+  ): Pagination.PagePromise<PageClass, Item> {
+    return this.requestAPIList(Page, { method: 'get', path, ...opts });
+  }
+
+  requestAPIList<
+    Item = unknown,
+    PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>,
+  >(
+    Page: new (...args: ConstructorParameters<typeof Pagination.AbstractPage>) => PageClass,
+    options: FinalRequestOptions,
+  ): Pagination.PagePromise<PageClass, Item> {
+    const request = this.makeRequest(options, null, undefined);
+    return new Pagination.PagePromise<PageClass, Item>(this as any as Unlayer, request, Page);
+  }
+
   async fetchWithTimeout(
     url: RequestInfo,
     init: RequestInit | undefined,
@@ -790,19 +816,34 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
-  emails: API.Emails = new API.Emails(this);
-  pages: API.Pages = new API.Pages(this);
   documents: API.Documents = new API.Documents(this);
+  emails: API.Emails = new API.Emails(this);
+  export: API.Export = new API.Export(this);
+  pages: API.Pages = new API.Pages(this);
   project: API.Project = new API.Project(this);
 }
 
-Unlayer.Emails = Emails;
-Unlayer.Pages = Pages;
 Unlayer.Documents = Documents;
+Unlayer.Emails = Emails;
+Unlayer.Export = Export;
+Unlayer.Pages = Pages;
 Unlayer.Project = Project;
 
 export declare namespace Unlayer {
   export type RequestOptions = Opts.RequestOptions;
+
+  export import CursorPage = Pagination.CursorPage;
+  export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
+
+  export {
+    Documents as Documents,
+    type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
+    type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
+    type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
+    type DocumentDocumentsRetrieveParams as DocumentDocumentsRetrieveParams,
+    type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
+    type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
+  };
 
   export {
     Emails as Emails,
@@ -817,27 +858,25 @@ export declare namespace Unlayer {
   };
 
   export {
+    Export as Export,
+    type ExportHTMLListResponse as ExportHTMLListResponse,
+    type ExportImageListResponse as ExportImageListResponse,
+    type ExportPdfListResponse as ExportPdfListResponse,
+    type ExportZipListResponse as ExportZipListResponse,
+    type ExportHTMLListParams as ExportHTMLListParams,
+    type ExportImageListParams as ExportImageListParams,
+    type ExportPdfListParams as ExportPdfListParams,
+    type ExportZipListParams as ExportZipListParams,
+  };
+
+  export {
     Pages as Pages,
     type PageRenderCreateResponse as PageRenderCreateResponse,
     type PageRenderCreateParams as PageRenderCreateParams,
   };
 
   export {
-    Documents as Documents,
-    type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
-    type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
-    type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
-    type DocumentDocumentsRetrieveParams as DocumentDocumentsRetrieveParams,
-    type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
-    type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
-  };
-
-  export {
     Project as Project,
-    type ProjectAPIKeysCreateResponse as ProjectAPIKeysCreateResponse,
-    type ProjectAPIKeysListResponse as ProjectAPIKeysListResponse,
-    type ProjectAPIKeysRetrieveResponse as ProjectAPIKeysRetrieveResponse,
-    type ProjectAPIKeysUpdateResponse as ProjectAPIKeysUpdateResponse,
     type ProjectCurrentListResponse as ProjectCurrentListResponse,
     type ProjectDomainsCreateResponse as ProjectDomainsCreateResponse,
     type ProjectDomainsListResponse as ProjectDomainsListResponse,
@@ -847,13 +886,9 @@ export declare namespace Unlayer {
     type ProjectTemplatesListResponse as ProjectTemplatesListResponse,
     type ProjectTemplatesRetrieveResponse as ProjectTemplatesRetrieveResponse,
     type ProjectTemplatesUpdateResponse as ProjectTemplatesUpdateResponse,
-    type ProjectTokensDeleteResponse as ProjectTokensDeleteResponse,
-    type ProjectTokensListResponse as ProjectTokensListResponse,
     type ProjectWorkspacesListResponse as ProjectWorkspacesListResponse,
     type ProjectWorkspacesRetrieveResponse as ProjectWorkspacesRetrieveResponse,
-    type ProjectAPIKeysCreateParams as ProjectAPIKeysCreateParams,
-    type ProjectAPIKeysListParams as ProjectAPIKeysListParams,
-    type ProjectAPIKeysUpdateParams as ProjectAPIKeysUpdateParams,
+    type ProjectTemplatesListResponsesCursorPage as ProjectTemplatesListResponsesCursorPage,
     type ProjectCurrentListParams as ProjectCurrentListParams,
     type ProjectDomainsCreateParams as ProjectDomainsCreateParams,
     type ProjectDomainsListParams as ProjectDomainsListParams,

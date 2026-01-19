@@ -3,13 +3,13 @@
 import Unlayer from '@unlayer/sdk';
 
 const client = new Unlayer({
-  apiKey: 'My API Key',
+  accessToken: 'My Access Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource documents', () => {
-  test('documentsRetrieve', async () => {
-    const responsePromise = client.documents.documentsRetrieve('id');
+  test('documentsRetrieve: only required params', async () => {
+    const responsePromise = client.documents.documentsRetrieve('id', { projectId: 'projectId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,19 +19,12 @@ describe('resource documents', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('documentsRetrieve: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.documents.documentsRetrieve(
-        'id',
-        { projectId: 'projectId' },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Unlayer.NotFoundError);
+  test('documentsRetrieve: required and optional params', async () => {
+    const response = await client.documents.documentsRetrieve('id', { projectId: 'projectId' });
   });
 
   test('generateCreate: only required params', async () => {
-    const responsePromise = client.documents.generateCreate({ design: { counters: 'bar', body: 'bar' } });
+    const responsePromise = client.documents.generateCreate({ projectId: 'projectId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -43,8 +36,8 @@ describe('resource documents', () => {
 
   test('generateCreate: required and optional params', async () => {
     const response = await client.documents.generateCreate({
-      design: { counters: 'bar', body: 'bar' },
       projectId: 'projectId',
+      design: { foo: 'bar' },
       filename: 'filename',
       html: 'html',
       mergeTags: { foo: 'string' },
@@ -53,7 +46,10 @@ describe('resource documents', () => {
   });
 
   test('generateTemplateTemplate: only required params', async () => {
-    const responsePromise = client.documents.generateTemplateTemplate({ templateId: 'templateId' });
+    const responsePromise = client.documents.generateTemplateTemplate({
+      projectId: 'projectId',
+      templateId: 'templateId',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -65,8 +61,8 @@ describe('resource documents', () => {
 
   test('generateTemplateTemplate: required and optional params', async () => {
     const response = await client.documents.generateTemplateTemplate({
-      templateId: 'templateId',
       projectId: 'projectId',
+      templateId: 'templateId',
       filename: 'filename',
       mergeTags: { foo: 'string' },
     });
