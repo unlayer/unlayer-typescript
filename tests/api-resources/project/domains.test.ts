@@ -7,9 +7,9 @@ const client = new Unlayer({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource export', () => {
-  test('htmlList: only required params', async () => {
-    const responsePromise = client.export.htmlList({ projectId: 'projectId' });
+describe('resource domains', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.project.domains.create({ projectId: 'projectId', domain: 'domain' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,12 +19,12 @@ describe('resource export', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('htmlList: required and optional params', async () => {
-    const response = await client.export.htmlList({ projectId: 'projectId' });
+  test('create: required and optional params', async () => {
+    const response = await client.project.domains.create({ projectId: 'projectId', domain: 'domain' });
   });
 
-  test('imageList: only required params', async () => {
-    const responsePromise = client.export.imageList({ projectId: 'projectId' });
+  test('retrieve', async () => {
+    const responsePromise = client.project.domains.retrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,12 +34,8 @@ describe('resource export', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('imageList: required and optional params', async () => {
-    const response = await client.export.imageList({ projectId: 'projectId' });
-  });
-
-  test('pdfList: only required params', async () => {
-    const responsePromise = client.export.pdfList({ projectId: 'projectId' });
+  test('update', async () => {
+    const responsePromise = client.project.domains.update('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -49,12 +45,15 @@ describe('resource export', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('pdfList: required and optional params', async () => {
-    const response = await client.export.pdfList({ projectId: 'projectId' });
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.project.domains.update('id', { domain: 'domain' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Unlayer.NotFoundError);
   });
 
-  test('zipList: only required params', async () => {
-    const responsePromise = client.export.zipList({ projectId: 'projectId' });
+  test('list: only required params', async () => {
+    const responsePromise = client.project.domains.list({ projectId: 'projectId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -64,7 +63,18 @@ describe('resource export', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('zipList: required and optional params', async () => {
-    const response = await client.export.zipList({ projectId: 'projectId' });
+  test('list: required and optional params', async () => {
+    const response = await client.project.domains.list({ projectId: 'projectId' });
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.project.domains.delete('id');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

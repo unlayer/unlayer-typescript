@@ -18,60 +18,12 @@ import { AbstractPage, type CursorPageParams, CursorPageResponse } from './core/
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
-import {
-  DocumentDocumentsRetrieveParams,
-  DocumentDocumentsRetrieveResponse,
-  DocumentGenerateCreateParams,
-  DocumentGenerateCreateResponse,
-  DocumentGenerateTemplateTemplateParams,
-  DocumentGenerateTemplateTemplateResponse,
-  Documents,
-} from './resources/documents';
-import {
-  EmailRenderCreateParams,
-  EmailRenderCreateResponse,
-  EmailRetrieveParams,
-  EmailRetrieveResponse,
-  EmailSendCreateParams,
-  EmailSendCreateResponse,
-  EmailSendTemplateTemplateParams,
-  EmailSendTemplateTemplateResponse,
-  Emails,
-} from './resources/emails';
-import {
-  Export,
-  ExportHTMLListParams,
-  ExportHTMLListResponse,
-  ExportImageListParams,
-  ExportImageListResponse,
-  ExportPdfListParams,
-  ExportPdfListResponse,
-  ExportZipListParams,
-  ExportZipListResponse,
-} from './resources/export';
-import { PageRenderCreateParams, PageRenderCreateResponse, Pages } from './resources/pages';
-import {
-  Project,
-  ProjectCurrentListParams,
-  ProjectCurrentListResponse,
-  ProjectDomainsCreateParams,
-  ProjectDomainsCreateResponse,
-  ProjectDomainsListParams,
-  ProjectDomainsListResponse,
-  ProjectDomainsRetrieveResponse,
-  ProjectDomainsUpdateParams,
-  ProjectDomainsUpdateResponse,
-  ProjectTemplatesCreateParams,
-  ProjectTemplatesCreateResponse,
-  ProjectTemplatesListParams,
-  ProjectTemplatesListResponse,
-  ProjectTemplatesListResponsesCursorPage,
-  ProjectTemplatesRetrieveResponse,
-  ProjectTemplatesUpdateParams,
-  ProjectTemplatesUpdateResponse,
-  ProjectWorkspacesListResponse,
-  ProjectWorkspacesRetrieveResponse,
-} from './resources/project';
+import { Convert } from './resources/convert/convert';
+import { DocumentRetrieveParams, DocumentRetrieveResponse, Documents } from './resources/documents/documents';
+import { EmailRetrieveParams, EmailRetrieveResponse, Emails } from './resources/emails/emails';
+import { Export } from './resources/export/export';
+import { Pages } from './resources/pages/pages';
+import { Project } from './resources/project/project';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -828,6 +780,7 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
+  convert: API.Convert = new API.Convert(this);
   documents: API.Documents = new API.Documents(this);
   emails: API.Emails = new API.Emails(this);
   export: API.Export = new API.Export(this);
@@ -835,6 +788,7 @@ export class Unlayer {
   project: API.Project = new API.Project(this);
 }
 
+Unlayer.Convert = Convert;
 Unlayer.Documents = Documents;
 Unlayer.Emails = Emails;
 Unlayer.Export = Export;
@@ -847,66 +801,23 @@ export declare namespace Unlayer {
   export import CursorPage = Pagination.CursorPage;
   export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
 
+  export { Convert as Convert };
+
   export {
     Documents as Documents,
-    type DocumentDocumentsRetrieveResponse as DocumentDocumentsRetrieveResponse,
-    type DocumentGenerateCreateResponse as DocumentGenerateCreateResponse,
-    type DocumentGenerateTemplateTemplateResponse as DocumentGenerateTemplateTemplateResponse,
-    type DocumentDocumentsRetrieveParams as DocumentDocumentsRetrieveParams,
-    type DocumentGenerateCreateParams as DocumentGenerateCreateParams,
-    type DocumentGenerateTemplateTemplateParams as DocumentGenerateTemplateTemplateParams,
+    type DocumentRetrieveResponse as DocumentRetrieveResponse,
+    type DocumentRetrieveParams as DocumentRetrieveParams,
   };
 
   export {
     Emails as Emails,
     type EmailRetrieveResponse as EmailRetrieveResponse,
-    type EmailRenderCreateResponse as EmailRenderCreateResponse,
-    type EmailSendCreateResponse as EmailSendCreateResponse,
-    type EmailSendTemplateTemplateResponse as EmailSendTemplateTemplateResponse,
     type EmailRetrieveParams as EmailRetrieveParams,
-    type EmailRenderCreateParams as EmailRenderCreateParams,
-    type EmailSendCreateParams as EmailSendCreateParams,
-    type EmailSendTemplateTemplateParams as EmailSendTemplateTemplateParams,
   };
 
-  export {
-    Export as Export,
-    type ExportHTMLListResponse as ExportHTMLListResponse,
-    type ExportImageListResponse as ExportImageListResponse,
-    type ExportPdfListResponse as ExportPdfListResponse,
-    type ExportZipListResponse as ExportZipListResponse,
-    type ExportHTMLListParams as ExportHTMLListParams,
-    type ExportImageListParams as ExportImageListParams,
-    type ExportPdfListParams as ExportPdfListParams,
-    type ExportZipListParams as ExportZipListParams,
-  };
+  export { Export as Export };
 
-  export {
-    Pages as Pages,
-    type PageRenderCreateResponse as PageRenderCreateResponse,
-    type PageRenderCreateParams as PageRenderCreateParams,
-  };
+  export { Pages as Pages };
 
-  export {
-    Project as Project,
-    type ProjectCurrentListResponse as ProjectCurrentListResponse,
-    type ProjectDomainsCreateResponse as ProjectDomainsCreateResponse,
-    type ProjectDomainsListResponse as ProjectDomainsListResponse,
-    type ProjectDomainsRetrieveResponse as ProjectDomainsRetrieveResponse,
-    type ProjectDomainsUpdateResponse as ProjectDomainsUpdateResponse,
-    type ProjectTemplatesCreateResponse as ProjectTemplatesCreateResponse,
-    type ProjectTemplatesListResponse as ProjectTemplatesListResponse,
-    type ProjectTemplatesRetrieveResponse as ProjectTemplatesRetrieveResponse,
-    type ProjectTemplatesUpdateResponse as ProjectTemplatesUpdateResponse,
-    type ProjectWorkspacesListResponse as ProjectWorkspacesListResponse,
-    type ProjectWorkspacesRetrieveResponse as ProjectWorkspacesRetrieveResponse,
-    type ProjectTemplatesListResponsesCursorPage as ProjectTemplatesListResponsesCursorPage,
-    type ProjectCurrentListParams as ProjectCurrentListParams,
-    type ProjectDomainsCreateParams as ProjectDomainsCreateParams,
-    type ProjectDomainsListParams as ProjectDomainsListParams,
-    type ProjectDomainsUpdateParams as ProjectDomainsUpdateParams,
-    type ProjectTemplatesCreateParams as ProjectTemplatesCreateParams,
-    type ProjectTemplatesListParams as ProjectTemplatesListParams,
-    type ProjectTemplatesUpdateParams as ProjectTemplatesUpdateParams,
-  };
+  export { Project as Project };
 }

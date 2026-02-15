@@ -1,56 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export {
-  Documents,
-  type DocumentDocumentsRetrieveResponse,
-  type DocumentGenerateCreateResponse,
-  type DocumentGenerateTemplateTemplateResponse,
-  type DocumentDocumentsRetrieveParams,
-  type DocumentGenerateCreateParams,
-  type DocumentGenerateTemplateTemplateParams,
-} from './documents';
-export {
-  Emails,
-  type EmailRetrieveResponse,
-  type EmailRenderCreateResponse,
-  type EmailSendCreateResponse,
-  type EmailSendTemplateTemplateResponse,
-  type EmailRetrieveParams,
-  type EmailRenderCreateParams,
-  type EmailSendCreateParams,
-  type EmailSendTemplateTemplateParams,
-} from './emails';
-export {
-  Export,
-  type ExportHTMLListResponse,
-  type ExportImageListResponse,
-  type ExportPdfListResponse,
-  type ExportZipListResponse,
-  type ExportHTMLListParams,
-  type ExportImageListParams,
-  type ExportPdfListParams,
-  type ExportZipListParams,
-} from './export';
-export { Pages, type PageRenderCreateResponse, type PageRenderCreateParams } from './pages';
-export {
-  Project,
-  type ProjectCurrentListResponse,
-  type ProjectDomainsCreateResponse,
-  type ProjectDomainsListResponse,
-  type ProjectDomainsRetrieveResponse,
-  type ProjectDomainsUpdateResponse,
-  type ProjectTemplatesCreateResponse,
-  type ProjectTemplatesListResponse,
-  type ProjectTemplatesRetrieveResponse,
-  type ProjectTemplatesUpdateResponse,
-  type ProjectWorkspacesListResponse,
-  type ProjectWorkspacesRetrieveResponse,
-  type ProjectCurrentListParams,
-  type ProjectDomainsCreateParams,
-  type ProjectDomainsListParams,
-  type ProjectDomainsUpdateParams,
-  type ProjectTemplatesCreateParams,
-  type ProjectTemplatesListParams,
-  type ProjectTemplatesUpdateParams,
-  type ProjectTemplatesListResponsesCursorPage,
-} from './project';
+export { Convert } from './convert/convert';
+export { Documents, type DocumentRetrieveResponse, type DocumentRetrieveParams } from './documents/documents';
+export { Emails, type EmailRetrieveResponse, type EmailRetrieveParams } from './emails/emails';
+export { Export } from './export/export';
+export { Pages } from './pages/pages';
+export { Project } from './project/project';
