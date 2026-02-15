@@ -1,77 +1,88 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as CurrentAPI from './current';
-import { Current, CurrentRetrieveParams, CurrentRetrieveResponse } from './current';
-import * as DomainsAPI from './domains';
-import {
-  DomainCreateParams,
-  DomainCreateResponse,
-  DomainListParams,
-  DomainListResponse,
-  DomainRetrieveResponse,
-  DomainUpdateParams,
-  DomainUpdateResponse,
-  Domains,
-} from './domains';
 import * as TemplatesAPI from './templates';
 import {
-  TemplateCreateParams,
-  TemplateCreateResponse,
   TemplateListParams,
   TemplateListResponse,
+  TemplateListResponsesCursorPage,
+  TemplateRetrieveParams,
   TemplateRetrieveResponse,
-  TemplateUpdateParams,
-  TemplateUpdateResponse,
   Templates,
 } from './templates';
-import * as WorkspacesAPI from './workspaces';
-import { WorkspaceListResponse, WorkspaceRetrieveResponse, Workspaces } from './workspaces';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
 
 export class Project extends APIResource {
-  current: CurrentAPI.Current = new CurrentAPI.Current(this._client);
-  domains: DomainsAPI.Domains = new DomainsAPI.Domains(this._client);
   templates: TemplatesAPI.Templates = new TemplatesAPI.Templates(this._client);
-  workspaces: WorkspacesAPI.Workspaces = new WorkspacesAPI.Workspaces(this._client);
+
+  /**
+   * Get project details for the specified project.
+   */
+  retrieve(query: ProjectRetrieveParams, options?: RequestOptions): APIPromise<ProjectRetrieveResponse> {
+    return this._client.get('/v3/project', { query, ...options });
+  }
 }
 
-Project.Current = Current;
-Project.Domains = Domains;
+export interface ProjectRetrieveResponse {
+  data?: ProjectRetrieveResponse.Data;
+}
+
+export namespace ProjectRetrieveResponse {
+  export interface Data {
+    /**
+     * The project ID.
+     */
+    id?: number;
+
+    /**
+     * When the project was created.
+     */
+    createdAt?: string;
+
+    /**
+     * The project name.
+     */
+    name?: string;
+
+    /**
+     * The project status.
+     */
+    status?: string;
+
+    workspace?: Data.Workspace;
+  }
+
+  export namespace Data {
+    export interface Workspace {
+      id?: number;
+
+      name?: string;
+    }
+  }
+}
+
+export interface ProjectRetrieveParams {
+  /**
+   * The project ID
+   */
+  projectId: string;
+}
+
 Project.Templates = Templates;
-Project.Workspaces = Workspaces;
 
 export declare namespace Project {
   export {
-    Current as Current,
-    type CurrentRetrieveResponse as CurrentRetrieveResponse,
-    type CurrentRetrieveParams as CurrentRetrieveParams,
-  };
-
-  export {
-    Domains as Domains,
-    type DomainCreateResponse as DomainCreateResponse,
-    type DomainRetrieveResponse as DomainRetrieveResponse,
-    type DomainUpdateResponse as DomainUpdateResponse,
-    type DomainListResponse as DomainListResponse,
-    type DomainCreateParams as DomainCreateParams,
-    type DomainUpdateParams as DomainUpdateParams,
-    type DomainListParams as DomainListParams,
+    type ProjectRetrieveResponse as ProjectRetrieveResponse,
+    type ProjectRetrieveParams as ProjectRetrieveParams,
   };
 
   export {
     Templates as Templates,
-    type TemplateCreateResponse as TemplateCreateResponse,
     type TemplateRetrieveResponse as TemplateRetrieveResponse,
-    type TemplateUpdateResponse as TemplateUpdateResponse,
     type TemplateListResponse as TemplateListResponse,
-    type TemplateCreateParams as TemplateCreateParams,
-    type TemplateUpdateParams as TemplateUpdateParams,
+    type TemplateListResponsesCursorPage as TemplateListResponsesCursorPage,
+    type TemplateRetrieveParams as TemplateRetrieveParams,
     type TemplateListParams as TemplateListParams,
-  };
-
-  export {
-    Workspaces as Workspaces,
-    type WorkspaceRetrieveResponse as WorkspaceRetrieveResponse,
-    type WorkspaceListResponse as WorkspaceListResponse,
   };
 }

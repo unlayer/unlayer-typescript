@@ -30,9 +30,9 @@ const client = new Unlayer({
   environment: 'stage', // or 'production' | 'qa' | 'dev'; defaults to 'production'
 });
 
-const fullToSimple = await client.convert.fullToSimple.create({ design: { body: {} } });
+const project = await client.project.retrieve({ projectId: 'your-project-id' });
 
-console.log(fullToSimple.data);
+console.log(project.data);
 ```
 
 ### Request & Response types
@@ -48,9 +48,8 @@ const client = new Unlayer({
   environment: 'stage', // or 'production' | 'qa' | 'dev'; defaults to 'production'
 });
 
-const params: Unlayer.Convert.FullToSimpleCreateParams = { design: { body: {} } };
-const fullToSimple: Unlayer.Convert.FullToSimpleCreateResponse =
-  await client.convert.fullToSimple.create(params);
+const params: Unlayer.ProjectRetrieveParams = { projectId: 'your-project-id' };
+const project: Unlayer.ProjectRetrieveResponse = await client.project.retrieve(params);
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -63,8 +62,8 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-const fullToSimple = await client.convert.fullToSimple
-  .create({ design: { body: {} } })
+const project = await client.project
+  .retrieve({ projectId: 'your-project-id' })
   .catch(async (err) => {
     if (err instanceof Unlayer.APIError) {
       console.log(err.status); // 400
@@ -105,7 +104,7 @@ const client = new Unlayer({
 });
 
 // Or, configure per-request:
-await client.convert.fullToSimple.create({ design: { body: {} } }, {
+await client.project.retrieve({ projectId: 'your-project-id' }, {
   maxRetries: 5,
 });
 ```
@@ -122,7 +121,7 @@ const client = new Unlayer({
 });
 
 // Override per-request:
-await client.convert.fullToSimple.create({ design: { body: {} } }, {
+await client.project.retrieve({ projectId: 'your-project-id' }, {
   timeout: 5 * 1000,
 });
 ```
@@ -130,6 +129,40 @@ await client.convert.fullToSimple.create({ design: { body: {} } }, {
 On timeout, an `APIConnectionTimeoutError` is thrown.
 
 Note that requests which time out will be [retried twice by default](#retries).
+
+## Auto-pagination
+
+List methods in the Unlayer API are paginated.
+You can use the `for await … of` syntax to iterate through items across all pages:
+
+```ts
+async function fetchAllTemplateListResponses(params) {
+  const allTemplateListResponses = [];
+  // Automatically fetches more pages as needed.
+  for await (const templateListResponse of client.project.templates.list({
+    projectId: 'your-project-id',
+    limit: 10,
+  })) {
+    allTemplateListResponses.push(templateListResponse);
+  }
+  return allTemplateListResponses;
+}
+```
+
+Alternatively, you can request a single page at a time:
+
+```ts
+let page = await client.project.templates.list({ projectId: 'your-project-id', limit: 10 });
+for (const templateListResponse of page.data) {
+  console.log(templateListResponse);
+}
+
+// Convenience methods are provided for manually paginating:
+while (page.hasNextPage()) {
+  page = await page.getNextPage();
+  // ...
+}
+```
 
 ## Advanced Usage
 
@@ -145,15 +178,15 @@ Unlike `.asResponse()` this method consumes the body, returning once it is parse
 ```ts
 const client = new Unlayer();
 
-const response = await client.convert.fullToSimple.create({ design: { body: {} } }).asResponse();
+const response = await client.project.retrieve({ projectId: 'your-project-id' }).asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: fullToSimple, response: raw } = await client.convert.fullToSimple
-  .create({ design: { body: {} } })
+const { data: project, response: raw } = await client.project
+  .retrieve({ projectId: 'your-project-id' })
   .withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(fullToSimple.data);
+console.log(project.data);
 ```
 
 ### Logging
@@ -233,7 +266,7 @@ parameter. This library doesn't validate at runtime that the request matches the
 send will be sent as-is.
 
 ```ts
-client.convert.fullToSimple.create({
+client.project.retrieve({
   // ...
   // @ts-expect-error baz is not yet public
   baz: 'undocumented option',

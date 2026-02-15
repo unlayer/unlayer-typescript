@@ -18,12 +18,9 @@ import { AbstractPage, type CursorPageParams, CursorPageResponse } from './core/
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
+import { WorkspaceListResponse, WorkspaceRetrieveResponse, Workspaces } from './resources/workspaces';
 import { Convert } from './resources/convert/convert';
-import { DocumentRetrieveParams, DocumentRetrieveResponse, Documents } from './resources/documents/documents';
-import { EmailRetrieveParams, EmailRetrieveResponse, Emails } from './resources/emails/emails';
-import { Export } from './resources/export/export';
-import { Pages } from './resources/pages/pages';
-import { Project } from './resources/project/project';
+import { Project, ProjectRetrieveParams, ProjectRetrieveResponse } from './resources/project/project';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -781,19 +778,13 @@ export class Unlayer {
   static toFile = Uploads.toFile;
 
   convert: API.Convert = new API.Convert(this);
-  documents: API.Documents = new API.Documents(this);
-  emails: API.Emails = new API.Emails(this);
-  export: API.Export = new API.Export(this);
-  pages: API.Pages = new API.Pages(this);
   project: API.Project = new API.Project(this);
+  workspaces: API.Workspaces = new API.Workspaces(this);
 }
 
 Unlayer.Convert = Convert;
-Unlayer.Documents = Documents;
-Unlayer.Emails = Emails;
-Unlayer.Export = Export;
-Unlayer.Pages = Pages;
 Unlayer.Project = Project;
+Unlayer.Workspaces = Workspaces;
 
 export declare namespace Unlayer {
   export type RequestOptions = Opts.RequestOptions;
@@ -804,20 +795,14 @@ export declare namespace Unlayer {
   export { Convert as Convert };
 
   export {
-    Documents as Documents,
-    type DocumentRetrieveResponse as DocumentRetrieveResponse,
-    type DocumentRetrieveParams as DocumentRetrieveParams,
+    Project as Project,
+    type ProjectRetrieveResponse as ProjectRetrieveResponse,
+    type ProjectRetrieveParams as ProjectRetrieveParams,
   };
 
   export {
-    Emails as Emails,
-    type EmailRetrieveResponse as EmailRetrieveResponse,
-    type EmailRetrieveParams as EmailRetrieveParams,
+    Workspaces as Workspaces,
+    type WorkspaceRetrieveResponse as WorkspaceRetrieveResponse,
+    type WorkspaceListResponse as WorkspaceListResponse,
   };
-
-  export { Export as Export };
-
-  export { Pages as Pages };
-
-  export { Project as Project };
 }
