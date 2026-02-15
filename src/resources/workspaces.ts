@@ -1,23 +1,23 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../core/resource';
-import { APIPromise } from '../../core/api-promise';
-import { RequestOptions } from '../../internal/request-options';
-import { path } from '../../internal/utils/path';
+import { APIResource } from '../core/resource';
+import { APIPromise } from '../core/api-promise';
+import { RequestOptions } from '../internal/request-options';
+import { path } from '../internal/utils/path';
 
 export class Workspaces extends APIResource {
   /**
    * Get a specific workspace by ID with its projects.
    */
   retrieve(workspaceID: string, options?: RequestOptions): APIPromise<WorkspaceRetrieveResponse> {
-    return this._client.get(path`/project/v1/workspaces/${workspaceID}`, options);
+    return this._client.get(path`/v3/workspaces/${workspaceID}`, options);
   }
 
   /**
    * Get all workspaces accessible by the current token.
    */
   list(options?: RequestOptions): APIPromise<WorkspaceListResponse> {
-    return this._client.get('/project/v1/workspaces', options);
+    return this._client.get('/v3/workspaces', options);
   }
 }
 

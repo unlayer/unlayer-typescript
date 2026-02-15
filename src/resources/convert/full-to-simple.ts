@@ -9,7 +9,7 @@ export class FullToSimple extends APIResource {
    * Convert design json from Full to Simple schema.
    */
   create(body: FullToSimpleCreateParams, options?: RequestOptions): APIPromise<FullToSimpleCreateResponse> {
-    return this._client.post('/convert/full-to-simple', { body, ...options });
+    return this._client.post('/v3/convert/full-to-simple', { body, ...options });
   }
 }
 
@@ -30,14 +30,20 @@ export interface FullToSimpleCreateParams {
 
   displayMode?: 'email' | 'web' | 'popup' | 'document';
 
+  /**
+   * When true, includes \_conversion metadata in the response. This metadata can be
+   * passed to simple-to-full to restore original values without data loss.
+   */
+  includeConversion?: boolean;
+
   includeDefaultValues?: boolean;
 }
 
 export namespace FullToSimpleCreateParams {
   export interface Design {
-    body: unknown;
+    body: { [key: string]: unknown };
 
-    counters?: unknown;
+    counters?: { [key: string]: unknown };
 
     schemaVersion?: number;
 

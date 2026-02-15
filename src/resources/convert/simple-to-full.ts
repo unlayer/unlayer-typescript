@@ -9,7 +9,7 @@ export class SimpleToFull extends APIResource {
    * Convert design json from Simple to Full schema.
    */
   create(body: SimpleToFullCreateParams, options?: RequestOptions): APIPromise<SimpleToFullCreateResponse> {
-    return this._client.post('/convert/simple-to-full', { body, ...options });
+    return this._client.post('/v3/convert/simple-to-full', { body, ...options });
   }
 }
 
@@ -35,11 +35,11 @@ export interface SimpleToFullCreateParams {
 
 export namespace SimpleToFullCreateParams {
   export interface Design {
-    body: unknown;
+    body: { [key: string]: unknown };
 
     _conversion?: Design._Conversion;
 
-    counters?: unknown;
+    counters?: { [key: string]: unknown };
 
     schemaVersion?: number;
 
