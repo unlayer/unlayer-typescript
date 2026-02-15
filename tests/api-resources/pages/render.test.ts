@@ -7,9 +7,9 @@ const client = new Unlayer({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource pages', () => {
-  test('renderCreate: only required params', async () => {
-    const responsePromise = client.pages.renderCreate({
+describe('resource render', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.pages.render.create({
       projectId: 'projectId',
       design: { foo: 'bar' },
     });
@@ -22,8 +22,8 @@ describe('resource pages', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('renderCreate: required and optional params', async () => {
-    const response = await client.pages.renderCreate({
+  test('create: required and optional params', async () => {
+    const response = await client.pages.render.create({
       projectId: 'projectId',
       design: { foo: 'bar' },
       mergeTags: { foo: 'string' },
