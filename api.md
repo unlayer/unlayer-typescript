@@ -24,23 +24,23 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/project/project.ts">ProjectRetrieveResponse</a></code>
+- <code><a href="./src/resources/project.ts">ProjectRetrieveResponse</a></code>
 
 Methods:
 
-- <code title="get /v3/project">client.project.<a href="./src/resources/project/project.ts">retrieve</a>({ ...params }) -> ProjectRetrieveResponse</code>
+- <code title="get /v3/project">client.project.<a href="./src/resources/project.ts">retrieve</a>({ ...params }) -> ProjectRetrieveResponse</code>
 
-## Templates
+# Templates
 
 Types:
 
-- <code><a href="./src/resources/project/templates.ts">TemplateRetrieveResponse</a></code>
-- <code><a href="./src/resources/project/templates.ts">TemplateListResponse</a></code>
+- <code><a href="./src/resources/templates.ts">TemplateRetrieveResponse</a></code>
+- <code><a href="./src/resources/templates.ts">TemplateListResponse</a></code>
 
 Methods:
 
-- <code title="get /v3/project/templates/{id}">client.project.templates.<a href="./src/resources/project/templates.ts">retrieve</a>(id, { ...params }) -> TemplateRetrieveResponse</code>
-- <code title="get /v3/project/templates">client.project.templates.<a href="./src/resources/project/templates.ts">list</a>({ ...params }) -> TemplateListResponsesCursorPage</code>
+- <code title="get /v3/templates/{id}">client.templates.<a href="./src/resources/templates.ts">retrieve</a>(id, { ...params }) -> TemplateRetrieveResponse</code>
+- <code title="get /v3/templates">client.templates.<a href="./src/resources/templates.ts">list</a>({ ...params }) -> TemplateListResponsesCursorPage</code>
 
 # Workspaces
 

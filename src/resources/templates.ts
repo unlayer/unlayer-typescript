@@ -1,35 +1,32 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../core/resource';
-import { APIPromise } from '../../core/api-promise';
-import { CursorPage, type CursorPageParams, PagePromise } from '../../core/pagination';
-import { RequestOptions } from '../../internal/request-options';
-import { path } from '../../internal/utils/path';
+import { APIResource } from '../core/resource';
+import { APIPromise } from '../core/api-promise';
+import { CursorPage, type CursorPageParams, PagePromise } from '../core/pagination';
+import { RequestOptions } from '../internal/request-options';
+import { path } from '../internal/utils/path';
 
 export class Templates extends APIResource {
   /**
-   * Get project template by ID.
+   * Get template by ID.
    */
   retrieve(
     id: string,
     query: TemplateRetrieveParams,
     options?: RequestOptions,
   ): APIPromise<TemplateRetrieveResponse> {
-    return this._client.get(path`/v3/project/templates/${id}`, { query, ...options });
+    return this._client.get(path`/v3/templates/${id}`, { query, ...options });
   }
 
   /**
-   * List project templates with cursor-based pagination. Returns templates in
-   * descending order by update time.
+   * List templates with cursor-based pagination. Returns templates in descending
+   * order by update time.
    */
   list(
     query: TemplateListParams,
     options?: RequestOptions,
   ): PagePromise<TemplateListResponsesCursorPage, TemplateListResponse> {
-    return this._client.getAPIList('/v3/project/templates', CursorPage<TemplateListResponse>, {
-      query,
-      ...options,
-    });
+    return this._client.getAPIList('/v3/templates', CursorPage<TemplateListResponse>, { query, ...options });
   }
 }
 
