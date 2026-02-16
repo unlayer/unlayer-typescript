@@ -139,7 +139,7 @@ You can use the `for await … of` syntax to iterate through items across all pa
 async function fetchAllTemplateListResponses(params) {
   const allTemplateListResponses = [];
   // Automatically fetches more pages as needed.
-  for await (const templateListResponse of client.project.templates.list({
+  for await (const templateListResponse of client.templates.list({
     projectId: 'your-project-id',
     limit: 10,
   })) {
@@ -152,7 +152,7 @@ async function fetchAllTemplateListResponses(params) {
 Alternatively, you can request a single page at a time:
 
 ```ts
-let page = await client.project.templates.list({ projectId: 'your-project-id', limit: 10 });
+let page = await client.templates.list({ projectId: 'your-project-id', limit: 10 });
 for (const templateListResponse of page.data) {
   console.log(templateListResponse);
 }

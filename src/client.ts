@@ -18,9 +18,17 @@ import { AbstractPage, type CursorPageParams, CursorPageResponse } from './core/
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
+import { Project, ProjectRetrieveParams, ProjectRetrieveResponse } from './resources/project';
+import {
+  TemplateListParams,
+  TemplateListResponse,
+  TemplateListResponsesCursorPage,
+  TemplateRetrieveParams,
+  TemplateRetrieveResponse,
+  Templates,
+} from './resources/templates';
 import { WorkspaceListResponse, WorkspaceRetrieveResponse, Workspaces } from './resources/workspaces';
 import { Convert } from './resources/convert/convert';
-import { Project, ProjectRetrieveParams, ProjectRetrieveResponse } from './resources/project/project';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -779,11 +787,13 @@ export class Unlayer {
 
   convert: API.Convert = new API.Convert(this);
   project: API.Project = new API.Project(this);
+  templates: API.Templates = new API.Templates(this);
   workspaces: API.Workspaces = new API.Workspaces(this);
 }
 
 Unlayer.Convert = Convert;
 Unlayer.Project = Project;
+Unlayer.Templates = Templates;
 Unlayer.Workspaces = Workspaces;
 
 export declare namespace Unlayer {
@@ -798,6 +808,15 @@ export declare namespace Unlayer {
     Project as Project,
     type ProjectRetrieveResponse as ProjectRetrieveResponse,
     type ProjectRetrieveParams as ProjectRetrieveParams,
+  };
+
+  export {
+    Templates as Templates,
+    type TemplateRetrieveResponse as TemplateRetrieveResponse,
+    type TemplateListResponse as TemplateListResponse,
+    type TemplateListResponsesCursorPage as TemplateListResponsesCursorPage,
+    type TemplateRetrieveParams as TemplateRetrieveParams,
+    type TemplateListParams as TemplateListParams,
   };
 
   export {

@@ -9,7 +9,7 @@ const client = new Unlayer({
 
 describe('resource templates', () => {
   test('retrieve: only required params', async () => {
-    const responsePromise = client.project.templates.retrieve('id', { projectId: 'projectId' });
+    const responsePromise = client.templates.retrieve('id', { projectId: 'projectId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,11 +20,11 @@ describe('resource templates', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.project.templates.retrieve('id', { projectId: 'projectId' });
+    const response = await client.templates.retrieve('id', { projectId: 'projectId' });
   });
 
   test('list: only required params', async () => {
-    const responsePromise = client.project.templates.list({ projectId: 'projectId' });
+    const responsePromise = client.templates.list({ projectId: 'projectId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -35,7 +35,7 @@ describe('resource templates', () => {
   });
 
   test('list: required and optional params', async () => {
-    const response = await client.project.templates.list({
+    const response = await client.templates.list({
       projectId: 'projectId',
       cursor: 'cursor',
       displayMode: 'email',
