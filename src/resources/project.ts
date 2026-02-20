@@ -8,7 +8,10 @@ export class Project extends APIResource {
   /**
    * Get project details for the specified project.
    */
-  retrieve(query: ProjectRetrieveParams, options?: RequestOptions): APIPromise<ProjectRetrieveResponse> {
+  retrieve(
+    query: ProjectRetrieveParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ProjectRetrieveResponse> {
     return this._client.get('/v3/project', { query, ...options });
   }
 }
@@ -53,9 +56,9 @@ export namespace ProjectRetrieveResponse {
 
 export interface ProjectRetrieveParams {
   /**
-   * The project ID
+   * The project ID (required for PAT auth, auto-resolved for API key auth)
    */
-  projectId: string;
+  projectId?: string;
 }
 
 export declare namespace Project {

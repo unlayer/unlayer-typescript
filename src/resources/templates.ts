@@ -12,7 +12,7 @@ export class Templates extends APIResource {
    */
   retrieve(
     id: string,
-    query: TemplateRetrieveParams,
+    query: TemplateRetrieveParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<TemplateRetrieveResponse> {
     return this._client.get(path`/v3/templates/${id}`, { query, ...options });
@@ -23,7 +23,7 @@ export class Templates extends APIResource {
    * order by update time.
    */
   list(
-    query: TemplateListParams,
+    query: TemplateListParams | null | undefined = {},
     options?: RequestOptions,
   ): PagePromise<TemplateListResponsesCursorPage, TemplateListResponse> {
     return this._client.getAPIList('/v3/templates', CursorPage<TemplateListResponse>, { query, ...options });
@@ -77,17 +77,12 @@ export interface TemplateListResponse {
 
 export interface TemplateRetrieveParams {
   /**
-   * The project ID
+   * The project ID (required for PAT auth, auto-resolved for API key auth)
    */
-  projectId: string;
+  projectId?: string;
 }
 
 export interface TemplateListParams extends CursorPageParams {
-  /**
-   * The project ID to list templates for
-   */
-  projectId: string;
-
   /**
    * Filter by template type
    */
@@ -97,6 +92,11 @@ export interface TemplateListParams extends CursorPageParams {
    * Filter by name (case-insensitive search)
    */
   name?: string;
+
+  /**
+   * The project ID to list templates for
+   */
+  projectId?: string;
 }
 
 export declare namespace Templates {
