@@ -26,9 +26,10 @@ const client = new Unlayer({
   apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
 });
 
-const project = await client.project.retrieve({ projectId: 'your-project-id' });
+const page = await client.templates.list({ limit: 10, projectId: 'your-project-id' });
+const templateListResponse = page.data[0];
 
-console.log(project.data);
+console.log(templateListResponse.id);
 ```
 
 ### Request & Response types
@@ -43,8 +44,8 @@ const client = new Unlayer({
   apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
 });
 
-const params: Unlayer.ProjectRetrieveParams = { projectId: 'your-project-id' };
-const project: Unlayer.ProjectRetrieveResponse = await client.project.retrieve(params);
+const params: Unlayer.TemplateListParams = { limit: 10, projectId: 'your-project-id' };
+const [templateListResponse]: [Unlayer.TemplateListResponse] = await client.templates.list(params);
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -57,8 +58,8 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-const project = await client.project
-  .retrieve({ projectId: 'your-project-id' })
+const page = await client.templates
+  .list({ limit: 10, projectId: 'your-project-id' })
   .catch(async (err) => {
     if (err instanceof Unlayer.APIError) {
       console.log(err.status); // 400
@@ -99,7 +100,7 @@ const client = new Unlayer({
 });
 
 // Or, configure per-request:
-await client.project.retrieve({ projectId: 'your-project-id' }, {
+await client.templates.list({ limit: 10, projectId: 'your-project-id' }, {
   maxRetries: 5,
 });
 ```
@@ -116,7 +117,7 @@ const client = new Unlayer({
 });
 
 // Override per-request:
-await client.project.retrieve({ projectId: 'your-project-id' }, {
+await client.templates.list({ limit: 10, projectId: 'your-project-id' }, {
   timeout: 5 * 1000,
 });
 ```
@@ -173,15 +174,19 @@ Unlike `.asResponse()` this method consumes the body, returning once it is parse
 ```ts
 const client = new Unlayer();
 
-const response = await client.project.retrieve({ projectId: 'your-project-id' }).asResponse();
+const response = await client.templates
+  .list({ limit: 10, projectId: 'your-project-id' })
+  .asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: project, response: raw } = await client.project
-  .retrieve({ projectId: 'your-project-id' })
+const { data: page, response: raw } = await client.templates
+  .list({ limit: 10, projectId: 'your-project-id' })
   .withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(project.data);
+for await (const templateListResponse of page) {
+  console.log(templateListResponse.id);
+}
 ```
 
 ### Logging
@@ -261,7 +266,7 @@ parameter. This library doesn't validate at runtime that the request matches the
 send will be sent as-is.
 
 ```ts
-client.project.retrieve({
+client.templates.list({
   // ...
   // @ts-expect-error baz is not yet public
   baz: 'undocumented option',

@@ -18,7 +18,7 @@ import { AbstractPage, type CursorPageParams, CursorPageResponse } from './core/
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
-import { Project, ProjectRetrieveParams, ProjectRetrieveResponse } from './resources/project';
+import { ProjectRetrieveResponse, Projects } from './resources/projects';
 import {
   TemplateListParams,
   TemplateListResponse,
@@ -813,13 +813,13 @@ export class Unlayer {
   static toFile = Uploads.toFile;
 
   convert: API.Convert = new API.Convert(this);
-  project: API.Project = new API.Project(this);
+  projects: API.Projects = new API.Projects(this);
   templates: API.Templates = new API.Templates(this);
   workspaces: API.Workspaces = new API.Workspaces(this);
 }
 
 Unlayer.Convert = Convert;
-Unlayer.Project = Project;
+Unlayer.Projects = Projects;
 Unlayer.Templates = Templates;
 Unlayer.Workspaces = Workspaces;
 
@@ -831,11 +831,7 @@ export declare namespace Unlayer {
 
   export { Convert as Convert };
 
-  export {
-    Project as Project,
-    type ProjectRetrieveResponse as ProjectRetrieveResponse,
-    type ProjectRetrieveParams as ProjectRetrieveParams,
-  };
+  export { Projects as Projects, type ProjectRetrieveResponse as ProjectRetrieveResponse };
 
   export {
     Templates as Templates,
