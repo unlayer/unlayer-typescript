@@ -3,16 +3,14 @@
 import { APIResource } from '../core/resource';
 import { APIPromise } from '../core/api-promise';
 import { RequestOptions } from '../internal/request-options';
+import { path } from '../internal/utils/path';
 
-export class Project extends APIResource {
+export class Projects extends APIResource {
   /**
-   * Get project details for the specified project.
+   * Get project details by ID.
    */
-  retrieve(
-    query: ProjectRetrieveParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<ProjectRetrieveResponse> {
-    return this._client.get('/v3/project', { query, ...options });
+  retrieve(id: string, options?: RequestOptions): APIPromise<ProjectRetrieveResponse> {
+    return this._client.get(path`/v3/projects/${id}`, options);
   }
 }
 
@@ -54,16 +52,6 @@ export namespace ProjectRetrieveResponse {
   }
 }
 
-export interface ProjectRetrieveParams {
-  /**
-   * The project ID (required for PAT auth, auto-resolved for API key auth)
-   */
-  projectId?: string;
-}
-
-export declare namespace Project {
-  export {
-    type ProjectRetrieveResponse as ProjectRetrieveResponse,
-    type ProjectRetrieveParams as ProjectRetrieveParams,
-  };
+export declare namespace Projects {
+  export { type ProjectRetrieveResponse as ProjectRetrieveResponse };
 }
