@@ -23,7 +23,7 @@ describe('instantiate client', () => {
     const client = new Unlayer({
       baseURL: 'http://localhost:5000/',
       defaultHeaders: { 'X-My-Default-Header': '2' },
-      accessToken: 'My Access Token',
+      apiKey: 'My API Key',
     });
 
     test('they are used in the request', async () => {
@@ -90,7 +90,7 @@ describe('instantiate client', () => {
       const client = new Unlayer({
         logger: logger,
         logLevel: 'debug',
-        accessToken: 'My Access Token',
+        apiKey: 'My API Key',
       });
 
       await forceAPIResponseForClient(client);
@@ -98,7 +98,7 @@ describe('instantiate client', () => {
     });
 
     test('default logLevel is warn', async () => {
-      const client = new Unlayer({ accessToken: 'My Access Token' });
+      const client = new Unlayer({ apiKey: 'My API Key' });
       expect(client.logLevel).toBe('warn');
     });
 
@@ -114,7 +114,7 @@ describe('instantiate client', () => {
       const client = new Unlayer({
         logger: logger,
         logLevel: 'info',
-        accessToken: 'My Access Token',
+        apiKey: 'My API Key',
       });
 
       await forceAPIResponseForClient(client);
@@ -131,7 +131,7 @@ describe('instantiate client', () => {
       };
 
       process.env['UNLAYER_LOG'] = 'debug';
-      const client = new Unlayer({ logger: logger, accessToken: 'My Access Token' });
+      const client = new Unlayer({ logger: logger, apiKey: 'My API Key' });
       expect(client.logLevel).toBe('debug');
 
       await forceAPIResponseForClient(client);
@@ -148,7 +148,7 @@ describe('instantiate client', () => {
       };
 
       process.env['UNLAYER_LOG'] = 'not a log level';
-      const client = new Unlayer({ logger: logger, accessToken: 'My Access Token' });
+      const client = new Unlayer({ logger: logger, apiKey: 'My API Key' });
       expect(client.logLevel).toBe('warn');
       expect(warnMock).toHaveBeenCalledWith(
         'process.env[\'UNLAYER_LOG\'] was set to "not a log level", expected one of ["off","error","warn","info","debug"]',
@@ -168,7 +168,7 @@ describe('instantiate client', () => {
       const client = new Unlayer({
         logger: logger,
         logLevel: 'off',
-        accessToken: 'My Access Token',
+        apiKey: 'My API Key',
       });
 
       await forceAPIResponseForClient(client);
@@ -188,7 +188,7 @@ describe('instantiate client', () => {
       const client = new Unlayer({
         logger: logger,
         logLevel: 'debug',
-        accessToken: 'My Access Token',
+        apiKey: 'My API Key',
       });
       expect(client.logLevel).toBe('debug');
       expect(warnMock).not.toHaveBeenCalled();
@@ -200,7 +200,7 @@ describe('instantiate client', () => {
       const client = new Unlayer({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { apiVersion: 'foo' },
-        accessToken: 'My Access Token',
+        apiKey: 'My API Key',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/foo?apiVersion=foo');
     });
@@ -209,7 +209,7 @@ describe('instantiate client', () => {
       const client = new Unlayer({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { apiVersion: 'foo', hello: 'world' },
-        accessToken: 'My Access Token',
+        apiKey: 'My API Key',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/foo?apiVersion=foo&hello=world');
     });
@@ -218,7 +218,7 @@ describe('instantiate client', () => {
       const client = new Unlayer({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { hello: 'world' },
-        accessToken: 'My Access Token',
+        apiKey: 'My API Key',
       });
       expect(client.buildURL('/foo', { hello: undefined })).toEqual('http://localhost:5000/foo');
     });
@@ -227,7 +227,7 @@ describe('instantiate client', () => {
   test('custom fetch', async () => {
     const client = new Unlayer({
       baseURL: 'http://localhost:5000/',
-      accessToken: 'My Access Token',
+      apiKey: 'My API Key',
       fetch: (url) => {
         return Promise.resolve(
           new Response(JSON.stringify({ url, custom: true }), {
@@ -245,7 +245,7 @@ describe('instantiate client', () => {
     // make sure the global fetch type is assignable to our Fetch type
     const client = new Unlayer({
       baseURL: 'http://localhost:5000/',
-      accessToken: 'My Access Token',
+      apiKey: 'My API Key',
       fetch: defaultFetch,
     });
   });
@@ -253,7 +253,7 @@ describe('instantiate client', () => {
   test('custom signal', async () => {
     const client = new Unlayer({
       baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-      accessToken: 'My Access Token',
+      apiKey: 'My API Key',
       fetch: (...args) => {
         return new Promise((resolve, reject) =>
           setTimeout(
@@ -285,7 +285,7 @@ describe('instantiate client', () => {
 
     const client = new Unlayer({
       baseURL: 'http://localhost:5000/',
-      accessToken: 'My Access Token',
+      apiKey: 'My API Key',
       fetch: testFetch,
     });
 
@@ -295,18 +295,12 @@ describe('instantiate client', () => {
 
   describe('baseUrl', () => {
     test('trailing slash', () => {
-      const client = new Unlayer({
-        baseURL: 'http://localhost:5000/custom/path/',
-        accessToken: 'My Access Token',
-      });
+      const client = new Unlayer({ baseURL: 'http://localhost:5000/custom/path/', apiKey: 'My API Key' });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/custom/path/foo');
     });
 
     test('no trailing slash', () => {
-      const client = new Unlayer({
-        baseURL: 'http://localhost:5000/custom/path',
-        accessToken: 'My Access Token',
-      });
+      const client = new Unlayer({ baseURL: 'http://localhost:5000/custom/path', apiKey: 'My API Key' });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/custom/path/foo');
     });
 
@@ -315,54 +309,37 @@ describe('instantiate client', () => {
     });
 
     test('explicit option', () => {
-      const client = new Unlayer({ baseURL: 'https://example.com', accessToken: 'My Access Token' });
+      const client = new Unlayer({ baseURL: 'https://example.com', apiKey: 'My API Key' });
       expect(client.baseURL).toEqual('https://example.com');
     });
 
     test('env variable', () => {
       process.env['UNLAYER_BASE_URL'] = 'https://example.com/from_env';
-      const client = new Unlayer({ accessToken: 'My Access Token' });
+      const client = new Unlayer({ apiKey: 'My API Key' });
       expect(client.baseURL).toEqual('https://example.com/from_env');
     });
 
     test('empty env variable', () => {
       process.env['UNLAYER_BASE_URL'] = ''; // empty
-      const client = new Unlayer({ accessToken: 'My Access Token' });
+      const client = new Unlayer({ apiKey: 'My API Key' });
       expect(client.baseURL).toEqual('https://api.unlayer.com');
     });
 
     test('blank env variable', () => {
       process.env['UNLAYER_BASE_URL'] = '  '; // blank
-      const client = new Unlayer({ accessToken: 'My Access Token' });
-      expect(client.baseURL).toEqual('https://api.unlayer.com');
-    });
-
-    test('env variable with environment', () => {
-      process.env['UNLAYER_BASE_URL'] = 'https://example.com/from_env';
-
-      expect(
-        () => new Unlayer({ accessToken: 'My Access Token', environment: 'production' }),
-      ).toThrowErrorMatchingInlineSnapshot(
-        `"Ambiguous URL; The \`baseURL\` option (or UNLAYER_BASE_URL env var) and the \`environment\` option are given. If you want to use the environment you must pass baseURL: null"`,
-      );
-
-      const client = new Unlayer({
-        accessToken: 'My Access Token',
-        baseURL: null,
-        environment: 'production',
-      });
+      const client = new Unlayer({ apiKey: 'My API Key' });
       expect(client.baseURL).toEqual('https://api.unlayer.com');
     });
 
     test('in request options', () => {
-      const client = new Unlayer({ accessToken: 'My Access Token' });
+      const client = new Unlayer({ apiKey: 'My API Key' });
       expect(client.buildURL('/foo', null, 'http://localhost:5000/option')).toEqual(
         'http://localhost:5000/option/foo',
       );
     });
 
     test('in request options overridden by client options', () => {
-      const client = new Unlayer({ accessToken: 'My Access Token', baseURL: 'http://localhost:5000/client' });
+      const client = new Unlayer({ apiKey: 'My API Key', baseURL: 'http://localhost:5000/client' });
       expect(client.buildURL('/foo', null, 'http://localhost:5000/option')).toEqual(
         'http://localhost:5000/client/foo',
       );
@@ -370,7 +347,7 @@ describe('instantiate client', () => {
 
     test('in request options overridden by env variable', () => {
       process.env['UNLAYER_BASE_URL'] = 'http://localhost:5000/env';
-      const client = new Unlayer({ accessToken: 'My Access Token' });
+      const client = new Unlayer({ apiKey: 'My API Key' });
       expect(client.buildURL('/foo', null, 'http://localhost:5000/option')).toEqual(
         'http://localhost:5000/env/foo',
       );
@@ -378,11 +355,11 @@ describe('instantiate client', () => {
   });
 
   test('maxRetries option is correctly set', () => {
-    const client = new Unlayer({ maxRetries: 4, accessToken: 'My Access Token' });
+    const client = new Unlayer({ maxRetries: 4, apiKey: 'My API Key' });
     expect(client.maxRetries).toEqual(4);
 
     // default
-    const client2 = new Unlayer({ accessToken: 'My Access Token' });
+    const client2 = new Unlayer({ apiKey: 'My API Key' });
     expect(client2.maxRetries).toEqual(2);
   });
 
@@ -391,7 +368,7 @@ describe('instantiate client', () => {
       const client = new Unlayer({
         baseURL: 'http://localhost:5000/',
         maxRetries: 3,
-        accessToken: 'My Access Token',
+        apiKey: 'My API Key',
       });
 
       const newClient = client.withOptions({
@@ -417,7 +394,7 @@ describe('instantiate client', () => {
         baseURL: 'http://localhost:5000/',
         defaultHeaders: { 'X-Test-Header': 'test-value' },
         defaultQuery: { 'test-param': 'test-value' },
-        accessToken: 'My Access Token',
+        apiKey: 'My API Key',
       });
 
       const newClient = client.withOptions({
@@ -435,7 +412,7 @@ describe('instantiate client', () => {
       const client = new Unlayer({
         baseURL: 'http://localhost:5000/',
         timeout: 1000,
-        accessToken: 'My Access Token',
+        apiKey: 'My API Key',
       });
 
       // Modify the client properties directly after creation
@@ -464,21 +441,21 @@ describe('instantiate client', () => {
 
   test('with environment variable arguments', () => {
     // set options via env var
-    process.env['UNLAYER_ACCESS_TOKEN'] = 'My Access Token';
+    process.env['UNLAYER_API_KEY'] = 'My API Key';
     const client = new Unlayer();
-    expect(client.accessToken).toBe('My Access Token');
+    expect(client.apiKey).toBe('My API Key');
   });
 
   test('with overridden environment variable arguments', () => {
     // set options via env var
-    process.env['UNLAYER_ACCESS_TOKEN'] = 'another My Access Token';
-    const client = new Unlayer({ accessToken: 'My Access Token' });
-    expect(client.accessToken).toBe('My Access Token');
+    process.env['UNLAYER_API_KEY'] = 'another My API Key';
+    const client = new Unlayer({ apiKey: 'My API Key' });
+    expect(client.apiKey).toBe('My API Key');
   });
 });
 
 describe('request building', () => {
-  const client = new Unlayer({ accessToken: 'My Access Token' });
+  const client = new Unlayer({ apiKey: 'My API Key' });
 
   describe('custom headers', () => {
     test('handles undefined', async () => {
@@ -497,7 +474,7 @@ describe('request building', () => {
 });
 
 describe('default encoder', () => {
-  const client = new Unlayer({ accessToken: 'My Access Token' });
+  const client = new Unlayer({ apiKey: 'My API Key' });
 
   class Serializable {
     toJSON() {
@@ -583,7 +560,7 @@ describe('retries', () => {
     };
 
     const client = new Unlayer({
-      accessToken: 'My Access Token',
+      apiKey: 'My API Key',
       timeout: 10,
       fetch: testFetch,
     });
@@ -617,7 +594,7 @@ describe('retries', () => {
     };
 
     const client = new Unlayer({
-      accessToken: 'My Access Token',
+      apiKey: 'My API Key',
       fetch: testFetch,
       maxRetries: 4,
     });
@@ -645,7 +622,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
     const client = new Unlayer({
-      accessToken: 'My Access Token',
+      apiKey: 'My API Key',
       fetch: testFetch,
       maxRetries: 4,
     });
@@ -678,7 +655,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
     const client = new Unlayer({
-      accessToken: 'My Access Token',
+      apiKey: 'My API Key',
       fetch: testFetch,
       maxRetries: 4,
       defaultHeaders: { 'X-Stainless-Retry-Count': null },
@@ -711,7 +688,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
     const client = new Unlayer({
-      accessToken: 'My Access Token',
+      apiKey: 'My API Key',
       fetch: testFetch,
       maxRetries: 4,
     });
@@ -744,7 +721,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Unlayer({ accessToken: 'My Access Token', fetch: testFetch });
+    const client = new Unlayer({ apiKey: 'My API Key', fetch: testFetch });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
     expect(count).toEqual(2);
@@ -774,7 +751,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Unlayer({ accessToken: 'My Access Token', fetch: testFetch });
+    const client = new Unlayer({ apiKey: 'My API Key', fetch: testFetch });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
     expect(count).toEqual(2);

@@ -23,8 +23,7 @@ The full API of this library can be found in [api.md](api.md).
 import Unlayer from '@unlayer/sdk';
 
 const client = new Unlayer({
-  accessToken: process.env['UNLAYER_ACCESS_TOKEN'], // This is the default and can be omitted
-  environment: 'stage', // or 'production' | 'qa' | 'dev'; defaults to 'production'
+  apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
 });
 
 const project = await client.project.retrieve({ projectId: 'your-project-id' });
@@ -41,8 +40,7 @@ This library includes TypeScript definitions for all request params and response
 import Unlayer from '@unlayer/sdk';
 
 const client = new Unlayer({
-  accessToken: process.env['UNLAYER_ACCESS_TOKEN'], // This is the default and can be omitted
-  environment: 'stage', // or 'production' | 'qa' | 'dev'; defaults to 'production'
+  apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
 });
 
 const params: Unlayer.ProjectRetrieveParams = { projectId: 'your-project-id' };
@@ -137,8 +135,8 @@ async function fetchAllTemplateListResponses(params) {
   const allTemplateListResponses = [];
   // Automatically fetches more pages as needed.
   for await (const templateListResponse of client.templates.list({
-    projectId: 'your-project-id',
     limit: 10,
+    projectId: 'your-project-id',
   })) {
     allTemplateListResponses.push(templateListResponse);
   }
@@ -149,7 +147,7 @@ async function fetchAllTemplateListResponses(params) {
 Alternatively, you can request a single page at a time:
 
 ```ts
-let page = await client.templates.list({ projectId: 'your-project-id', limit: 10 });
+let page = await client.templates.list({ limit: 10, projectId: 'your-project-id' });
 for (const templateListResponse of page.data) {
   console.log(templateListResponse);
 }

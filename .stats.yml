@@ -1,4 +1,4 @@
 configured_endpoints: 7
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/unlayer%2Funlayer-05f06124acf955282470ca7d863e8d10c5dd36cbde746d154482e9972277cd03.yml
-openapi_spec_hash: 21532f2d9416a6e55bf9107df0948cd8
-config_hash: 87d560e6d481bc04dc9310719a5eb946
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/unlayer%2Funlayer-14707e371ca64ee082f425e10f8bd4b7d9e2eeb28d6e69daad66902abb1b8b6b.yml
+openapi_spec_hash: 8198d0442f4736109bf6c49a5a8697ab
+config_hash: 144077318a24cfbe9ce6da795a628a80

@@ -7,14 +7,16 @@ import { path } from '../internal/utils/path';
 
 export class Workspaces extends APIResource {
   /**
-   * Get a specific workspace by ID with its projects.
+   * Get a specific workspace by ID with its projects. Requires a Personal Access
+   * Token (PAT).
    */
   retrieve(workspaceID: string, options?: RequestOptions): APIPromise<WorkspaceRetrieveResponse> {
     return this._client.get(path`/v3/workspaces/${workspaceID}`, options);
   }
 
   /**
-   * Get all workspaces accessible by the current token.
+   * Get all workspaces accessible by the current token. Requires a Personal Access
+   * Token (PAT).
    */
   list(options?: RequestOptions): APIPromise<WorkspaceListResponse> {
     return this._client.get('/v3/workspaces', options);
