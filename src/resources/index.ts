@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export { Convert } from './convert/convert';
-export { Project, type ProjectRetrieveResponse, type ProjectRetrieveParams } from './project';
+export { Projects, type ProjectRetrieveResponse } from './projects';
 export {
   Templates,
   type TemplateRetrieveResponse,

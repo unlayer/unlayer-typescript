@@ -18,7 +18,7 @@ import { AbstractPage, type CursorPageParams, CursorPageResponse } from './core/
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
-import { Project, ProjectRetrieveParams, ProjectRetrieveResponse } from './resources/project';
+import { ProjectRetrieveResponse, Projects } from './resources/projects';
 import {
   TemplateListParams,
   TemplateListResponse,
@@ -42,30 +42,21 @@ import {
 } from './internal/utils/log';
 import { isEmptyObj } from './internal/utils/values';
 
-const environments = {
-  production: 'https://api.unlayer.com',
-  stage: 'https://api.stage.unlayer.com',
-  qa: 'https://api.qa.unlayer.com',
-  dev: 'https://api.dev.unlayer.com',
-};
-type Environment = keyof typeof environments;
-
 export interface ClientOptions {
   /**
-   * Defaults to process.env['UNLAYER_ACCESS_TOKEN'].
+   * Defaults to process.env['UNLAYER_API_KEY'].
    */
-  accessToken?: string | undefined;
+  apiKey?: string | null | undefined;
 
   /**
-   * Specifies the environment to use for the API.
-   *
-   * Each environment maps to a different base URL:
-   * - `production` corresponds to `https://api.unlayer.com`
-   * - `stage` corresponds to `https://api.stage.unlayer.com`
-   * - `qa` corresponds to `https://api.qa.unlayer.com`
-   * - `dev` corresponds to `https://api.dev.unlayer.com`
+   * Defaults to process.env['UNLAYER_PERSONAL_ACCESS_TOKEN'].
    */
-  environment?: Environment | undefined;
+  personalAccessToken?: string | null | undefined;
+
+  /**
+   * Defaults to process.env['UNLAYER_PROJECT_ID'].
+   */
+  projectID?: string | null | undefined;
 
   /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
@@ -140,7 +131,9 @@ export interface ClientOptions {
  * API Client for interfacing with the Unlayer API.
  */
 export class Unlayer {
-  accessToken: string;
+  apiKey: string | null;
+  personalAccessToken: string | null;
+  projectID: string | null;
 
   baseURL: string;
   maxRetries: number;
@@ -157,8 +150,9 @@ export class Unlayer {
   /**
    * API Client for interfacing with the Unlayer API.
    *
-   * @param {string | undefined} [opts.accessToken=process.env['UNLAYER_ACCESS_TOKEN'] ?? undefined]
-   * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
+   * @param {string | null | undefined} [opts.apiKey=process.env['UNLAYER_API_KEY'] ?? null]
+   * @param {string | null | undefined} [opts.personalAccessToken=process.env['UNLAYER_PERSONAL_ACCESS_TOKEN'] ?? null]
+   * @param {string | null | undefined} [opts.projectID=process.env['UNLAYER_PROJECT_ID'] ?? null]
    * @param {string} [opts.baseURL=process.env['UNLAYER_BASE_URL'] ?? https://api.unlayer.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
@@ -169,29 +163,20 @@ export class Unlayer {
    */
   constructor({
     baseURL = readEnv('UNLAYER_BASE_URL'),
-    accessToken = readEnv('UNLAYER_ACCESS_TOKEN'),
+    apiKey = readEnv('UNLAYER_API_KEY') ?? null,
+    personalAccessToken = readEnv('UNLAYER_PERSONAL_ACCESS_TOKEN') ?? null,
+    projectID = readEnv('UNLAYER_PROJECT_ID') ?? null,
     ...opts
   }: ClientOptions = {}) {
-    if (accessToken === undefined) {
-      throw new Errors.UnlayerError(
-        "The UNLAYER_ACCESS_TOKEN environment variable is missing or empty; either provide it, or instantiate the Unlayer client with an accessToken option, like new Unlayer({ accessToken: 'My Access Token' }).",
-      );
-    }
-
     const options: ClientOptions = {
-      accessToken,
+      apiKey,
+      personalAccessToken,
+      projectID,
       ...opts,
-      baseURL,
-      environment: opts.environment ?? 'production',
+      baseURL: baseURL || `https://api.unlayer.com`,
     };
 
-    if (baseURL && opts.environment) {
-      throw new Errors.UnlayerError(
-        'Ambiguous URL; The `baseURL` option (or UNLAYER_BASE_URL env var) and the `environment` option are given. If you want to use the environment you must pass baseURL: null',
-      );
-    }
-
-    this.baseURL = options.baseURL || environments[options.environment || 'production'];
+    this.baseURL = options.baseURL!;
     this.timeout = options.timeout ?? Unlayer.DEFAULT_TIMEOUT /* 1 minute */;
     this.logger = options.logger ?? console;
     const defaultLogLevel = 'warn';
@@ -208,7 +193,9 @@ export class Unlayer {
 
     this._options = options;
 
-    this.accessToken = accessToken;
+    this.apiKey = apiKey;
+    this.personalAccessToken = personalAccessToken;
+    this.projectID = projectID;
   }
 
   /**
@@ -217,15 +204,16 @@ export class Unlayer {
   withOptions(options: Partial<ClientOptions>): this {
     const client = new (this.constructor as any as new (props: ClientOptions) => typeof this)({
       ...this._options,
-      environment: options.environment ? options.environment : undefined,
-      baseURL: options.environment ? undefined : this.baseURL,
+      baseURL: this.baseURL,
       maxRetries: this.maxRetries,
       timeout: this.timeout,
       logger: this.logger,
       logLevel: this.logLevel,
       fetch: this.fetch,
       fetchOptions: this.fetchOptions,
-      accessToken: this.accessToken,
+      apiKey: this.apiKey,
+      personalAccessToken: this.personalAccessToken,
+      projectID: this.projectID,
       ...options,
     });
     return client;
@@ -235,7 +223,7 @@ export class Unlayer {
    * Check whether the base URL is set to its default.
    */
   #baseURLOverridden(): boolean {
-    return this.baseURL !== environments[this._options.environment || 'production'];
+    return this.baseURL !== 'https://api.unlayer.com';
   }
 
   protected defaultQuery(): Record<string, string | undefined> | undefined {
@@ -243,11 +231,41 @@ export class Unlayer {
   }
 
   protected validateHeaders({ values, nulls }: NullableHeaders) {
-    return;
+    if (this.apiKey && values.get('authorization')) {
+      return;
+    }
+    if (nulls.has('authorization')) {
+      return;
+    }
+
+    if (this.personalAccessToken && values.get('authorization')) {
+      return;
+    }
+    if (nulls.has('authorization')) {
+      return;
+    }
+
+    throw new Error(
+      'Could not resolve authentication method. Expected either apiKey or personalAccessToken to be set. Or for one of the "Authorization" or "Authorization" headers to be explicitly omitted',
+    );
   }
 
   protected async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    return buildHeaders([{ Authorization: `Bearer ${this.accessToken}` }]);
+    return buildHeaders([await this.apiKeyAuth(opts), await this.personalAccessTokenAuth(opts)]);
+  }
+
+  protected async apiKeyAuth(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
+    if (this.apiKey == null) {
+      return undefined;
+    }
+    return buildHeaders([{ Authorization: `Bearer ${this.apiKey}` }]);
+  }
+
+  protected async personalAccessTokenAuth(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
+    if (this.personalAccessToken == null) {
+      return undefined;
+    }
+    return buildHeaders([{ Authorization: `Bearer ${this.personalAccessToken}` }]);
   }
 
   /**
@@ -711,6 +729,7 @@ export class Unlayer {
         'X-Stainless-Retry-Count': String(retryCount),
         ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
         ...getPlatformHeaders(),
+        'X-Project-ID': this.projectID,
       },
       await this.authHeaders(options),
       this._options.defaultHeaders,
@@ -761,6 +780,14 @@ export class Unlayer {
         (Symbol.iterator in body && 'next' in body && typeof body.next === 'function'))
     ) {
       return { bodyHeaders: undefined, body: Shims.ReadableStreamFrom(body as AsyncIterable<Uint8Array>) };
+    } else if (
+      typeof body === 'object' &&
+      headers.values.get('content-type') === 'application/x-www-form-urlencoded'
+    ) {
+      return {
+        bodyHeaders: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: this.stringifyQuery(body as Record<string, unknown>),
+      };
     } else {
       return this.#encoder({ body, headers });
     }
@@ -786,13 +813,13 @@ export class Unlayer {
   static toFile = Uploads.toFile;
 
   convert: API.Convert = new API.Convert(this);
-  project: API.Project = new API.Project(this);
+  projects: API.Projects = new API.Projects(this);
   templates: API.Templates = new API.Templates(this);
   workspaces: API.Workspaces = new API.Workspaces(this);
 }
 
 Unlayer.Convert = Convert;
-Unlayer.Project = Project;
+Unlayer.Projects = Projects;
 Unlayer.Templates = Templates;
 Unlayer.Workspaces = Workspaces;
 
@@ -804,11 +831,7 @@ export declare namespace Unlayer {
 
   export { Convert as Convert };
 
-  export {
-    Project as Project,
-    type ProjectRetrieveResponse as ProjectRetrieveResponse,
-    type ProjectRetrieveParams as ProjectRetrieveParams,
-  };
+  export { Projects as Projects, type ProjectRetrieveResponse as ProjectRetrieveResponse };
 
   export {
     Templates as Templates,

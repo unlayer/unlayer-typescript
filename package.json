@@ -1,12 +1,12 @@
 {
   "name": "@unlayer/sdk",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "The official TypeScript library for the Unlayer API",
   "author": "Unlayer <contact@example.com>",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "type": "commonjs",
-  "repository": "github:stainless-sdks/unlayer-typescript",
+  "repository": "github:unlayer/unlayer-typescript",
   "license": "Apache-2.0",
   "packageManager": "yarn@1.22.22",
   "files": [

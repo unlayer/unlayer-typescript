@@ -20,15 +20,15 @@ Methods:
 
 - <code title="post /v3/convert/simple-to-full">client.convert.simpleToFull.<a href="./src/resources/convert/simple-to-full.ts">create</a>({ ...params }) -> SimpleToFullCreateResponse</code>
 
-# Project
+# Projects
 
 Types:
 
-- <code><a href="./src/resources/project.ts">ProjectRetrieveResponse</a></code>
+- <code><a href="./src/resources/projects.ts">ProjectRetrieveResponse</a></code>
 
 Methods:
 
-- <code title="get /v3/project">client.project.<a href="./src/resources/project.ts">retrieve</a>({ ...params }) -> ProjectRetrieveResponse</code>
+- <code title="get /v3/projects/{id}">client.projects.<a href="./src/resources/projects.ts">retrieve</a>(id) -> ProjectRetrieveResponse</code>
 
 # Templates
 

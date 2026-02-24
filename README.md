@@ -11,11 +11,8 @@ It is generated with [Stainless](https://www.stainless.com/).
 ## Installation
 
 ```sh
-npm install git+ssh://git@github.com:stainless-sdks/unlayer-typescript.git
+npm install @unlayer/sdk
 ```
-
-> [!NOTE]
-> Once this package is [published to npm](https://www.stainless.com/docs/guides/publish), this will become: `npm install @unlayer/sdk`
 
 ## Usage
 
@@ -26,13 +23,13 @@ The full API of this library can be found in [api.md](api.md).
 import Unlayer from '@unlayer/sdk';
 
 const client = new Unlayer({
-  accessToken: process.env['UNLAYER_ACCESS_TOKEN'], // This is the default and can be omitted
-  environment: 'stage', // or 'production' | 'qa' | 'dev'; defaults to 'production'
+  apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
 });
 
-const project = await client.project.retrieve({ projectId: 'your-project-id' });
+const page = await client.templates.list({ limit: 10, projectId: 'your-project-id' });
+const templateListResponse = page.data[0];
 
-console.log(project.data);
+console.log(templateListResponse.id);
 ```
 
 ### Request & Response types
@@ -44,12 +41,11 @@ This library includes TypeScript definitions for all request params and response
 import Unlayer from '@unlayer/sdk';
 
 const client = new Unlayer({
-  accessToken: process.env['UNLAYER_ACCESS_TOKEN'], // This is the default and can be omitted
-  environment: 'stage', // or 'production' | 'qa' | 'dev'; defaults to 'production'
+  apiKey: process.env['UNLAYER_API_KEY'], // This is the default and can be omitted
 });
 
-const params: Unlayer.ProjectRetrieveParams = { projectId: 'your-project-id' };
-const project: Unlayer.ProjectRetrieveResponse = await client.project.retrieve(params);
+const params: Unlayer.TemplateListParams = { limit: 10, projectId: 'your-project-id' };
+const [templateListResponse]: [Unlayer.TemplateListResponse] = await client.templates.list(params);
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -62,8 +58,8 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-const project = await client.project
-  .retrieve({ projectId: 'your-project-id' })
+const page = await client.templates
+  .list({ limit: 10, projectId: 'your-project-id' })
   .catch(async (err) => {
     if (err instanceof Unlayer.APIError) {
       console.log(err.status); // 400
@@ -104,7 +100,7 @@ const client = new Unlayer({
 });
 
 // Or, configure per-request:
-await client.project.retrieve({ projectId: 'your-project-id' }, {
+await client.templates.list({ limit: 10, projectId: 'your-project-id' }, {
   maxRetries: 5,
 });
 ```
@@ -121,7 +117,7 @@ const client = new Unlayer({
 });
 
 // Override per-request:
-await client.project.retrieve({ projectId: 'your-project-id' }, {
+await client.templates.list({ limit: 10, projectId: 'your-project-id' }, {
   timeout: 5 * 1000,
 });
 ```
@@ -140,8 +136,8 @@ async function fetchAllTemplateListResponses(params) {
   const allTemplateListResponses = [];
   // Automatically fetches more pages as needed.
   for await (const templateListResponse of client.templates.list({
-    projectId: 'your-project-id',
     limit: 10,
+    projectId: 'your-project-id',
   })) {
     allTemplateListResponses.push(templateListResponse);
   }
@@ -152,7 +148,7 @@ async function fetchAllTemplateListResponses(params) {
 Alternatively, you can request a single page at a time:
 
 ```ts
-let page = await client.templates.list({ projectId: 'your-project-id', limit: 10 });
+let page = await client.templates.list({ limit: 10, projectId: 'your-project-id' });
 for (const templateListResponse of page.data) {
   console.log(templateListResponse);
 }
@@ -178,15 +174,19 @@ Unlike `.asResponse()` this method consumes the body, returning once it is parse
 ```ts
 const client = new Unlayer();
 
-const response = await client.project.retrieve({ projectId: 'your-project-id' }).asResponse();
+const response = await client.templates
+  .list({ limit: 10, projectId: 'your-project-id' })
+  .asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: project, response: raw } = await client.project
-  .retrieve({ projectId: 'your-project-id' })
+const { data: page, response: raw } = await client.templates
+  .list({ limit: 10, projectId: 'your-project-id' })
   .withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(project.data);
+for await (const templateListResponse of page) {
+  console.log(templateListResponse.id);
+}
 ```
 
 ### Logging
@@ -266,7 +266,7 @@ parameter. This library doesn't validate at runtime that the request matches the
 send will be sent as-is.
 
 ```ts
-client.project.retrieve({
+client.templates.list({
   // ...
   // @ts-expect-error baz is not yet public
   baz: 'undocumented option',
@@ -376,7 +376,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/unlayer-typescript/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/unlayer/unlayer-typescript/issues) with questions, bugs, or suggestions.
 
 ## Requirements
 
