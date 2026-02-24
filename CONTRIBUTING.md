@@ -60,7 +60,7 @@ $ yarn link @unlayer/sdk
 # With pnpm
 $ pnpm link --global
 $ cd ../my-package
-$ pnpm link -—global @unlayer/sdk
+$ pnpm link --global @unlayer/sdk
 ```
 
 ## Running tests
