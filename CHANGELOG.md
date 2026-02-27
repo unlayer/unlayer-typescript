@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1 (2026-02-27)
+
+Full Changelog: [v0.1.0...v0.1.1](https://github.com/unlayer/unlayer-typescript/compare/v0.1.0...v0.1.1)
+
+### Chores
+
+* **internal:** move stringifyQuery implementation to internal function ([a382843](https://github.com/unlayer/unlayer-typescript/commit/a3828431e022b0c294eea5dd6d3dfec91dc50f3c))
+
 ## 0.1.0 (2026-02-24)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/unlayer/unlayer-typescript/compare/v0.0.1...v0.1.0)
