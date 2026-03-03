@@ -4,6 +4,9 @@ import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
+/**
+ * Design schema conversion between Full and Simple formats.
+ */
 export class SimpleToFull extends APIResource {
   /**
    * Convert design json from Simple to Full schema.

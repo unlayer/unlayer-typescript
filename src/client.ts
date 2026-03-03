@@ -801,8 +801,17 @@ export class Unlayer {
   static toFile = Uploads.toFile;
 
   convert: API.Convert = new API.Convert(this);
+  /**
+   * Project details and configuration.
+   */
   projects: API.Projects = new API.Projects(this);
+  /**
+   * Template management and retrieval.
+   */
   templates: API.Templates = new API.Templates(this);
+  /**
+   * Workspace access and management.
+   */
   workspaces: API.Workspaces = new API.Workspaces(this);
 }
 
