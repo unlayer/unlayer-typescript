@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.1.1 (2026-03-07)
+
+Full Changelog: [v0.1.0...v0.1.1](https://github.com/unlayer/unlayer-typescript/compare/v0.1.0...v0.1.1)
+
+### Bug Fixes
+
+* **client:** preserve URL params already embedded in path ([aa35c3f](https://github.com/unlayer/unlayer-typescript/commit/aa35c3f9daed566ab225bb5460667b55accfdec3))
+
+
+### Chores
+
+* **ci:** skip uploading artifacts on stainless-internal branches ([5ba5d28](https://github.com/unlayer/unlayer-typescript/commit/5ba5d2871132cd901801f72d9d82ae8a0d03adc1))
+* **internal:** codegen related update ([5d0b8ca](https://github.com/unlayer/unlayer-typescript/commit/5d0b8cae4d04648e5904edde4c4be65d2f22b144))
+* **internal:** codegen related update ([c6204bd](https://github.com/unlayer/unlayer-typescript/commit/c6204bdf620e82a1b0de3859c74a0b04ddb220be))
+* **internal:** move stringifyQuery implementation to internal function ([a382843](https://github.com/unlayer/unlayer-typescript/commit/a3828431e022b0c294eea5dd6d3dfec91dc50f3c))
+* **test:** do not count install time for mock server timeout ([3f4f137](https://github.com/unlayer/unlayer-typescript/commit/3f4f1372bc0146d0abd93d289d1edf1a4c6ce864))
+
 ## 0.1.0 (2026-02-24)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/unlayer/unlayer-typescript/compare/v0.0.1...v0.1.0)
