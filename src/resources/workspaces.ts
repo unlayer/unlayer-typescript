@@ -5,6 +5,9 @@ import { APIPromise } from '../core/api-promise';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
+/**
+ * Workspace access and management.
+ */
 export class Workspaces extends APIResource {
   /**
    * Get a specific workspace by ID with its projects. Requires a Personal Access
