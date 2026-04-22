@@ -29,6 +29,7 @@ import {
   Templates,
 } from './resources/templates';
 import { WorkspaceListResponse, WorkspaceRetrieveResponse, Workspaces } from './resources/workspaces';
+import { AI } from './resources/ai/ai';
 import { Convert } from './resources/convert/convert';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
@@ -801,6 +802,7 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
+  ai: API.AI = new API.AI(this);
   convert: API.Convert = new API.Convert(this);
   /**
    * Project details and configuration.
@@ -816,6 +818,7 @@ export class Unlayer {
   workspaces: API.Workspaces = new API.Workspaces(this);
 }
 
+Unlayer.AI = AI;
 Unlayer.Convert = Convert;
 Unlayer.Projects = Projects;
 Unlayer.Templates = Templates;
@@ -826,6 +829,8 @@ export declare namespace Unlayer {
 
   export import CursorPage = Pagination.CursorPage;
   export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
+
+  export { AI as AI };
 
   export { Convert as Convert };
 
