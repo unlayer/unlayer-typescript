@@ -5,6 +5,9 @@ import { APIPromise } from '../core/api-promise';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
+/**
+ * Project details and configuration.
+ */
 export class Projects extends APIResource {
   /**
    * Get project details by ID.

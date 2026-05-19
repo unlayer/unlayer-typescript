@@ -1,3 +1,15 @@
+# AI
+
+## Generate
+
+Types:
+
+- <code><a href="./src/resources/ai/generate.ts">GenerateCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/ai/generate">client.ai.generate.<a href="./src/resources/ai/generate.ts">create</a>({ ...params }) -> GenerateCreateResponse</code>
+
 # Convert
 
 ## FullToSimple
