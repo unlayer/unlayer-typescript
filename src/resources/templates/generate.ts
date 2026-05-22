@@ -4,6 +4,9 @@ import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
+/**
+ * Template management — list, retrieve, generate, import, export, and convert designs.
+ */
 export class Generate extends APIResource {
   /**
    * Generate, modify, or import an Unlayer design using AI. Provide typed input
@@ -11,7 +14,7 @@ export class Generate extends APIResource {
    */
   create(params: GenerateCreateParams, options?: RequestOptions): APIPromise<GenerateCreateResponse> {
     const { projectId, ...body } = params;
-    return this._client.post('/v3/ai/generate', { query: { projectId }, body, ...options });
+    return this._client.post('/v3/templates/generate', { query: { projectId }, body, ...options });
   }
 }
 

@@ -9,7 +9,7 @@ const client = new Unlayer({
 
 describe('resource generate', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.ai.generate.create({
+    const responsePromise = client.templates.generate.create({
       displayMode: 'email',
       input: [{ type: 'text' }],
       output: { blockType: 'template', type: 'json' },
@@ -24,7 +24,7 @@ describe('resource generate', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.ai.generate.create({
+    const response = await client.templates.generate.create({
       displayMode: 'email',
       input: [
         {

@@ -1,37 +1,3 @@
-# AI
-
-## Generate
-
-Types:
-
-- <code><a href="./src/resources/ai/generate.ts">GenerateCreateResponse</a></code>
-
-Methods:
-
-- <code title="post /v3/ai/generate">client.ai.generate.<a href="./src/resources/ai/generate.ts">create</a>({ ...params }) -> GenerateCreateResponse</code>
-
-# Convert
-
-## FullToSimple
-
-Types:
-
-- <code><a href="./src/resources/convert/full-to-simple.ts">FullToSimpleCreateResponse</a></code>
-
-Methods:
-
-- <code title="post /v3/convert/full-to-simple">client.convert.fullToSimple.<a href="./src/resources/convert/full-to-simple.ts">create</a>({ ...params }) -> FullToSimpleCreateResponse</code>
-
-## SimpleToFull
-
-Types:
-
-- <code><a href="./src/resources/convert/simple-to-full.ts">SimpleToFullCreateResponse</a></code>
-
-Methods:
-
-- <code title="post /v3/convert/simple-to-full">client.convert.simpleToFull.<a href="./src/resources/convert/simple-to-full.ts">create</a>({ ...params }) -> SimpleToFullCreateResponse</code>
-
 # Projects
 
 Types:
@@ -46,13 +12,53 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/templates.ts">TemplateRetrieveResponse</a></code>
-- <code><a href="./src/resources/templates.ts">TemplateListResponse</a></code>
+- <code><a href="./src/resources/templates/templates.ts">TemplateRetrieveResponse</a></code>
+- <code><a href="./src/resources/templates/templates.ts">TemplateListResponse</a></code>
 
 Methods:
 
-- <code title="get /v3/templates/{id}">client.templates.<a href="./src/resources/templates.ts">retrieve</a>(id, { ...params }) -> TemplateRetrieveResponse</code>
-- <code title="get /v3/templates">client.templates.<a href="./src/resources/templates.ts">list</a>({ ...params }) -> TemplateListResponsesCursorPage</code>
+- <code title="get /v3/templates/{id}">client.templates.<a href="./src/resources/templates/templates.ts">retrieve</a>(id, { ...params }) -> TemplateRetrieveResponse</code>
+- <code title="get /v3/templates">client.templates.<a href="./src/resources/templates/templates.ts">list</a>({ ...params }) -> TemplateListResponsesCursorPage</code>
+
+## ConvertFullToSimple
+
+Types:
+
+- <code><a href="./src/resources/templates/convert-full-to-simple.ts">ConvertFullToSimpleCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/templates/convert/full-to-simple">client.templates.convertFullToSimple.<a href="./src/resources/templates/convert-full-to-simple.ts">create</a>({ ...params }) -> ConvertFullToSimpleCreateResponse</code>
+
+## ConvertSimpleToFull
+
+Types:
+
+- <code><a href="./src/resources/templates/convert-simple-to-full.ts">ConvertSimpleToFullCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/templates/convert/simple-to-full">client.templates.convertSimpleToFull.<a href="./src/resources/templates/convert-simple-to-full.ts">create</a>({ ...params }) -> ConvertSimpleToFullCreateResponse</code>
+
+## Generate
+
+Types:
+
+- <code><a href="./src/resources/templates/generate.ts">GenerateCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/templates/generate">client.templates.generate.<a href="./src/resources/templates/generate.ts">create</a>({ ...params }) -> GenerateCreateResponse</code>
+
+## Import
+
+Types:
+
+- <code><a href="./src/resources/templates/import.ts">ImportCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/templates/import">client.templates.import.<a href="./src/resources/templates/import.ts">create</a>({ ...params }) -> ImportCreateResponse</code>
 
 # Workspaces
 

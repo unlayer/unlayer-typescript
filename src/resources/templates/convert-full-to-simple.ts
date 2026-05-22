@@ -5,31 +5,34 @@ import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
 /**
- * Design schema conversion between Full and Simple formats.
+ * Template management — list, retrieve, generate, import, export, and convert designs.
  */
-export class FullToSimple extends APIResource {
+export class ConvertFullToSimple extends APIResource {
   /**
    * Convert design json from Full to Simple schema.
    */
-  create(body: FullToSimpleCreateParams, options?: RequestOptions): APIPromise<FullToSimpleCreateResponse> {
-    return this._client.post('/v3/convert/full-to-simple', { body, ...options });
+  create(
+    body: ConvertFullToSimpleCreateParams,
+    options?: RequestOptions,
+  ): APIPromise<ConvertFullToSimpleCreateResponse> {
+    return this._client.post('/v3/templates/convert/full-to-simple', { body, ...options });
   }
 }
 
-export interface FullToSimpleCreateResponse {
-  data?: FullToSimpleCreateResponse.Data;
+export interface ConvertFullToSimpleCreateResponse {
+  data?: ConvertFullToSimpleCreateResponse.Data;
 
   success?: true;
 }
 
-export namespace FullToSimpleCreateResponse {
+export namespace ConvertFullToSimpleCreateResponse {
   export interface Data {
     design?: { [key: string]: unknown };
   }
 }
 
-export interface FullToSimpleCreateParams {
-  design: FullToSimpleCreateParams.Design;
+export interface ConvertFullToSimpleCreateParams {
+  design: ConvertFullToSimpleCreateParams.Design;
 
   displayMode?: 'email' | 'web' | 'popup' | 'document';
 
@@ -42,7 +45,7 @@ export interface FullToSimpleCreateParams {
   includeDefaultValues?: boolean;
 }
 
-export namespace FullToSimpleCreateParams {
+export namespace ConvertFullToSimpleCreateParams {
   export interface Design {
     body: { [key: string]: unknown };
 
@@ -54,9 +57,9 @@ export namespace FullToSimpleCreateParams {
   }
 }
 
-export declare namespace FullToSimple {
+export declare namespace ConvertFullToSimple {
   export {
-    type FullToSimpleCreateResponse as FullToSimpleCreateResponse,
-    type FullToSimpleCreateParams as FullToSimpleCreateParams,
+    type ConvertFullToSimpleCreateResponse as ConvertFullToSimpleCreateResponse,
+    type ConvertFullToSimpleCreateParams as ConvertFullToSimpleCreateParams,
   };
 }

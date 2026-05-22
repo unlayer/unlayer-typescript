@@ -7,9 +7,9 @@ const client = new Unlayer({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource fullToSimple', () => {
+describe('resource convertFullToSimple', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.convert.fullToSimple.create({ design: { body: { foo: 'bar' } } });
+    const responsePromise = client.templates.convertFullToSimple.create({ design: { body: { foo: 'bar' } } });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource fullToSimple', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.convert.fullToSimple.create({
+    const response = await client.templates.convertFullToSimple.create({
       design: {
         body: { foo: 'bar' },
         counters: { foo: 'bar' },
