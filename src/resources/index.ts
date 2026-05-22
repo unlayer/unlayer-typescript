@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { AI } from './ai/ai';
-export { Convert } from './convert/convert';
 export { Projects, type ProjectRetrieveResponse } from './projects';
 export {
   Templates,
@@ -10,5 +8,5 @@ export {
   type TemplateRetrieveParams,
   type TemplateListParams,
   type TemplateListResponsesCursorPage,
-} from './templates';
+} from './templates/templates';
 export { Workspaces, type WorkspaceRetrieveResponse, type WorkspaceListResponse } from './workspaces';
