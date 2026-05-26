@@ -10,9 +10,8 @@ const client = new Unlayer({
 describe('resource generate', () => {
   test('create: only required params', async () => {
     const responsePromise = client.templates.generate.create({
-      displayMode: 'email',
-      input: [{ type: 'text' }],
-      output: { blockType: 'template', type: 'json' },
+      messages: [{ content: [{ type: 'text' }], role: 'user' }],
+      output: { displayMode: 'email', kind: 'template' },
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -25,20 +24,25 @@ describe('resource generate', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.templates.generate.create({
-      displayMode: 'email',
-      input: [
+      messages: [
         {
-          type: 'text',
-          id: 'id',
-          blockType: 'blockType',
-          data: { foo: 'bar' },
-          html: 'html',
-          schemaVersion: 0,
-          text: 'text',
-          url: 'url',
+          content: [
+            {
+              type: 'text',
+              file: { url: 'url', mediaType: 'mediaType' },
+              image: 'image',
+              text: 'text',
+            },
+          ],
+          role: 'user',
+          metadata: { action: { id: 'id' } },
         },
       ],
-      output: { blockType: 'template', type: 'json' },
+      output: {
+        displayMode: 'email',
+        kind: 'template',
+        schemaVersion: 0,
+      },
       projectId: 'projectId',
       context: {
         availableTools: ['string'],
@@ -48,8 +52,27 @@ describe('resource generate', () => {
             slug: 'slug',
           },
         ],
+        fullDesign: { foo: 'bar' },
+        selection: {
+          id: 'string',
+          collection: 'pages',
+          value: 'value',
+        },
       },
-      model: 'anthropic/claude-opus-4-6',
+      conversationId: 'conversationId',
+      locale: 'locale',
+      model: 'model',
     });
+  });
+
+  test('retrieve', async () => {
+    const responsePromise = client.templates.generate.retrieve();
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });
