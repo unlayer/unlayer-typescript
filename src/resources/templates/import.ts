@@ -77,10 +77,13 @@ export interface ImportCreateParams {
   projectId?: string;
 
   /**
-   * Body param: AI model to use, in provider/model format. Optional — defaults to
-   * anthropic/claude-opus-4-6.
+   * Body param: AI model to use. Accepts a provider/model string (e.g.
+   * "anthropic/claude-opus-4-7", "openai/gpt-5.5"), a bare provider ("anthropic",
+   * "openai") which uses that provider's default model, or a bare model id
+   * ("claude-opus-4-7", "gpt-5.5") with the provider inferred from the name.
+   * Optional — defaults to anthropic/claude-opus-4-7.
    */
-  model?: 'anthropic/claude-opus-4-6' | 'openai/gpt-5.2';
+  model?: string;
 }
 
 export namespace ImportCreateParams {

@@ -49,6 +49,7 @@ Types:
 Methods:
 
 - <code title="post /v3/templates/generate">client.templates.generate.<a href="./src/resources/templates/generate.ts">create</a>({ ...params }) -> GenerateCreateResponse</code>
+- <code title="get /v3/templates/generate">client.templates.generate.<a href="./src/resources/templates/generate.ts">retrieve</a>() -> void</code>
 
 ## Import
 

@@ -35,7 +35,7 @@ describe('resource import', () => {
         },
       ],
       projectId: 'projectId',
-      model: 'anthropic/claude-opus-4-6',
+      model: 'model',
     });
   });
 });
