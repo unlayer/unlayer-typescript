@@ -60,6 +60,7 @@ describe('resource generate', () => {
         },
       },
       conversationId: 'conversationId',
+      fallbackModels: true,
       locale: 'locale',
       model: 'model',
     });

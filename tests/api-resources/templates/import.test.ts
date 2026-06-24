@@ -35,6 +35,7 @@ describe('resource import', () => {
         },
       ],
       projectId: 'projectId',
+      fallbackModels: true,
       model: 'model',
     });
   });
