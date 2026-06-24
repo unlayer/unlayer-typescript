@@ -140,13 +140,21 @@ export interface GenerateCreateParams {
   conversationId?: string;
 
   /**
+   * Body param: Transient-outage fallback controls. Omit to use Unlayer defaults
+   * only when no model is pinned; true always uses Unlayer defaults; false disables
+   * the outage tail; an ordered array replaces the default provider/model strings.
+   */
+  fallbackModels?: boolean | Array<string>;
+
+  /**
    * Body param: BCP-47 fallback locale for AI status messages.
    */
   locale?: string;
 
   /**
-   * Body param: AI model in "provider/id" form, e.g. "anthropic/claude-opus-4-7".
-   * Optional — server resolves a default per output kind.
+   * Body param: Preferred AI model in "provider/id" form, e.g.
+   * "anthropic/claude-opus-4-7". Optional — server resolves a default per output
+   * kind.
    */
   model?: string;
 }

@@ -77,7 +77,14 @@ export interface ImportCreateParams {
   projectId?: string;
 
   /**
-   * Body param: AI model to use. Accepts a provider/model string (e.g.
+   * Body param: Transient-outage fallback controls. Omit to use Unlayer defaults
+   * only when no model is pinned; true always uses Unlayer defaults; false disables
+   * the outage tail; an ordered array replaces the default provider/model strings.
+   */
+  fallbackModels?: boolean | Array<string>;
+
+  /**
+   * Body param: Preferred AI model. Accepts a provider/model string (e.g.
    * "anthropic/claude-opus-4-7", "openai/gpt-5.5"), a bare provider ("anthropic",
    * "openai") which uses that provider's default model, or a bare model id
    * ("claude-opus-4-7", "gpt-5.5") with the provider inferred from the name.
