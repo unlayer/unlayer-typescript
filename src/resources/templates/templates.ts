@@ -13,6 +13,14 @@ import {
   ConvertSimpleToFullCreateParams,
   ConvertSimpleToFullCreateResponse,
 } from './convert-simple-to-full';
+import * as ExportHTMLAPI from './export-html';
+import { ExportHTML, ExportHTMLCreateParams, ExportHTMLCreateResponse } from './export-html';
+import * as ExportImageAPI from './export-image';
+import { ExportImage, ExportImageCreateParams, ExportImageCreateResponse } from './export-image';
+import * as ExportPdfAPI from './export-pdf';
+import { ExportPdf, ExportPdfCreateParams, ExportPdfCreateResponse } from './export-pdf';
+import * as ExportZipAPI from './export-zip';
+import { ExportZip, ExportZipCreateParams, ExportZipCreateResponse } from './export-zip';
 import * as GenerateAPI from './generate';
 import { Generate, GenerateCreateParams, GenerateCreateResponse } from './generate';
 import * as ImportAPI from './import';
@@ -30,6 +38,10 @@ export class Templates extends APIResource {
     new ConvertFullToSimpleAPI.ConvertFullToSimple(this._client);
   convertSimpleToFull: ConvertSimpleToFullAPI.ConvertSimpleToFull =
     new ConvertSimpleToFullAPI.ConvertSimpleToFull(this._client);
+  exportHTML: ExportHTMLAPI.ExportHTML = new ExportHTMLAPI.ExportHTML(this._client);
+  exportImage: ExportImageAPI.ExportImage = new ExportImageAPI.ExportImage(this._client);
+  exportPdf: ExportPdfAPI.ExportPdf = new ExportPdfAPI.ExportPdf(this._client);
+  exportZip: ExportZipAPI.ExportZip = new ExportZipAPI.ExportZip(this._client);
   generate: GenerateAPI.Generate = new GenerateAPI.Generate(this._client);
   import: ImportAPI.Import = new ImportAPI.Import(this._client);
 
@@ -127,6 +139,10 @@ export interface TemplateListParams extends CursorPageParams {
 
 Templates.ConvertFullToSimple = ConvertFullToSimple;
 Templates.ConvertSimpleToFull = ConvertSimpleToFull;
+Templates.ExportHTML = ExportHTML;
+Templates.ExportImage = ExportImage;
+Templates.ExportPdf = ExportPdf;
+Templates.ExportZip = ExportZip;
 Templates.Generate = Generate;
 Templates.Import = Import;
 
@@ -149,6 +165,30 @@ export declare namespace Templates {
     ConvertSimpleToFull as ConvertSimpleToFull,
     type ConvertSimpleToFullCreateResponse as ConvertSimpleToFullCreateResponse,
     type ConvertSimpleToFullCreateParams as ConvertSimpleToFullCreateParams,
+  };
+
+  export {
+    ExportHTML as ExportHTML,
+    type ExportHTMLCreateResponse as ExportHTMLCreateResponse,
+    type ExportHTMLCreateParams as ExportHTMLCreateParams,
+  };
+
+  export {
+    ExportImage as ExportImage,
+    type ExportImageCreateResponse as ExportImageCreateResponse,
+    type ExportImageCreateParams as ExportImageCreateParams,
+  };
+
+  export {
+    ExportPdf as ExportPdf,
+    type ExportPdfCreateResponse as ExportPdfCreateResponse,
+    type ExportPdfCreateParams as ExportPdfCreateParams,
+  };
+
+  export {
+    ExportZip as ExportZip,
+    type ExportZipCreateResponse as ExportZipCreateResponse,
+    type ExportZipCreateParams as ExportZipCreateParams,
   };
 
   export {

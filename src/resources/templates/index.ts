@@ -10,6 +10,10 @@ export {
   type ConvertSimpleToFullCreateResponse,
   type ConvertSimpleToFullCreateParams,
 } from './convert-simple-to-full';
+export { ExportHTML, type ExportHTMLCreateResponse, type ExportHTMLCreateParams } from './export-html';
+export { ExportImage, type ExportImageCreateResponse, type ExportImageCreateParams } from './export-image';
+export { ExportPdf, type ExportPdfCreateResponse, type ExportPdfCreateParams } from './export-pdf';
+export { ExportZip, type ExportZipCreateResponse, type ExportZipCreateParams } from './export-zip';
 export { Generate, type GenerateCreateResponse, type GenerateCreateParams } from './generate';
 export { Import, type ImportCreateResponse, type ImportCreateParams } from './import';
 export {
