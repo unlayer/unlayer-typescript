@@ -40,6 +40,46 @@ Methods:
 
 - <code title="post /v3/templates/convert/simple-to-full">client.templates.convertSimpleToFull.<a href="./src/resources/templates/convert-simple-to-full.ts">create</a>({ ...params }) -> ConvertSimpleToFullCreateResponse</code>
 
+## ExportHTML
+
+Types:
+
+- <code><a href="./src/resources/templates/export-html.ts">ExportHTMLCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/templates/export/html">client.templates.exportHTML.<a href="./src/resources/templates/export-html.ts">create</a>({ ...params }) -> ExportHTMLCreateResponse</code>
+
+## ExportImage
+
+Types:
+
+- <code><a href="./src/resources/templates/export-image.ts">ExportImageCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/templates/export/image">client.templates.exportImage.<a href="./src/resources/templates/export-image.ts">create</a>({ ...params }) -> ExportImageCreateResponse</code>
+
+## ExportPdf
+
+Types:
+
+- <code><a href="./src/resources/templates/export-pdf.ts">ExportPdfCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/templates/export/pdf">client.templates.exportPdf.<a href="./src/resources/templates/export-pdf.ts">create</a>({ ...params }) -> ExportPdfCreateResponse</code>
+
+## ExportZip
+
+Types:
+
+- <code><a href="./src/resources/templates/export-zip.ts">ExportZipCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/templates/export/zip">client.templates.exportZip.<a href="./src/resources/templates/export-zip.ts">create</a>({ ...params }) -> ExportZipCreateResponse</code>
+
 ## Generate
 
 Types:
