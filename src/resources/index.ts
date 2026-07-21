@@ -1,5 +1,11 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+export {
+  EditorSessions,
+  type EditorSessionCreateResponse,
+  type EditorSessionCreateParams,
+} from './editor-sessions';
+export { Me } from './me/me';
 export { Projects, type ProjectRetrieveResponse } from './projects';
 export {
   Templates,
