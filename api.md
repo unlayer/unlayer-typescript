@@ -1,3 +1,25 @@
+# EditorSessions
+
+Types:
+
+- <code><a href="./src/resources/editor-sessions.ts">EditorSessionCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/editor-sessions">client.editorSessions.<a href="./src/resources/editor-sessions.ts">create</a>({ ...params }) -> EditorSessionCreateResponse</code>
+
+# Me
+
+## Subscription
+
+Types:
+
+- <code><a href="./src/resources/me/subscription.ts">SubscriptionRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /v3/me/subscription">client.me.subscription.<a href="./src/resources/me/subscription.ts">retrieve</a>({ ...params }) -> SubscriptionRetrieveResponse</code>
+
 # Projects
 
 Types:

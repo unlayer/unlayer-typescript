@@ -19,8 +19,14 @@ import { AbstractPage, type CursorPageParams, CursorPageResponse } from './core/
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
+import {
+  EditorSessionCreateParams,
+  EditorSessionCreateResponse,
+  EditorSessions,
+} from './resources/editor-sessions';
 import { ProjectRetrieveResponse, Projects } from './resources/projects';
 import { WorkspaceListResponse, WorkspaceRetrieveResponse, Workspaces } from './resources/workspaces';
+import { Me } from './resources/me/me';
 import {
   TemplateListParams,
   TemplateListResponse,
@@ -820,6 +826,8 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
+  editorSessions: API.EditorSessions = new API.EditorSessions(this);
+  me: API.Me = new API.Me(this);
   /**
    * Project details and configuration.
    */
@@ -834,6 +842,8 @@ export class Unlayer {
   workspaces: API.Workspaces = new API.Workspaces(this);
 }
 
+Unlayer.EditorSessions = EditorSessions;
+Unlayer.Me = Me;
 Unlayer.Projects = Projects;
 Unlayer.Templates = Templates;
 Unlayer.Workspaces = Workspaces;
@@ -843,6 +853,14 @@ export declare namespace Unlayer {
 
   export import CursorPage = Pagination.CursorPage;
   export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
+
+  export {
+    EditorSessions as EditorSessions,
+    type EditorSessionCreateResponse as EditorSessionCreateResponse,
+    type EditorSessionCreateParams as EditorSessionCreateParams,
+  };
+
+  export { Me as Me };
 
   export { Projects as Projects, type ProjectRetrieveResponse as ProjectRetrieveResponse };
 
