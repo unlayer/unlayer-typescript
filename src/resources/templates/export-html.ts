@@ -22,7 +22,11 @@ export interface ExportHTMLCreateResponse {
 
 export namespace ExportHTMLCreateResponse {
   export interface Data {
+    amp?: { [key: string]: unknown };
+
     chunks?: Data.Chunks;
+
+    design?: { [key: string]: unknown };
 
     html?: string;
   }
@@ -36,6 +40,8 @@ export namespace ExportHTMLCreateResponse {
       fonts?: Array<unknown>;
 
       js?: string;
+
+      tags?: Array<string>;
     }
   }
 }
