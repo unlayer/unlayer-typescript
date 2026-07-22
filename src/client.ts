@@ -24,9 +24,9 @@ import {
   EditorSessionCreateResponse,
   EditorSessions,
 } from './resources/editor-sessions';
-import { ProjectRetrieveResponse, Projects } from './resources/projects';
 import { WorkspaceListResponse, WorkspaceRetrieveResponse, Workspaces } from './resources/workspaces';
 import { Me } from './resources/me/me';
+import { ProjectRetrieveResponse, Projects } from './resources/projects/projects';
 import {
   TemplateListParams,
   TemplateListResponse,

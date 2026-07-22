@@ -6,7 +6,7 @@ export {
   type EditorSessionCreateParams,
 } from './editor-sessions';
 export { Me } from './me/me';
-export { Projects, type ProjectRetrieveResponse } from './projects';
+export { Projects, type ProjectRetrieveResponse } from './projects/projects';
 export {
   Templates,
   type TemplateRetrieveResponse,
