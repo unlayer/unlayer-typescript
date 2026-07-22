@@ -24,11 +24,83 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/projects.ts">ProjectRetrieveResponse</a></code>
+- <code><a href="./src/resources/projects/projects.ts">ProjectRetrieveResponse</a></code>
 
 Methods:
 
-- <code title="get /v3/projects/{id}">client.projects.<a href="./src/resources/projects.ts">retrieve</a>(id) -> ProjectRetrieveResponse</code>
+- <code title="get /v3/projects/{id}">client.projects.<a href="./src/resources/projects/projects.ts">retrieve</a>(id) -> ProjectRetrieveResponse</code>
+
+## AICredits
+
+Types:
+
+- <code><a href="./src/resources/projects/ai-credits.ts">AICreditRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /v3/projects/{id}/ai-credits">client.projects.aiCredits.<a href="./src/resources/projects/ai-credits.ts">retrieve</a>(id) -> AICreditRetrieveResponse</code>
+
+## AICreditsSettings
+
+Types:
+
+- <code><a href="./src/resources/projects/ai-credits-settings.ts">AICreditsSettingRetrieveResponse</a></code>
+- <code><a href="./src/resources/projects/ai-credits-settings.ts">AICreditsSettingUpdateResponse</a></code>
+
+Methods:
+
+- <code title="get /v3/projects/{id}/ai-credits/settings">client.projects.aiCreditsSettings.<a href="./src/resources/projects/ai-credits-settings.ts">retrieve</a>(id) -> AICreditsSettingRetrieveResponse</code>
+- <code title="put /v3/projects/{id}/ai-credits/settings">client.projects.aiCreditsSettings.<a href="./src/resources/projects/ai-credits-settings.ts">update</a>(id, { ...params }) -> AICreditsSettingUpdateResponse</code>
+
+## AICreditsSettingsRotateSecret
+
+Types:
+
+- <code><a href="./src/resources/projects/ai-credits-settings-rotate-secret.ts">AICreditsSettingsRotateSecretCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/projects/{id}/ai-credits/settings/rotate-secret">client.projects.aiCreditsSettingsRotateSecret.<a href="./src/resources/projects/ai-credits-settings-rotate-secret.ts">create</a>(id) -> AICreditsSettingsRotateSecretCreateResponse</code>
+
+## AICreditsUsage
+
+Types:
+
+- <code><a href="./src/resources/projects/ai-credits-usage.ts">AICreditsUsageRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /v3/projects/{id}/ai-credits/usage">client.projects.aiCreditsUsage.<a href="./src/resources/projects/ai-credits-usage.ts">retrieve</a>(id, { ...params }) -> AICreditsUsageRetrieveResponse</code>
+
+## AICreditsWebhooksDeliveries
+
+Types:
+
+- <code><a href="./src/resources/projects/ai-credits-webhooks-deliveries.ts">AICreditsWebhooksDeliveryRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /v3/projects/{id}/ai-credits/webhooks/deliveries">client.projects.aiCreditsWebhooksDeliveries.<a href="./src/resources/projects/ai-credits-webhooks-deliveries.ts">retrieve</a>(id, { ...params }) -> AICreditsWebhooksDeliveryRetrieveResponse</code>
+
+## AICreditsWebhooksDeliveriesattempts
+
+Types:
+
+- <code><a href="./src/resources/projects/ai-credits-webhooks-deliveriesattempts.ts">AICreditsWebhooksDeliveriesattemptRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /v3/projects/{id}/ai-credits/webhooks/deliveries/{deliveryId}/attempts">client.projects.aiCreditsWebhooksDeliveriesattempts.<a href="./src/resources/projects/ai-credits-webhooks-deliveriesattempts.ts">retrieve</a>(deliveryID, { ...params }) -> AICreditsWebhooksDeliveriesattemptRetrieveResponse</code>
+
+## AICreditsWebhooksDeliveriesretry
+
+Types:
+
+- <code><a href="./src/resources/projects/ai-credits-webhooks-deliveriesretry.ts">AICreditsWebhooksDeliveriesretryCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/projects/{id}/ai-credits/webhooks/deliveries/{deliveryId}/retry">client.projects.aiCreditsWebhooksDeliveriesretry.<a href="./src/resources/projects/ai-credits-webhooks-deliveriesretry.ts">create</a>(deliveryID, { ...params }) -> AICreditsWebhooksDeliveriesretryCreateResponse</code>
 
 # Templates
 
