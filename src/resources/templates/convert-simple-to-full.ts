@@ -34,6 +34,12 @@ export namespace ConvertSimpleToFullCreateResponse {
 export interface ConvertSimpleToFullCreateParams {
   design: ConvertSimpleToFullCreateParams.Design;
 
+  /**
+   * Display mode of the design (email, web, document, popup). Defaults to "email",
+   * matching /v3/templates/validate. Mode-specific repairs apply during conversion
+   * (email caps contentWidth at 900px, for example), so pass the design's actual
+   * mode — a web design converted under the email default can be altered.
+   */
   displayMode?: 'email' | 'web' | 'popup' | 'document';
 
   includeDefaultValues?: boolean;

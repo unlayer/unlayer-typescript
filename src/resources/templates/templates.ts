@@ -25,6 +25,10 @@ import * as GenerateAPI from './generate';
 import { Generate, GenerateCreateParams, GenerateCreateResponse } from './generate';
 import * as ImportAPI from './import';
 import { Import, ImportCreateParams, ImportCreateResponse } from './import';
+import * as SchemaAPI from './schema';
+import { Schema, SchemaRetrieveParams } from './schema';
+import * as ValidateAPI from './validate';
+import { Validate, ValidateCreateParams, ValidateCreateResponse } from './validate';
 import { APIPromise } from '../../core/api-promise';
 import { CursorPage, type CursorPageParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
@@ -44,6 +48,8 @@ export class Templates extends APIResource {
   exportZip: ExportZipAPI.ExportZip = new ExportZipAPI.ExportZip(this._client);
   generate: GenerateAPI.Generate = new GenerateAPI.Generate(this._client);
   import: ImportAPI.Import = new ImportAPI.Import(this._client);
+  schema: SchemaAPI.Schema = new SchemaAPI.Schema(this._client);
+  validate: ValidateAPI.Validate = new ValidateAPI.Validate(this._client);
 
   /**
    * Get template by ID.
@@ -145,6 +151,8 @@ Templates.ExportPdf = ExportPdf;
 Templates.ExportZip = ExportZip;
 Templates.Generate = Generate;
 Templates.Import = Import;
+Templates.Schema = Schema;
+Templates.Validate = Validate;
 
 export declare namespace Templates {
   export {
@@ -201,5 +209,13 @@ export declare namespace Templates {
     Import as Import,
     type ImportCreateResponse as ImportCreateResponse,
     type ImportCreateParams as ImportCreateParams,
+  };
+
+  export { Schema as Schema, type SchemaRetrieveParams as SchemaRetrieveParams };
+
+  export {
+    Validate as Validate,
+    type ValidateCreateResponse as ValidateCreateResponse,
+    type ValidateCreateParams as ValidateCreateParams,
   };
 }

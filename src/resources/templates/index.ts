@@ -16,6 +16,7 @@ export { ExportPdf, type ExportPdfCreateResponse, type ExportPdfCreateParams } f
 export { ExportZip, type ExportZipCreateResponse, type ExportZipCreateParams } from './export-zip';
 export { Generate, type GenerateCreateResponse, type GenerateCreateParams } from './generate';
 export { Import, type ImportCreateResponse, type ImportCreateParams } from './import';
+export { Schema, type SchemaRetrieveParams } from './schema';
 export {
   Templates,
   type TemplateRetrieveResponse,
@@ -24,3 +25,4 @@ export {
   type TemplateListParams,
   type TemplateListResponsesCursorPage,
 } from './templates';
+export { Validate, type ValidateCreateResponse, type ValidateCreateParams } from './validate';
