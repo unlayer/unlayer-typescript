@@ -25,6 +25,22 @@ import {
   EditorSessions,
 } from './resources/editor-sessions';
 import { WorkspaceListResponse, WorkspaceRetrieveResponse, Workspaces } from './resources/workspaces';
+import {
+  DomainCreateParams,
+  DomainCreateResponse,
+  DomainDeleteResponse,
+  DomainListResponse,
+  DomainRetrieveResponse,
+  Domains,
+} from './resources/domains/domains';
+import {
+  EmailCreateParams,
+  EmailCreateResponse,
+  EmailListParams,
+  EmailListResponse,
+  EmailRetrieveResponse,
+  Emails,
+} from './resources/emails/emails';
 import { Me } from './resources/me/me';
 import { ProjectRetrieveResponse, Projects } from './resources/projects/projects';
 import {
@@ -35,6 +51,16 @@ import {
   TemplateRetrieveResponse,
   Templates,
 } from './resources/templates/templates';
+import {
+  WebhookCreateParams,
+  WebhookCreateResponse,
+  WebhookDeleteResponse,
+  WebhookListResponse,
+  WebhookRetrieveResponse,
+  WebhookUpdateParams,
+  WebhookUpdateResponse,
+  Webhooks,
+} from './resources/webhooks/webhooks';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -826,7 +852,9 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
+  domains: API.Domains = new API.Domains(this);
   editorSessions: API.EditorSessions = new API.EditorSessions(this);
+  emails: API.Emails = new API.Emails(this);
   me: API.Me = new API.Me(this);
   /**
    * Project details and configuration.
@@ -836,16 +864,20 @@ export class Unlayer {
    * Template management — list, retrieve, generate, import, export, and convert designs.
    */
   templates: API.Templates = new API.Templates(this);
+  webhooks: API.Webhooks = new API.Webhooks(this);
   /**
    * Workspace access and management.
    */
   workspaces: API.Workspaces = new API.Workspaces(this);
 }
 
+Unlayer.Domains = Domains;
 Unlayer.EditorSessions = EditorSessions;
+Unlayer.Emails = Emails;
 Unlayer.Me = Me;
 Unlayer.Projects = Projects;
 Unlayer.Templates = Templates;
+Unlayer.Webhooks = Webhooks;
 Unlayer.Workspaces = Workspaces;
 
 export declare namespace Unlayer {
@@ -855,9 +887,27 @@ export declare namespace Unlayer {
   export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
 
   export {
+    Domains as Domains,
+    type DomainCreateResponse as DomainCreateResponse,
+    type DomainRetrieveResponse as DomainRetrieveResponse,
+    type DomainListResponse as DomainListResponse,
+    type DomainDeleteResponse as DomainDeleteResponse,
+    type DomainCreateParams as DomainCreateParams,
+  };
+
+  export {
     EditorSessions as EditorSessions,
     type EditorSessionCreateResponse as EditorSessionCreateResponse,
     type EditorSessionCreateParams as EditorSessionCreateParams,
+  };
+
+  export {
+    Emails as Emails,
+    type EmailCreateResponse as EmailCreateResponse,
+    type EmailRetrieveResponse as EmailRetrieveResponse,
+    type EmailListResponse as EmailListResponse,
+    type EmailCreateParams as EmailCreateParams,
+    type EmailListParams as EmailListParams,
   };
 
   export { Me as Me };
@@ -871,6 +921,17 @@ export declare namespace Unlayer {
     type TemplateListResponsesCursorPage as TemplateListResponsesCursorPage,
     type TemplateRetrieveParams as TemplateRetrieveParams,
     type TemplateListParams as TemplateListParams,
+  };
+
+  export {
+    Webhooks as Webhooks,
+    type WebhookCreateResponse as WebhookCreateResponse,
+    type WebhookRetrieveResponse as WebhookRetrieveResponse,
+    type WebhookUpdateResponse as WebhookUpdateResponse,
+    type WebhookListResponse as WebhookListResponse,
+    type WebhookDeleteResponse as WebhookDeleteResponse,
+    type WebhookCreateParams as WebhookCreateParams,
+    type WebhookUpdateParams as WebhookUpdateParams,
   };
 
   export {

@@ -1,3 +1,29 @@
+# Domains
+
+Types:
+
+- <code><a href="./src/resources/domains/domains.ts">DomainCreateResponse</a></code>
+- <code><a href="./src/resources/domains/domains.ts">DomainRetrieveResponse</a></code>
+- <code><a href="./src/resources/domains/domains.ts">DomainListResponse</a></code>
+- <code><a href="./src/resources/domains/domains.ts">DomainDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/domains">client.domains.<a href="./src/resources/domains/domains.ts">create</a>({ ...params }) -> DomainCreateResponse</code>
+- <code title="get /v3/domains/{id}">client.domains.<a href="./src/resources/domains/domains.ts">retrieve</a>(id) -> DomainRetrieveResponse</code>
+- <code title="get /v3/domains">client.domains.<a href="./src/resources/domains/domains.ts">list</a>() -> DomainListResponse</code>
+- <code title="delete /v3/domains/{id}">client.domains.<a href="./src/resources/domains/domains.ts">delete</a>(id) -> DomainDeleteResponse</code>
+
+## Verify
+
+Types:
+
+- <code><a href="./src/resources/domains/verify.ts">VerifyCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/domains/{id}/verify">client.domains.verify.<a href="./src/resources/domains/verify.ts">create</a>(id) -> VerifyCreateResponse</code>
+
 # EditorSessions
 
 Types:
@@ -7,6 +33,96 @@ Types:
 Methods:
 
 - <code title="post /v3/editor-sessions">client.editorSessions.<a href="./src/resources/editor-sessions.ts">create</a>({ ...params }) -> EditorSessionCreateResponse</code>
+
+# Emails
+
+Types:
+
+- <code><a href="./src/resources/emails/emails.ts">EmailCreateResponse</a></code>
+- <code><a href="./src/resources/emails/emails.ts">EmailRetrieveResponse</a></code>
+- <code><a href="./src/resources/emails/emails.ts">EmailListResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/emails">client.emails.<a href="./src/resources/emails/emails.ts">create</a>({ ...params }) -> EmailCreateResponse</code>
+- <code title="get /v3/emails/{id}">client.emails.<a href="./src/resources/emails/emails.ts">retrieve</a>(id) -> EmailRetrieveResponse</code>
+- <code title="get /v3/emails">client.emails.<a href="./src/resources/emails/emails.ts">list</a>({ ...params }) -> EmailListResponse</code>
+
+## Events
+
+Types:
+
+- <code><a href="./src/resources/emails/events.ts">EventRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /v3/emails/{id}/events">client.emails.events.<a href="./src/resources/emails/events.ts">retrieve</a>(id) -> EventRetrieveResponse</code>
+
+## Render
+
+Types:
+
+- <code><a href="./src/resources/emails/render.ts">RenderCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/emails/render">client.emails.render.<a href="./src/resources/emails/render.ts">create</a>({ ...params }) -> RenderCreateResponse</code>
+
+## Settings
+
+Types:
+
+- <code><a href="./src/resources/emails/settings.ts">SettingRetrieveResponse</a></code>
+- <code><a href="./src/resources/emails/settings.ts">SettingUpdateResponse</a></code>
+
+Methods:
+
+- <code title="get /v3/emails/settings">client.emails.settings.<a href="./src/resources/emails/settings.ts">retrieve</a>() -> SettingRetrieveResponse</code>
+- <code title="patch /v3/emails/settings">client.emails.settings.<a href="./src/resources/emails/settings.ts">update</a>({ ...params }) -> SettingUpdateResponse</code>
+
+## Stats
+
+Types:
+
+- <code><a href="./src/resources/emails/stats.ts">StatRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /v3/emails/stats">client.emails.stats.<a href="./src/resources/emails/stats.ts">retrieve</a>({ ...params }) -> StatRetrieveResponse</code>
+
+## Suppressions
+
+Types:
+
+- <code><a href="./src/resources/emails/suppressions.ts">SuppressionCreateResponse</a></code>
+- <code><a href="./src/resources/emails/suppressions.ts">SuppressionRetrieveResponse</a></code>
+- <code><a href="./src/resources/emails/suppressions.ts">SuppressionDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/emails/suppressions">client.emails.suppressions.<a href="./src/resources/emails/suppressions.ts">create</a>({ ...params }) -> SuppressionCreateResponse</code>
+- <code title="get /v3/emails/suppressions">client.emails.suppressions.<a href="./src/resources/emails/suppressions.ts">retrieve</a>({ ...params }) -> SuppressionRetrieveResponse</code>
+- <code title="delete /v3/emails/suppressions">client.emails.suppressions.<a href="./src/resources/emails/suppressions.ts">delete</a>({ ...params }) -> SuppressionDeleteResponse</code>
+
+## SuppressionsCheck
+
+Types:
+
+- <code><a href="./src/resources/emails/suppressions-check.ts">SuppressionsCheckRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /v3/emails/suppressions/check">client.emails.suppressionsCheck.<a href="./src/resources/emails/suppressions-check.ts">retrieve</a>({ ...params }) -> SuppressionsCheckRetrieveResponse</code>
+
+## Template
+
+Types:
+
+- <code><a href="./src/resources/emails/template.ts">TemplateCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/emails/template">client.emails.template.<a href="./src/resources/emails/template.ts">create</a>({ ...params }) -> TemplateCreateResponse</code>
 
 # Me
 
@@ -194,6 +310,50 @@ Types:
 Methods:
 
 - <code title="post /v3/templates/import">client.templates.import.<a href="./src/resources/templates/import.ts">create</a>({ ...params }) -> ImportCreateResponse</code>
+
+## Schema
+
+Methods:
+
+- <code title="get /v3/templates/schema">client.templates.schema.<a href="./src/resources/templates/schema.ts">retrieve</a>({ ...params }) -> void</code>
+
+## Validate
+
+Types:
+
+- <code><a href="./src/resources/templates/validate.ts">ValidateCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/templates/validate">client.templates.validate.<a href="./src/resources/templates/validate.ts">create</a>({ ...params }) -> ValidateCreateResponse</code>
+
+# Webhooks
+
+Types:
+
+- <code><a href="./src/resources/webhooks/webhooks.ts">WebhookCreateResponse</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">WebhookRetrieveResponse</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">WebhookUpdateResponse</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">WebhookListResponse</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">WebhookDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/webhooks">client.webhooks.<a href="./src/resources/webhooks/webhooks.ts">create</a>({ ...params }) -> WebhookCreateResponse</code>
+- <code title="get /v3/webhooks/{id}">client.webhooks.<a href="./src/resources/webhooks/webhooks.ts">retrieve</a>(id) -> WebhookRetrieveResponse</code>
+- <code title="patch /v3/webhooks/{id}">client.webhooks.<a href="./src/resources/webhooks/webhooks.ts">update</a>(id, { ...params }) -> WebhookUpdateResponse</code>
+- <code title="get /v3/webhooks">client.webhooks.<a href="./src/resources/webhooks/webhooks.ts">list</a>() -> WebhookListResponse</code>
+- <code title="delete /v3/webhooks/{id}">client.webhooks.<a href="./src/resources/webhooks/webhooks.ts">delete</a>(id) -> WebhookDeleteResponse</code>
+
+## RotateSecret
+
+Types:
+
+- <code><a href="./src/resources/webhooks/rotate-secret.ts">RotateSecretCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v3/webhooks/{id}/rotate-secret">client.webhooks.rotateSecret.<a href="./src/resources/webhooks/rotate-secret.ts">create</a>(id) -> RotateSecretCreateResponse</code>
 
 # Workspaces
 
