@@ -1,3 +1,13 @@
+# Blocks
+
+Types:
+
+- <code><a href="./src/resources/blocks.ts">BlockRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /v3/blocks">client.blocks.<a href="./src/resources/blocks.ts">retrieve</a>({ ...params }) -> BlockRetrieveResponse</code>
+
 # Domains
 
 Types:

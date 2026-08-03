@@ -1,5 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+export { Blocks, type BlockRetrieveResponse, type BlockRetrieveParams } from './blocks';
 export {
   Domains,
   type DomainCreateResponse,
