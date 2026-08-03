@@ -19,6 +19,7 @@ import { AbstractPage, type CursorPageParams, CursorPageResponse } from './core/
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
+import { BlockRetrieveParams, BlockRetrieveResponse, Blocks } from './resources/blocks';
 import {
   EditorSessionCreateParams,
   EditorSessionCreateResponse,
@@ -852,6 +853,10 @@ export class Unlayer {
 
   static toFile = Uploads.toFile;
 
+  /**
+   * Reusable design blocks — list shared project blocks and end-user saved blocks for backup, migration, and usage reporting.
+   */
+  blocks: API.Blocks = new API.Blocks(this);
   domains: API.Domains = new API.Domains(this);
   editorSessions: API.EditorSessions = new API.EditorSessions(this);
   emails: API.Emails = new API.Emails(this);
@@ -871,6 +876,7 @@ export class Unlayer {
   workspaces: API.Workspaces = new API.Workspaces(this);
 }
 
+Unlayer.Blocks = Blocks;
 Unlayer.Domains = Domains;
 Unlayer.EditorSessions = EditorSessions;
 Unlayer.Emails = Emails;
@@ -885,6 +891,12 @@ export declare namespace Unlayer {
 
   export import CursorPage = Pagination.CursorPage;
   export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
+
+  export {
+    Blocks as Blocks,
+    type BlockRetrieveResponse as BlockRetrieveResponse,
+    type BlockRetrieveParams as BlockRetrieveParams,
+  };
 
   export {
     Domains as Domains,
