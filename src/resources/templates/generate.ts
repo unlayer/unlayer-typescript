@@ -50,8 +50,8 @@ export interface GenerateCreateResponse {
   output?: GenerateCreateResponse.Output;
 
   /**
-   * Aggregate token usage for the turn when exposed by the caller. Builder copilot
-   * endpoints expose it only in local/dev/QA and omit it in staging/production.
+   * Aggregate token usage and billed AI credits for the turn. Estimated provider
+   * cost is included only by builder copilot endpoints in local/dev/QA.
    */
   usage?: GenerateCreateResponse.Usage;
 }
@@ -63,7 +63,7 @@ export namespace GenerateCreateResponse {
    */
   export interface Model {
     /**
-     * Resolved model id, e.g. "claude-opus-4-7".
+     * Resolved model id, e.g. "claude-opus-5".
      */
     id?: string;
 
@@ -90,10 +90,16 @@ export namespace GenerateCreateResponse {
   }
 
   /**
-   * Aggregate token usage for the turn when exposed by the caller. Builder copilot
-   * endpoints expose it only in local/dev/QA and omit it in staging/production.
+   * Aggregate token usage and billed AI credits for the turn. Estimated provider
+   * cost is included only by builder copilot endpoints in local/dev/QA.
    */
   export interface Usage {
+    /**
+     * Marked-up integer AI credits used by the complete turn, including failover
+     * attempts.
+     */
+    aiCreditsUsed?: number;
+
     cachedInputTokens?: number;
 
     estimatedCostMicroUsd?: number;
@@ -111,10 +117,10 @@ export namespace GenerateCreateResponse {
 export interface GenerateCreateParams {
   /**
    * Body param: Conversation messages in chronological order, capped at 10 messages.
-   * The last `user` message is the prompt for this turn; any earlier
-   * `user`/`assistant` text turns are forwarded to the model as prior chat context.
-   * A `user` message may carry a predefined prompt action via `metadata.action.id`
-   * (e.g. SPELLING, REPHRASE).
+   * The last `user` message is the prompt for this turn; the newest earlier
+   * `user`/`assistant` turns are forwarded within a 12,000-character aggregate
+   * history budget. A `user` message may carry a predefined prompt action via
+   * `metadata.action.id` (e.g. SPELLING, REPHRASE).
    */
   messages: Array<GenerateCreateParams.Message>;
 
@@ -153,8 +159,7 @@ export interface GenerateCreateParams {
 
   /**
    * Body param: Preferred AI model in "provider/id" form, e.g.
-   * "anthropic/claude-opus-4-7". Optional — server resolves a default per output
-   * kind.
+   * "anthropic/claude-opus-5". Optional — server resolves a default per output kind.
    */
   model?: string;
 }
