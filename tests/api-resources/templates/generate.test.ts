@@ -46,6 +46,19 @@ describe('resource generate', () => {
       projectId: 'projectId',
       context: {
         availableTools: ['string'],
+        brand: {
+          colors: {
+            accent: 'accent',
+            primary: 'primary',
+            secondary: 'secondary',
+          },
+          companyName: 'companyName',
+          fonts: { body: 'body', heading: 'heading' },
+          guidelines: 'guidelines',
+          productDescription: 'productDescription',
+          targetAudience: 'targetAudience',
+          voice: 'voice',
+        },
         customTools: [
           {
             options: { foo: 'bar' },

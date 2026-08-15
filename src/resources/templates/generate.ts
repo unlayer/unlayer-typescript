@@ -223,6 +223,8 @@ export namespace GenerateCreateParams {
   export interface Context {
     availableTools?: Array<string>;
 
+    brand?: Context.Brand;
+
     customTools?: Array<Context.CustomTool>;
 
     fullDesign?: { [key: string]: unknown } | null;
@@ -233,6 +235,38 @@ export namespace GenerateCreateParams {
   }
 
   export namespace Context {
+    export interface Brand {
+      colors?: Brand.Colors;
+
+      companyName?: string;
+
+      fonts?: Brand.Fonts;
+
+      guidelines?: string;
+
+      productDescription?: string;
+
+      targetAudience?: string;
+
+      voice?: string;
+    }
+
+    export namespace Brand {
+      export interface Colors {
+        accent?: string;
+
+        primary?: string;
+
+        secondary?: string;
+      }
+
+      export interface Fonts {
+        body?: string;
+
+        heading?: string;
+      }
+    }
+
     export interface CustomTool {
       options: { [key: string]: unknown };
 
