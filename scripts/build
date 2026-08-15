@@ -6,14 +6,10 @@ cd "$(dirname "$0")/.."
 
 node scripts/utils/check-version.cjs
 
-# Build into dist and will publish the package from there,
-# so that src/resources/foo.ts becomes <package root>/resources/foo.js
-# This way importing from `"@unlayer/sdk/resources/foo"` works
-# even with `"moduleResolution": "node"`
+./node_modules/.bin/tsdown
 
-rm -rf dist; mkdir dist
-# Copy src to dist/src and build from dist/src into dist, so that
-# the source map for index.js.map will refer to ./src/index.ts etc
+# Releases publish from dist/, so include package metadata and generated source
+# beside the bundled CommonJS, ESM, and declaration output.
 cp -rp src README.md dist
 for file in LICENSE CHANGELOG.md; do
   if [ -e "${file}" ]; then cp "${file}" dist; fi
@@ -30,20 +26,12 @@ fi
 # and does a few other minor things
 node scripts/utils/make-dist-package-json.cjs > dist/package.json
 
-# build to .js/.mjs/.d.ts files
-./node_modules/.bin/tsc-multi
-# we need to patch index.js so that `new module.exports()` works for cjs backwards
-# compat. No way to get that from index.ts because it would cause compile errors
-# when building .mjs
-node scripts/utils/fix-index-exports.cjs
 cp tsconfig.dist-src.json dist/src/tsconfig.json
 
-node scripts/utils/postprocess-files.cjs
-
-# make sure that nothing crashes when we require the output CJS or
-# import the output ESM
-(cd dist && node -e 'require("@unlayer/sdk")')
-(cd dist && node -e 'import("@unlayer/sdk")' --input-type=module)
+# Verify both public entry points in CommonJS and ESM.
+(cd dist && node -e 'const sdk = require("@unlayer/sdk"); const client = require("@unlayer/sdk/client"); const unlayer = new sdk.Unlayer({ client: client.createClient({ auth: "test", baseUrl: "https://api.unlayer.com", throwOnError: true }) }); if (typeof unlayer.templates.listTemplates !== "function") process.exit(1)')
+(cd dist && node -e 'const sdk = await import("@unlayer/sdk"); const client = await import("@unlayer/sdk/client"); const unlayer = new sdk.Unlayer({ client: client.createClient({ auth: "test", baseUrl: "https://api.unlayer.com", throwOnError: true }) }); if (typeof unlayer.templates.listTemplates !== "function") process.exit(1)' --input-type=module)
+./node_modules/.bin/tsc --project tsconfig.consumer.json
 
 if [ -e ./scripts/build-deno ]
 then

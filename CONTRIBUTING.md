@@ -14,26 +14,11 @@ This will install all the required dependencies and build output files to `dist/
 
 ## Modifying/Adding code
 
-Most of the SDK is generated code. Modifications to code will be persisted between generations, but may
-result in merge conflicts between manual patches and changes from the generator. The generator will never
-modify the contents of the `src/lib/` and `examples/` directories.
-
-## Adding and running examples
-
-All files in the `examples/` directory are not modified by the generator and can be freely edited or added to.
-
-```ts
-// add an example to examples/<your-example>.ts
-
-#!/usr/bin/env -S npm run tsn -T
-…
-```
-
-```sh
-$ chmod +x examples/<your-example>.ts
-# run the example against your api
-$ yarn tsn -T examples/<your-example>.ts
-```
+The SDK source is generated with Hey API from Unlayer API v3. Automation
+replaces `src/` from the deployed production OpenAPI document, except for
+`src/version.ts`. Do not edit generated source by hand. Change the API schema or
+generator configuration in
+[`unlayer/unlayer`](https://github.com/unlayer/unlayer) instead.
 
 ## Using the repository from source
 
@@ -65,15 +50,13 @@ $ pnpm link --global @unlayer/sdk
 
 ## Running tests
 
-Most tests require you to [set up a mock server](https://github.com/stoplightio/prism) against the OpenAPI spec to run the tests.
-
-```sh
-$ ./scripts/mock
-```
-
 ```sh
 $ yarn run test
 ```
+
+This verifies source types and formatting, CommonJS and ESM builds, public
+package exports, and the packed type surface. HTTP behavior is tested beside the
+generator in `unlayer/unlayer`.
 
 ## Linting and formatting
 
