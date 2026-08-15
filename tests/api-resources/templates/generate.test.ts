@@ -45,6 +45,7 @@ describe('resource generate', () => {
       },
       projectId: 'projectId',
       context: {
+        availableFonts: [{ label: 'x', value: 'x' }],
         availableTools: ['string'],
         brand: {
           colors: {
@@ -55,6 +56,7 @@ describe('resource generate', () => {
           companyName: 'companyName',
           fonts: { body: 'body', heading: 'heading' },
           guidelines: 'guidelines',
+          logos: { primary: 'https://example.com', secondary: 'https://example.com' },
           productDescription: 'productDescription',
           targetAudience: 'targetAudience',
           voice: 'voice',

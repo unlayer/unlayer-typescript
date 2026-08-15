@@ -221,9 +221,11 @@ export namespace GenerateCreateParams {
   }
 
   export interface Context {
+    availableFonts?: Array<Context.AvailableFont>;
+
     availableTools?: Array<string>;
 
-    brand?: Context.Brand;
+    brand?: Context.Brand | null;
 
     customTools?: Array<Context.CustomTool>;
 
@@ -235,6 +237,12 @@ export namespace GenerateCreateParams {
   }
 
   export namespace Context {
+    export interface AvailableFont {
+      label: string;
+
+      value: string;
+    }
+
     export interface Brand {
       colors?: Brand.Colors;
 
@@ -243,6 +251,8 @@ export namespace GenerateCreateParams {
       fonts?: Brand.Fonts;
 
       guidelines?: string;
+
+      logos?: Brand.Logos;
 
       productDescription?: string;
 
@@ -264,6 +274,12 @@ export namespace GenerateCreateParams {
         body?: string;
 
         heading?: string;
+      }
+
+      export interface Logos {
+        primary?: string;
+
+        secondary?: string;
       }
     }
 
