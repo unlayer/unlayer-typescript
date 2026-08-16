@@ -1,0 +1,49 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release-please:
+    name: release please
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+
+    steps:
+      - name: Check release credentials
+        env:
+          APP_CLIENT_ID: ${{ secrets.SDK_PUBLISHER_CLIENT_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.SDK_PUBLISHER_PRIVATE_KEY }}
+        run: |
+          test -n "$APP_CLIENT_ID"
+          test -n "$APP_PRIVATE_KEY"
+
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.SDK_PUBLISHER_CLIENT_ID }}
+          private-key: ${{ secrets.SDK_PUBLISHER_PRIVATE_KEY }}
+          owner: unlayer
+          repositories: unlayer-typescript
+
+      - name: Create or update release
+        id: release
+        uses: googleapis/release-please-action@v5
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish:
+    name: publish package
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
+    uses: ./.github/workflows/publish-npm.yml
+    secrets: inherit
