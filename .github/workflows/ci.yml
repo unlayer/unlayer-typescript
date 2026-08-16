@@ -1,12 +1,21 @@
 name: CI
 on:
   push:
+    branches:
+      - main
   pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   verify:
     timeout-minutes: 10
-    name: verify
+    name: verify (Node 24)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -25,3 +34,38 @@ jobs:
 
       - name: Verify SDK package
         run: pnpm test
+
+      - name: Pack verified SDK
+        run: |
+          mkdir sdk-package
+          npm pack --silent --pack-destination sdk-package ./dist
+
+      - name: Upload verified SDK
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdk-package
+          path: sdk-package/*.tgz
+          retention-days: 1
+
+  runtime:
+    timeout-minutes: 5
+    name: runtime (Node 20)
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          package-manager-cache: false
+
+      - name: Download verified SDK
+        uses: actions/download-artifact@v4
+        with:
+          name: sdk-package
+          path: sdk-package
+
+      - name: Verify packed SDK runtime
+        run: ./scripts/test-package-archive sdk-package/*.tgz tests/packed-sdk-smoke.mjs
