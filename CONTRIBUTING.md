@@ -1,7 +1,9 @@
 ## Setting up the environment
 
-This repository uses the pnpm version pinned in `package.json`. Enable Corepack
-before setup so the correct version is selected automatically.
+This repository uses the pnpm version pinned in `package.json`. Development and
+SDK generation require Node.js 22.18 or newer; the published package supports
+Node.js 20 and newer. Enable Corepack before setup so the correct pnpm version
+is selected automatically.
 
 To set up the repository, run:
 
@@ -15,11 +17,17 @@ This will install all the required dependencies and build output files to `dist/
 
 ## Modifying/Adding code
 
-The SDK source is generated with Hey API from Unlayer API v3. Automation
-replaces `src/` from the deployed production OpenAPI document, except for
-`src/version.ts`. Do not edit generated source by hand. Change the API schema or
-generator configuration in
-[`unlayer/unlayer`](https://github.com/unlayer/unlayer) instead.
+The SDK source is generated with the pinned Hey API version and
+`openapi-ts.config.ts` from the deployed production OpenAPI document. Run:
+
+```sh
+$ pnpm generate
+```
+
+Generation replaces `src/` and then applies the small, fail-closed SDK contract
+postprocessor. Do not edit generated source by hand. If Hey API changes its
+generated request layout, the postprocessor stops instead of producing an SDK
+with mismatched runtime and TypeScript behavior.
 
 ## Using the repository from source
 

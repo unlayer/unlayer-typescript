@@ -20,7 +20,6 @@ const unlayer = new Unlayer({
   client: createClient({
     auth: process.env['UNLAYER_API_KEY'],
     baseUrl: 'https://api.unlayer.com',
-    throwOnError: true,
   }),
 });
 
@@ -33,7 +32,10 @@ const template = await unlayer.templates.getTemplate({
 });
 ```
 
-With `throwOnError: true`, failed requests reject with the typed API error body.
+SDK operations throw the parsed API error body by default. Generated error-body
+types are exported, but caught values should still be narrowed at runtime.
+API failures throw the parsed body rather than an `Error` instance; network
+failures retain the native Fetch error behavior.
 
 ## Native API shape
 
@@ -47,7 +49,23 @@ await unlayer.templates.convertFullToSimple({
 ```
 
 Types for request parameters, successful responses, and error responses are
-exported from `@unlayer/sdk`.
+exported from `@unlayer/sdk`. Resource methods always return the data-only
+response shape. The lower-level client remains available from
+`@unlayer/sdk/client` for callers that need other native response styles.
+
+Pass `throwOnError: false` to an individual operation to return `undefined`
+instead of throwing for a failed API response:
+
+```ts
+const template = await unlayer.templates.getTemplate({
+  path: { id: 'template-id' },
+  throwOnError: false,
+});
+
+if (!template) {
+  // Handle the failed response.
+}
+```
 
 To override the API URL, Fetch implementation, headers, or other native client
 options, pass them to `createClient()`:
@@ -58,7 +76,6 @@ const client = createClient({
   baseUrl: 'https://api.unlayer.com',
   fetch: customFetch,
   headers: { 'X-Request-ID': requestId },
-  throwOnError: true,
 });
 
 const unlayer = new Unlayer({ client });
@@ -67,17 +84,65 @@ const unlayer = new Unlayer({ client });
 Each `Unlayer` instance can receive its own client, so credentials and runtime
 configuration remain isolated.
 
+## Migrating from 0.1
+
+Version 0.2 replaces the generated wrapper runtime with the native Hey API
+client. Construct a client explicitly and pass it to `Unlayer`:
+
+```ts
+// 0.1
+import Unlayer from '@unlayer/sdk';
+
+const unlayer = new Unlayer({ apiKey: process.env['UNLAYER_API_KEY'] });
+await unlayer.templates.list({ limit: 20, projectId: 'your-project-id' });
+```
+
+```ts
+// 0.2+
+import { Unlayer } from '@unlayer/sdk';
+import { createClient } from '@unlayer/sdk/client';
+
+const unlayer = new Unlayer({
+  client: createClient({
+    auth: process.env['UNLAYER_API_KEY'],
+    baseUrl: 'https://api.unlayer.com',
+  }),
+});
+
+await unlayer.templates.listTemplates({
+  query: { limit: 20, projectId: 'your-project-id' },
+});
+```
+
+Operation names now match the OpenAPI operation IDs, and parameters are grouped
+under `path`, `query`, and `body`. The default export, implicit environment
+configuration, custom error hierarchy, retries, timeouts, and pagination
+helpers from 0.1 are no longer part of the SDK. API errors are parsed bodies,
+not `Error` subclasses, and do not carry response status or headers. Configure
+retry behavior with a custom Fetch implementation and timeouts with a request
+signal when needed:
+
+```ts
+await unlayer.templates.listTemplates({
+  query: { projectId: 'your-project-id' },
+  signal: AbortSignal.timeout(60_000),
+});
+```
+
 ## Development
 
-The generated files under `src/` are replaced by automation from the deployed
-production OpenAPI document. Change the API schema or generator configuration
-in [`unlayer/unlayer`](https://github.com/unlayer/unlayer), not in generated
-files here.
+The generated files under `src/` come from the production OpenAPI document and
+the pinned configuration in `openapi-ts.config.ts`. Do not edit generated files
+directly. Regenerate them with Node.js 22.18 or newer:
 
 ```bash
 pnpm install
+pnpm generate
 pnpm test
 ```
+
+The published SDK supports Node.js 20 and newer. The newer Node.js requirement
+applies only to the development and generation toolchain.
 
 `pnpm test` checks repository formatting and generated source types, builds
 CommonJS and ESM output, verifies the package export map, and validates the
