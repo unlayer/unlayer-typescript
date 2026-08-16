@@ -80,14 +80,22 @@ $ pnpm fix
 
 ## Publishing and releases
 
-Changes made to this repository via the automated release PR pipeline should publish to npm automatically. If
-the changes aren't made through the automated pipeline, you may want to make releases manually.
+Release Please maintains the release PR. Merging that PR creates a GitHub
+release, which triggers the `Publish NPM` workflow and publishes `@unlayer/sdk`
+through npm trusted publishing.
 
-### Publish with a GitHub workflow
+The repository requires two one-time release settings:
 
-You can release to package managers by using [the `Publish NPM` GitHub action](https://www.github.com/unlayer/unlayer-typescript/actions/workflows/publish-npm.yml). This requires a setup organization or repository secret to be set up.
+- Repository secrets named `SDK_PUBLISHER_CLIENT_ID` and
+  `SDK_PUBLISHER_PRIVATE_KEY` for the GitHub App that creates release PRs and
+  releases. Install the app on this repository with read/write access to
+  contents, issues, and pull requests.
+- An npm trusted publisher for organization `unlayer`, repository
+  `unlayer-typescript`, workflow `publish-npm.yml`, with `npm publish` allowed.
 
-### Publish manually
+No long-lived npm token is required. GitHub's OIDC token provides short-lived
+credentials and npm automatically records package provenance.
 
-If you need to manually release a package, you can run the `bin/publish-npm` script with an `NPM_TOKEN` set on
-the environment.
+To retry a failed package release, manually run the
+[`Publish NPM` workflow](https://github.com/unlayer/unlayer-typescript/actions/workflows/publish-npm.yml)
+for the release commit.
