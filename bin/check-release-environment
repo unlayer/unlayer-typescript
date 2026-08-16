@@ -6,13 +6,16 @@ cd "$(dirname "$0")/.."
 
 node <<'NODE'
 const packageJson = require('./package.json');
-const [npmMajor, npmMinor] = require('child_process')
+const [npmMajor = 0, npmMinor = 0, npmPatch = 0] = require('child_process')
   .execFileSync('npm', ['--version'], { encoding: 'utf8' })
   .trim()
   .split('.')
   .map(Number);
 
-if (npmMajor < 11 || (npmMajor === 11 && npmMinor < 5)) {
+if (
+  npmMajor < 11 ||
+  (npmMajor === 11 && (npmMinor < 5 || (npmMinor === 5 && npmPatch < 1)))
+) {
   throw new Error('npm 11.5.1 or newer is required for trusted publishing');
 }
 

@@ -18,6 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Verify release tag
+        run: bash ./bin/check-release-ref
+
       - name: Set up pnpm
         uses: pnpm/action-setup@v6
 

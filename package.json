@@ -32,7 +32,7 @@
     "test": "./scripts/lint",
     "build": "./scripts/build",
     "generate": "openapi-ts && node scripts/postprocess-sdk.cjs",
-    "prepublishOnly": "echo 'to publish, run pnpm build && (cd dist; pnpm publish)' && exit 1",
+    "prepublishOnly": "echo 'packages are released by the GitHub release workflow' && exit 1",
     "format": "./scripts/format",
     "lint": "./scripts/lint",
     "fix": "./scripts/format"

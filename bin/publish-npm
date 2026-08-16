@@ -4,6 +4,8 @@ set -eu
 
 cd "$(dirname "$0")/.."
 
+bash ./bin/check-release-ref
+
 pnpm build
 cd dist
 

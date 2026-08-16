@@ -19,5 +19,22 @@ NPM_CONFIG_CACHE="${TMPDIR:-/tmp}/unlayer-sdk-npm-cache" ./node_modules/.bin/att
 echo "==> Running publint"
 ./node_modules/.bin/publint dist
 
+echo "==> Testing release safeguards"
+RELEASE_VERSION="$(node -p 'require("./package.json").version')"
+GITHUB_ACTIONS=true GITHUB_REF_TYPE=tag GITHUB_REF_NAME="v${RELEASE_VERSION}" \
+  ./bin/check-release-ref
+
+if GITHUB_ACTIONS=true GITHUB_REF_TYPE=branch GITHUB_REF_NAME=main \
+  ./bin/check-release-ref >/dev/null 2>&1; then
+  echo "release safeguard accepted a branch" >&2
+  exit 1
+fi
+
+if GITHUB_ACTIONS=true GITHUB_REF_TYPE=tag GITHUB_REF_NAME=v999.0.0 \
+  ./bin/check-release-ref >/dev/null 2>&1; then
+  echo "release safeguard accepted a mismatched tag" >&2
+  exit 1
+fi
+
 echo "==> Testing the packed SDK"
 ./scripts/test-packed-sdk tests/packed-sdk-smoke.mjs

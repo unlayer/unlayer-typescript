@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -eu
+
+cd "$(dirname "$0")/.."
+
+if [ "${GITHUB_ACTIONS:-}" != "true" ]; then
+  echo "Package releases must run in GitHub Actions." >&2
+  exit 1
+fi
+
+if [ "${GITHUB_REF_TYPE:-}" != "tag" ]; then
+  echo "Package releases must run from a Git tag." >&2
+  exit 1
+fi
+
+VERSION="$(jq -r -e '.version' package.json)"
+EXPECTED_TAG="v${VERSION}"
+
+if [ "${GITHUB_REF_NAME:-}" != "$EXPECTED_TAG" ]; then
+  echo "Release tag ${GITHUB_REF_NAME:-<missing>} does not match package version $VERSION." >&2
+  exit 1
+fi
+
+echo "Release tag $EXPECTED_TAG matches package version $VERSION."
