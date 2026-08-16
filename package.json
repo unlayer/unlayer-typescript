@@ -9,7 +9,7 @@
   "type": "commonjs",
   "repository": "github:unlayer/unlayer-typescript",
   "license": "Apache-2.0",
-  "packageManager": "yarn@1.22.22",
+  "packageManager": "pnpm@11.20.0",
   "files": [
     "**/*"
   ],
@@ -20,19 +20,20 @@
   "scripts": {
     "test": "./scripts/lint",
     "build": "./scripts/build",
-    "prepublishOnly": "echo 'to publish, run yarn build && (cd dist; yarn publish)' && exit 1",
+    "generate": "openapi-ts && node scripts/postprocess-sdk.cjs",
+    "prepublishOnly": "echo 'to publish, run pnpm build && (cd dist; pnpm publish)' && exit 1",
     "format": "./scripts/format",
     "lint": "./scripts/lint",
     "fix": "./scripts/format"
   },
-  "dependencies": {},
   "devDependencies": {
-    "@arethetypeswrong/cli": "0.17.0",
+    "@arethetypeswrong/cli": "0.18.5",
+    "@hey-api/openapi-ts": "0.98.2",
     "eslint": "9.39.1",
     "eslint-plugin-prettier": "5.4.1",
     "eslint-plugin-unused-imports": "4.1.4",
     "prettier": "3.1.1",
-    "publint": "0.2.12",
+    "publint": "0.3.23",
     "tsdown": "0.22.14",
     "typescript": "5.8.3",
     "typescript-eslint": "8.31.1"

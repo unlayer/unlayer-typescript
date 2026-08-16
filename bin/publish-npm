@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-set -eux
+set -eu
 
 npm config set '//registry.npmjs.org/:_authToken' "$NPM_TOKEN"
 
-yarn build
+pnpm build
 cd dist
 
 # Get package name and version from package.json
@@ -58,4 +58,4 @@ else
 fi
 
 # Publish with the appropriate tag
-yarn publish --tag "$TAG"
+pnpm publish --tag "$TAG" --no-git-checks

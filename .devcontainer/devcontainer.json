@@ -6,7 +6,7 @@
   "features": {
     "ghcr.io/devcontainers/features/node:1": {}
   },
-  "postCreateCommand": "yarn install",
+  "postCreateCommand": "corepack pnpm install --frozen-lockfile",
   "customizations": {
     "vscode": {
       "extensions": ["esbenp.prettier-vscode"]

@@ -11,13 +11,17 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
           node-version: '24'
+          cache: 'pnpm'
 
       - name: Bootstrap
-        run: ./scripts/bootstrap
+        run: ./scripts/bootstrap --frozen-lockfile
 
       - name: Verify SDK package
-        run: yarn test
+        run: pnpm test

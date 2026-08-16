@@ -75,11 +75,11 @@ in [`unlayer/unlayer`](https://github.com/unlayer/unlayer), not in generated
 files here.
 
 ```bash
-yarn install
-yarn test
+pnpm install
+pnpm test
 ```
 
-`yarn test` checks repository formatting and generated source types, builds
+`pnpm test` checks repository formatting and generated source types, builds
 CommonJS and ESM output, verifies the package export map, and validates the
 packed type surface. It also installs the tarball in an isolated consumer and
 checks real HTTP request and response behavior against a local server.

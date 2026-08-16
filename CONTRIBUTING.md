@@ -1,13 +1,14 @@
 ## Setting up the environment
 
-This repository uses [`yarn@v1`](https://classic.yarnpkg.com/lang/en/docs/install).
-Other package managers may work but are not officially supported for development.
+This repository uses the pnpm version pinned in `package.json`. Enable Corepack
+before setup so the correct version is selected automatically.
 
 To set up the repository, run:
 
 ```sh
-$ yarn
-$ yarn build
+$ corepack enable
+$ pnpm install
+$ pnpm build
 ```
 
 This will install all the required dependencies and build output files to `dist/`.
@@ -37,12 +38,6 @@ Alternatively, to link a local copy of the repo:
 $ git clone https://www.github.com/unlayer/unlayer-typescript
 $ cd unlayer-typescript
 
-# With yarn
-$ yarn link
-$ cd ../my-package
-$ yarn link @unlayer/sdk
-
-# With pnpm
 $ pnpm link --global
 $ cd ../my-package
 $ pnpm link --global @unlayer/sdk
@@ -51,12 +46,12 @@ $ pnpm link --global @unlayer/sdk
 ## Running tests
 
 ```sh
-$ yarn run test
+$ pnpm test
 ```
 
 This verifies source types and formatting, CommonJS and ESM builds, public
-package exports, and the packed type surface. HTTP behavior is tested beside the
-generator in `unlayer/unlayer`.
+package exports, and the packed type surface. It also installs the package in an
+isolated consumer and exercises its HTTP behavior.
 
 ## Linting and formatting
 
@@ -66,13 +61,13 @@ This repository uses [prettier](https://www.npmjs.com/package/prettier) and
 To lint:
 
 ```sh
-$ yarn lint
+$ pnpm lint
 ```
 
 To format and fix all lint issues automatically:
 
 ```sh
-$ yarn fix
+$ pnpm fix
 ```
 
 ## Publishing and releases

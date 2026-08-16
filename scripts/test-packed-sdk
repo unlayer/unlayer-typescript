@@ -22,6 +22,8 @@ trap 'rm -rf "$test_dir"' EXIT
 pack_dir="$test_dir/pack"
 mkdir -p "$pack_dir"
 
+# Exercise npm deliberately here: pnpm manages this repository, while this
+# smoke test verifies the registry tarball works for npm consumers too.
 NPM_CONFIG_CACHE="$test_dir/npm-cache" npm pack \
   --silent \
   --pack-destination "$pack_dir" \
