@@ -81,4 +81,5 @@ yarn test
 
 `yarn test` checks repository formatting and generated source types, builds
 CommonJS and ESM output, verifies the package export map, and validates the
-packed type surface.
+packed type surface. It also installs the tarball in an isolated consumer and
+checks real HTTP request and response behavior against a local server.

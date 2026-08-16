@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+if [ "$#" -ne 1 ]; then
+  echo "usage: $0 <smoke-test-file>" >&2
+  exit 1
+fi
+
+smoke_test_file="$1"
+if [ ! -f "$smoke_test_file" ]; then
+  echo "smoke test not found: $smoke_test_file" >&2
+  exit 1
+fi
+
+tmp_root="${TMPDIR:-/tmp}"
+test_dir=$(mktemp -d "$tmp_root/unlayer-sdk-package-test.XXXXXX")
+trap 'rm -rf "$test_dir"' EXIT
+
+pack_dir="$test_dir/pack"
+mkdir -p "$pack_dir"
+
+NPM_CONFIG_CACHE="$test_dir/npm-cache" npm pack \
+  --silent \
+  --pack-destination "$pack_dir" \
+  ./dist >/dev/null
+
+archives=("$pack_dir"/*.tgz)
+if [ "${#archives[@]}" -ne 1 ]; then
+  echo "expected exactly one packed SDK archive" >&2
+  exit 1
+fi
+
+./scripts/test-package-archive "${archives[0]}" "$smoke_test_file"
