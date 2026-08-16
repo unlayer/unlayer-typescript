@@ -2,7 +2,7 @@
 
 set -eu
 
-npm config set '//registry.npmjs.org/:_authToken' "$NPM_TOKEN"
+cd "$(dirname "$0")/.."
 
 pnpm build
 cd dist
@@ -57,5 +57,6 @@ else
   TAG="latest"
 fi
 
-# Publish with the appropriate tag
-pnpm publish --tag "$TAG" --no-git-checks
+# npm trusted publishing exchanges GitHub's OIDC token for short-lived publish
+# credentials and automatically attaches provenance to public packages.
+npm publish --tag "$TAG" --access public

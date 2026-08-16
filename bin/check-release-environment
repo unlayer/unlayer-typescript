@@ -1,22 +1,28 @@
 #!/usr/bin/env bash
 
-errors=()
+set -eu
 
-if [ -z "${NPM_TOKEN}" ]; then
-  errors+=("The NPM_TOKEN secret has not been set. Please set it in either this repository's secrets or your organization secrets")
-fi
+cd "$(dirname "$0")/.."
 
-lenErrors=${#errors[@]}
+node <<'NODE'
+const packageJson = require('./package.json');
+const [npmMajor, npmMinor] = require('child_process')
+  .execFileSync('npm', ['--version'], { encoding: 'utf8' })
+  .trim()
+  .split('.')
+  .map(Number);
 
-if [[ lenErrors -gt 0 ]]; then
-  echo -e "Found the following errors in the release environment:\n"
+if (npmMajor < 11 || (npmMajor === 11 && npmMinor < 5)) {
+  throw new Error('npm 11.5.1 or newer is required for trusted publishing');
+}
 
-  for error in "${errors[@]}"; do
-    echo -e "- $error\n"
-  done
+if (packageJson.publishConfig?.access !== 'public') {
+  throw new Error('publishConfig.access must be public');
+}
 
-  exit 1
-fi
+if (packageJson.repository?.url !== 'git+https://github.com/unlayer/unlayer-typescript.git') {
+  throw new Error('repository URL must match the trusted publisher repository');
+}
+NODE
 
-echo "The environment is ready to push releases!"
-
+echo "The repository release configuration is valid."
