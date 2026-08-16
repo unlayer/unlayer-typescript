@@ -2,12 +2,19 @@
   "name": "@unlayer/sdk",
   "version": "0.1.0",
   "description": "The official TypeScript library for the Unlayer API",
-  "author": "Unlayer <contact@example.com>",
+  "author": "Unlayer",
   "types": "dist/index.d.mts",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "type": "commonjs",
-  "repository": "github:unlayer/unlayer-typescript",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unlayer/unlayer-typescript.git"
+  },
+  "homepage": "https://github.com/unlayer/unlayer-typescript#readme",
+  "bugs": {
+    "url": "https://github.com/unlayer/unlayer-typescript/issues"
+  },
   "license": "Apache-2.0",
   "packageManager": "pnpm@11.20.0",
   "engines": {
