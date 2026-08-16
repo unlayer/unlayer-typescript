@@ -10,6 +10,10 @@
   "repository": "github:unlayer/unlayer-typescript",
   "license": "Apache-2.0",
   "packageManager": "pnpm@11.20.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "sideEffects": false,
   "files": [
     "**/*"
   ],

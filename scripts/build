@@ -4,8 +4,6 @@ set -exuo pipefail
 
 cd "$(dirname "$0")/.."
 
-node scripts/utils/check-version.cjs
-
 ./node_modules/.bin/tsdown
 
 # Releases publish from dist/, so include package metadata and generated source
@@ -32,8 +30,3 @@ cp tsconfig.dist-src.json dist/src/tsconfig.json
 (cd dist && node -e 'const sdk = require("@unlayer/sdk"); const client = require("@unlayer/sdk/client"); const unlayer = new sdk.Unlayer({ client: client.createClient({ auth: "test", baseUrl: "https://api.unlayer.com", throwOnError: true }) }); if (typeof unlayer.templates.listTemplates !== "function") process.exit(1)')
 (cd dist && node -e 'const sdk = await import("@unlayer/sdk"); const client = await import("@unlayer/sdk/client"); const unlayer = new sdk.Unlayer({ client: client.createClient({ auth: "test", baseUrl: "https://api.unlayer.com", throwOnError: true }) }); if (typeof unlayer.templates.listTemplates !== "function") process.exit(1)' --input-type=module)
 ./node_modules/.bin/tsc --project tsconfig.consumer.json
-
-if [ -e ./scripts/build-deno ]
-then
-  ./scripts/build-deno
-fi

@@ -57,6 +57,5 @@
       "hidden": true
     }
   ],
-  "release-type": "node",
-  "extra-files": ["src/version.ts"]
+  "release-type": "node"
 }
