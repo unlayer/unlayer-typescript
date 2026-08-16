@@ -5,6 +5,7 @@ set -eu
 cd "$(dirname "$0")/.."
 
 bash ./bin/check-release-ref
+bash ./bin/check-release-environment
 
 pnpm build
 cd dist
