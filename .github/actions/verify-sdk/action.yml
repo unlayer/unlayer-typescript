@@ -1,0 +1,19 @@
+name: Verify and pack SDK
+description: Verify the SDK package and create the registry tarball
+
+runs:
+  using: composite
+  steps:
+    - name: Bootstrap
+      shell: bash
+      run: ./scripts/bootstrap --frozen-lockfile
+
+    - name: Verify SDK package
+      shell: bash
+      run: pnpm test
+
+    - name: Pack verified SDK
+      shell: bash
+      run: |
+        mkdir sdk-package
+        npm pack --silent --pack-destination sdk-package ./dist

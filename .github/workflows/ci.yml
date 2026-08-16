@@ -29,16 +29,8 @@ jobs:
           node-version: '24'
           cache: 'pnpm'
 
-      - name: Bootstrap
-        run: ./scripts/bootstrap --frozen-lockfile
-
-      - name: Verify SDK package
-        run: pnpm test
-
-      - name: Pack verified SDK
-        run: |
-          mkdir sdk-package
-          npm pack --silent --pack-destination sdk-package ./dist
+      - name: Verify and pack SDK
+        uses: ./.github/actions/verify-sdk
 
       - name: Upload verified SDK
         uses: actions/upload-artifact@v4

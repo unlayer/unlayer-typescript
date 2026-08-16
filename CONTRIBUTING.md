@@ -97,7 +97,9 @@ $ pnpm fix
 
 Release Please maintains the release PR. Merging that PR creates a GitHub
 release, which triggers the `Publish NPM` workflow and publishes `@unlayer/sdk`
-through npm trusted publishing.
+through npm trusted publishing. The workflow runs full verification on Node.js
+24, tests the exact packed tarball on Node.js 20, and publishes that same
+artifact only after both jobs pass.
 
 The repository requires two one-time release settings:
 

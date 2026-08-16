@@ -7,12 +7,28 @@ cd "$(dirname "$0")/.."
 bash ./bin/check-release-ref
 bash ./bin/check-release-environment
 
-pnpm build
-cd dist
+if [ "$#" -ne 1 ]; then
+  echo "usage: $0 <verified-package-archive>" >&2
+  exit 1
+fi
 
-# Get package name and version from package.json
-PACKAGE_NAME="$(jq -r -e '.name' ./package.json)"
-VERSION="$(jq -r -e '.version' ./package.json)"
+ARCHIVE="$1"
+if [ ! -f "$ARCHIVE" ]; then
+  echo "verified package archive not found: $ARCHIVE" >&2
+  exit 1
+fi
+
+# Read release identity from the exact archive that passed verification.
+PACKAGE_JSON="$(tar -xOf "$ARCHIVE" package/package.json)"
+PACKAGE_NAME="$(echo "$PACKAGE_JSON" | jq -r -e '.name')"
+VERSION="$(echo "$PACKAGE_JSON" | jq -r -e '.version')"
+EXPECTED_NAME="$(jq -r -e '.name' package.json)"
+EXPECTED_VERSION="$(jq -r -e '.version' package.json)"
+
+if [ "$PACKAGE_NAME" != "$EXPECTED_NAME" ] || [ "$VERSION" != "$EXPECTED_VERSION" ]; then
+  echo "verified archive identity does not match the release checkout" >&2
+  exit 1
+fi
 
 # Get latest version from npm
 #
@@ -62,4 +78,4 @@ fi
 
 # npm trusted publishing exchanges GitHub's OIDC token for short-lived publish
 # credentials and automatically attaches provenance to public packages.
-npm publish --tag "$TAG" --access public
+npm publish "$ARCHIVE" --tag "$TAG" --access public

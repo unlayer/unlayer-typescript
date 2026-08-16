@@ -8,18 +8,14 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
-  publish:
-    name: publish
+  verify:
+    timeout-minutes: 10
+    name: verify (Node 24)
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v6
-
-      - name: Verify release tag
-        run: bash ./bin/check-release-ref
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v6
@@ -28,11 +24,67 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '24'
+          cache: 'pnpm'
+
+      - name: Verify release tag
+        run: bash ./bin/check-release-ref
+
+      - name: Verify and pack SDK
+        uses: ./.github/actions/verify-sdk
+
+      - name: Upload verified SDK
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdk-package
+          path: sdk-package/*.tgz
+          retention-days: 1
+
+  runtime:
+    timeout-minutes: 5
+    name: runtime (Node 20)
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          package-manager-cache: false
+
+      - name: Download verified SDK
+        uses: actions/download-artifact@v4
+        with:
+          name: sdk-package
+          path: sdk-package
+
+      - name: Verify packed SDK runtime
+        run: ./scripts/test-package-archive sdk-package/*.tgz tests/packed-sdk-smoke.mjs
+
+  publish:
+    timeout-minutes: 5
+    name: publish
+    needs: runtime
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
           package-manager-cache: false
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Download verified SDK
+        uses: actions/download-artifact@v4
+        with:
+          name: sdk-package
+          path: sdk-package
 
       - name: Publish to NPM
-        run: bash ./bin/publish-npm
+        run: bash ./bin/publish-npm sdk-package/*.tgz
