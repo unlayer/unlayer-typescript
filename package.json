@@ -32,6 +32,7 @@
     "test": "./scripts/lint",
     "build": "./scripts/build",
     "generate": "openapi-ts && node scripts/postprocess-sdk.cjs",
+    "sync-spec": "node scripts/sync-openapi.cjs",
     "prepublishOnly": "echo 'packages are released by the GitHub release workflow' && exit 1",
     "format": "./scripts/format",
     "lint": "./scripts/lint",

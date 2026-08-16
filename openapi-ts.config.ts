@@ -1,7 +1,7 @@
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  input: 'https://api.unlayer.com/v3/docs/json',
+  input: './openapi.json',
   output: {
     clean: true,
     path: 'src',

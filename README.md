@@ -135,15 +135,19 @@ await unlayer.templates.listTemplates({
 
 ## Development
 
-The generated files under `src/` come from the production OpenAPI document and
-the pinned configuration in `openapi-ts.config.ts`. Do not edit generated files
-directly. Regenerate them with Node.js 22.18 or newer:
+The generated files under `src/` come from the committed public OpenAPI snapshot
+and the pinned configuration in `openapi-ts.config.ts`. Do not edit generated
+files directly. Regenerate them with Node.js 22.18 or newer:
 
 ```bash
 pnpm install
 pnpm generate
 pnpm test
 ```
+
+Run `pnpm sync-spec` before generation only when intentionally updating the
+snapshot from the production API document. This keeps unrelated API changes out
+of generator and configuration updates.
 
 The published SDK supports Node.js 20 and newer. The newer Node.js requirement
 applies only to the development and generation toolchain.

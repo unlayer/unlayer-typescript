@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+tmp_root="${TMPDIR:-/tmp}"
+check_dir=$(mktemp -d "$tmp_root/unlayer-sdk-generated.XXXXXX")
+trap 'rm -rf "$check_dir"' EXIT
+
+cp -R src "$check_dir/src"
+pnpm generate
+
+if ! diff -ru "$check_dir/src" src; then
+  echo "generated SDK source is stale; review and commit the regenerated files" >&2
+  exit 1
+fi

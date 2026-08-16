@@ -18,7 +18,7 @@ This will install all the required dependencies and build output files to `dist/
 ## Modifying/Adding code
 
 The SDK source is generated with the pinned Hey API version and
-`openapi-ts.config.ts` from the deployed production OpenAPI document. Run:
+`openapi-ts.config.ts` from the committed `openapi.json` snapshot. Run:
 
 ```sh
 $ pnpm generate
@@ -28,6 +28,21 @@ Generation replaces `src/` and then applies the small, fail-closed SDK contract
 postprocessor. Do not edit generated source by hand. If Hey API changes its
 generated request layout, the postprocessor stops instead of producing an SDK
 with mismatched runtime and TypeScript behavior.
+
+To intentionally update the snapshot from the public production API document,
+run both commands and review the specification and generated-source diffs:
+
+```sh
+$ pnpm sync-spec
+$ pnpm generate
+```
+
+The sync command records the canonical API server in the local snapshot. Hey
+previously inferred that origin from the remote document URL, while local-file
+generation requires it explicitly.
+
+`pnpm test` regenerates the SDK from the committed snapshot and fails if the
+checked-in source has drifted.
 
 ## Using the repository from source
 
