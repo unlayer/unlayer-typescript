@@ -98,4 +98,4 @@ credentials and npm automatically records package provenance.
 
 To retry a failed package release, manually run the
 [`Publish NPM` workflow](https://github.com/unlayer/unlayer-typescript/actions/workflows/publish-npm.yml)
-for the release commit.
+and select the matching `v<version>` release tag. Branches cannot publish.

@@ -4,6 +4,10 @@ The official TypeScript SDK for the Unlayer API. It is generated directly from
 Unlayer's API v3 OpenAPI document with [Hey API](https://heyapi.dev/) and uses
 the native Fetch API.
 
+> [!IMPORTANT]
+> Use this SDK only from trusted server-side code. Never expose an API key or
+> Personal Access Token in browser, mobile, or other client-side code.
+
 ## Installation
 
 ```bash
