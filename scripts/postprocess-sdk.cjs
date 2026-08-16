@@ -30,8 +30,8 @@ source = source.replace(responseStylePattern, '');
 source = source.replace(
   optionsSpreadPattern,
   (_, indentation) =>
-    `${indentation}throwOnError: true as ThrowOnError,\n` +
     `${indentation}...options,\n` +
+    `${indentation}throwOnError: (options?.throwOnError ?? true) as ThrowOnError,\n` +
     `${indentation}responseStyle: 'data',\n`,
 );
 source = source.replace(/[ \t]+$/gm, '');

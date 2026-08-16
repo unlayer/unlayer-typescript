@@ -64,8 +64,8 @@ export class Blocks extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/blocks',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -89,8 +89,8 @@ export class Domains extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/domains',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -112,8 +112,8 @@ export class Domains extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/domains',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -139,8 +139,8 @@ export class Domains extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/domains/{id}',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -162,8 +162,8 @@ export class Domains extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/domains/{id}',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -185,8 +185,8 @@ export class Domains extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/domains/{id}/verify',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -210,8 +210,8 @@ export class EditorSessions extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/editor-sessions',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -239,8 +239,8 @@ export class Emails extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/emails',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -262,8 +262,8 @@ export class Emails extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/emails',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -289,8 +289,8 @@ export class Emails extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/emails/{id}',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -312,8 +312,8 @@ export class Emails extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/emails/{id}/events',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -335,8 +335,8 @@ export class Emails extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/emails/render',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -362,8 +362,8 @@ export class Emails extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/emails/settings',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -385,8 +385,8 @@ export class Emails extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/emails/settings',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -412,8 +412,8 @@ export class Emails extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/emails/stats',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -435,8 +435,8 @@ export class Emails extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/emails/suppressions',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -458,8 +458,8 @@ export class Emails extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/emails/suppressions',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -481,8 +481,8 @@ export class Emails extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/emails/suppressions',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -508,8 +508,8 @@ export class Emails extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/emails/suppressions/check',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -531,8 +531,8 @@ export class Emails extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/emails/template',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -560,8 +560,8 @@ export class Me extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/me/subscription',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -585,8 +585,8 @@ export class Projects extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/projects/{id}',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -610,8 +610,8 @@ export class AiCredits extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/projects/{id}/ai-credits',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -633,8 +633,8 @@ export class AiCredits extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/projects/{id}/ai-credits/settings',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -656,8 +656,8 @@ export class AiCredits extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/projects/{id}/ai-credits/settings',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -683,8 +683,8 @@ export class AiCredits extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/projects/{id}/ai-credits/settings/rotate-secret',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -706,8 +706,8 @@ export class AiCredits extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/projects/{id}/ai-credits/usage',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -729,8 +729,8 @@ export class AiCredits extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/projects/{id}/ai-credits/webhooks/deliveries',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -752,8 +752,8 @@ export class AiCredits extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/projects/{id}/ai-credits/webhooks/deliveries/{deliveryId}/attempts',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -775,8 +775,8 @@ export class AiCredits extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/projects/{id}/ai-credits/webhooks/deliveries/{deliveryId}/retry',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -800,8 +800,8 @@ export class Templates extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/templates',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -823,8 +823,8 @@ export class Templates extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/templates/{id}',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -846,8 +846,8 @@ export class Templates extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/templates/convert/full-to-simple',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -873,8 +873,8 @@ export class Templates extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/templates/convert/simple-to-full',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -900,8 +900,8 @@ export class Templates extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/templates/generate',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -927,8 +927,8 @@ export class Templates extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/templates/import',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -954,8 +954,8 @@ export class Templates extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/templates/schema',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -977,8 +977,8 @@ export class Templates extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/templates/validate',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1006,8 +1006,8 @@ export class Export extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/templates/export/html',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1033,8 +1033,8 @@ export class Export extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/templates/export/image',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1060,8 +1060,8 @@ export class Export extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/templates/export/pdf',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1087,8 +1087,8 @@ export class Export extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/templates/export/zip',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1116,8 +1116,8 @@ export class Webhooks extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/webhooks',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -1139,8 +1139,8 @@ export class Webhooks extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/webhooks',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1166,8 +1166,8 @@ export class Webhooks extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/webhooks/{id}',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -1189,8 +1189,8 @@ export class Webhooks extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/webhooks/{id}',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -1212,8 +1212,8 @@ export class Webhooks extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/webhooks/{id}',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1239,8 +1239,8 @@ export class Webhooks extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/webhooks/{id}/rotate-secret',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -1264,8 +1264,8 @@ export class Workspaces extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/workspaces',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -1287,8 +1287,8 @@ export class Workspaces extends HeyApiClient {
                     type: 'http'
                 }],
             url: '/v3/workspaces/{workspaceId}',
-            throwOnError: true as ThrowOnError,
             ...options,
+            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
             responseStyle: 'data',
         });
     }

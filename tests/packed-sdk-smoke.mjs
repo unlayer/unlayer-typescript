@@ -94,13 +94,27 @@ try {
     return true;
   });
 
+  await assert.rejects(
+    sdk.templates.listTemplates({
+      query: { name: 'unauthorized-undefined' },
+      throwOnError: undefined,
+    }),
+    (error) => {
+      assert.deepEqual(error, {
+        error: 'unauthorized',
+        message: 'Bad token',
+      });
+      return true;
+    },
+  );
+
   const noThrowResult = await sdk.templates.listTemplates({
     query: { name: 'unauthorized-no-throw' },
     throwOnError: false,
   });
   assert.equal(noThrowResult, undefined);
 
-  assert.equal(requests.length, 4);
+  assert.equal(requests.length, 5);
 
   const listUrl = new URL(requests[0].url, 'http://localhost');
   assert.equal(requests[0].method, 'GET');
