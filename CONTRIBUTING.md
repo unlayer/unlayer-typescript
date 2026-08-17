@@ -41,6 +41,11 @@ The sync command records the canonical API server in the local snapshot. Hey
 previously inferred that origin from the remote document URL, while local-file
 generation requires it explicitly.
 
+The `Sync OpenAPI` workflow performs this check once a day and can also be run
+manually. When the production document changes, it regenerates and verifies the
+SDK before opening or updating one automation PR. The workflow exits early when
+the committed snapshot is already current.
+
 `pnpm test` regenerates the SDK from the committed snapshot and fails if the
 checked-in source has drifted.
 
@@ -90,22 +95,22 @@ $ pnpm fix
 ## Publishing and releases
 
 Release Please maintains the release PR. Merging that PR creates a GitHub
-release, which triggers the `Publish NPM` workflow and publishes `@unlayer/sdk`
-through npm trusted publishing. The workflow runs full verification on Node.js
-24, tests the exact packed tarball on Node.js 20, and publishes that same
-artifact only after both jobs pass.
+release and dispatches the `Publish NPM` workflow at the matching tag. Publishing
+uses npm trusted publishing. The workflow runs full verification on Node.js 24,
+tests the exact packed tarball on Node.js 20, and publishes that same artifact
+only after both jobs pass.
 
-The repository requires two one-time release settings:
+The repository requires two one-time settings:
 
-- Repository secrets named `SDK_PUBLISHER_CLIENT_ID` and
-  `SDK_PUBLISHER_PRIVATE_KEY` for the GitHub App that creates release PRs and
-  releases. Install the app on this repository with read/write access to
-  contents, issues, and pull requests.
+- GitHub Actions must be allowed to create pull requests. The built-in,
+  short-lived `GITHUB_TOKEN` creates SDK update PRs, release PRs, tags, and
+  releases only within this repository.
 - An npm trusted publisher for organization `unlayer`, repository
   `unlayer-typescript`, workflow `publish-npm.yml`, with `npm publish` allowed.
 
-No long-lived npm token is required. GitHub's OIDC token provides short-lived
-credentials and npm automatically records package provenance.
+No GitHub App, personal access token, or long-lived npm token is required.
+GitHub's OIDC token provides short-lived npm credentials and npm automatically
+records package provenance.
 
 To retry a failed package release, manually run the
 [`Publish NPM` workflow](https://github.com/unlayer/unlayer-typescript/actions/workflows/publish-npm.yml)
