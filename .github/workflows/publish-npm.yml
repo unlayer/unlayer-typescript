@@ -1,10 +1,8 @@
-# Triggered after Release Please creates a GitHub release. It can also be run
-# manually to retry a failed publish.
+# Dispatched at the release tag after Release Please creates a GitHub release.
+# It can also be run manually at that tag to retry a failed publish.
 name: Publish NPM
 on:
   workflow_dispatch:
-  release:
-    types: [published]
 
 permissions:
   contents: read
