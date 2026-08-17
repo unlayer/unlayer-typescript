@@ -1,0 +1,105 @@
+name: Sync OpenAPI
+
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-openapi
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: sync production API
+    if: github.repository == 'unlayer/unlayer-typescript'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Download production OpenAPI document
+        run: node scripts/sync-openapi.cjs
+
+      - name: Check for API changes
+        id: changes
+        shell: bash
+        run: |
+          if git diff --quiet -- openapi.json; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            echo 'Production OpenAPI document is unchanged.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up pnpm
+        if: steps.changes.outputs.changed == 'true'
+        uses: pnpm/action-setup@v6
+
+      - name: Install dependencies
+        if: steps.changes.outputs.changed == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate SDK
+        if: steps.changes.outputs.changed == 'true'
+        run: pnpm generate
+
+      - name: Verify SDK
+        if: steps.changes.outputs.changed == 'true'
+        run: pnpm test
+
+      - name: Reject unexpected changes
+        if: steps.changes.outputs.changed == 'true'
+        shell: bash
+        run: |
+          unexpected=$(git diff --name-only | grep -Ev '^(openapi\.json|src/)' || true)
+          if [ -n "$unexpected" ]; then
+            echo 'Generation changed files outside openapi.json and src/:' >&2
+            echo "$unexpected" >&2
+            exit 1
+          fi
+
+      - name: Open or update SDK PR
+        if: steps.changes.outputs.changed == 'true'
+        id: pull-request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ github.token }}
+          add-paths: |
+            openapi.json
+            src
+          branch: automation/native-sdk-update
+          delete-branch: true
+          commit-message: 'feat(repo): regenerate SDK from the production OpenAPI document'
+          title: 'feat(repo): regenerate SDK from the production OpenAPI document'
+          body: |
+            This PR updates the committed production OpenAPI snapshot and its
+            matching generated SDK source.
+
+            Generation uses the pinned Hey API toolchain and configuration from
+            this repository. The source under `src/` is generated and must not
+            be edited by hand.
+
+      - name: Run CI for the generated branch
+        if: >-
+          steps.pull-request.outputs.pull-request-operation == 'created' ||
+          steps.pull-request.outputs.pull-request-operation == 'updated'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run ci.yml --ref automation/native-sdk-update
+
+      - name: Write update summary
+        if: steps.pull-request.outputs.pull-request-url != ''
+        run: echo 'SDK update PR ${{ steps.pull-request.outputs.pull-request-url }}' >> "$GITHUB_STEP_SUMMARY"
