@@ -82,6 +82,7 @@ jobs:
             src
           branch: automation/native-sdk-update
           delete-branch: true
+          sign-commits: true
           commit-message: 'feat(repo): regenerate SDK from the production OpenAPI document'
           title: 'feat(repo): regenerate SDK from the production OpenAPI document'
           body: |
