@@ -39,5 +39,7 @@ if GITHUB_ACTIONS=true GITHUB_REF_TYPE=tag GITHUB_REF_NAME=v999.0.0 \
   exit 1
 fi
 
+node --test tests/publish-npm.test.mjs
+
 echo "==> Testing the packed SDK"
 ./scripts/test-packed-sdk tests/packed-sdk-smoke.mjs
