@@ -34,6 +34,15 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (request.method === 'GET' && request.url?.startsWith('/v3/templates/folder')) {
+    response.end(
+      JSON.stringify({
+        data: { id: 'folder/Welcome & Spring', name: 'Path template' },
+      }),
+    );
+    return;
+  }
+
   response.end(
     JSON.stringify({
       data: [{ displayMode: 'email', id: 'template-1', name: 'Welcome' }],
@@ -76,6 +85,14 @@ try {
     data: [{ displayMode: 'email', id: 'template-1', name: 'Welcome' }],
     has_more: false,
     next_cursor: null,
+  });
+
+  const template = await sdk.templates.getTemplate({
+    path: { id: 'folder/Welcome & Spring' },
+  });
+
+  assert.deepEqual(template, {
+    data: { id: 'folder/Welcome & Spring', name: 'Path template' },
   });
 
   const domain = await sdk.domains.createDomain({
@@ -181,7 +198,7 @@ try {
     (error) => error === abortError,
   );
 
-  assert.equal(requests.length, 5);
+  assert.equal(requests.length, 6);
 
   const listUrl = new URL(requests[0].url, 'http://localhost');
   assert.equal(requests[0].method, 'GET');
@@ -192,14 +209,18 @@ try {
   assert.equal(listUrl.searchParams.get('name'), 'Summer & Sale');
   assert.equal(listUrl.searchParams.get('projectId'), 'project-1');
 
-  assert.equal(requests[1].method, 'POST');
-  assert.equal(requests[1].url, '/v3/domains');
+  assert.equal(requests[1].method, 'GET');
+  assert.equal(requests[1].url, '/v3/templates/folder%2FWelcome%20%26%20Spring');
   assert.equal(requests[1].headers.authorization, 'Bearer test-token');
-  assert.match(requests[1].headers['content-type'], /^application\/json/);
-  assert.deepEqual(JSON.parse(requests[1].body), { domain: 'example.com' });
+
+  assert.equal(requests[2].method, 'POST');
+  assert.equal(requests[2].url, '/v3/domains');
+  assert.equal(requests[2].headers.authorization, 'Bearer test-token');
+  assert.match(requests[2].headers['content-type'], /^application\/json/);
+  assert.deepEqual(JSON.parse(requests[2].body), { domain: 'example.com' });
 
   process.stdout.write(
-    'Packed SDK smoke passed: auth, serialization, factory defaults, HTTP, transport, and abort behavior\n',
+    'Packed SDK smoke passed: auth, path/query/body serialization, factory defaults, HTTP, transport, and abort behavior\n',
   );
 } finally {
   await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
