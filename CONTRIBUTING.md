@@ -44,27 +44,21 @@ generation requires it explicitly.
 `pnpm test` regenerates the SDK from the committed snapshot and fails if the
 checked-in source has drifted.
 
-## Using the repository from source
+## Testing an unreleased package
 
-If you’d like to use the repository from source, you can either install from git or link to a cloned repository:
-
-To install via git:
-
-```sh
-$ npm install git+ssh://git@github.com:unlayer/unlayer-typescript.git
-```
-
-Alternatively, to link a local copy of the repo:
+Git URL dependencies are not supported because generated build output is not
+committed to the repository. To test an unreleased revision, build and pack the
+same package layout that the release workflow publishes:
 
 ```sh
-# Clone
-$ git clone https://www.github.com/unlayer/unlayer-typescript
-$ cd unlayer-typescript
-
-$ pnpm link --global
+$ pnpm build
+$ archive=$(npm pack --silent ./dist)
 $ cd ../my-package
-$ pnpm link --global @unlayer/sdk
+$ npm install "../unlayer-typescript/$archive"
 ```
+
+This exercises the package manifest and files that consumers receive from npm
+instead of linking directly to repository internals.
 
 ## Running tests
 

@@ -23,7 +23,6 @@ import { createClient } from '@unlayer/sdk/client';
 const unlayer = new Unlayer({
   client: createClient({
     auth: process.env['UNLAYER_API_KEY'],
-    baseUrl: 'https://api.unlayer.com',
   }),
 });
 
@@ -35,6 +34,10 @@ const template = await unlayer.templates.getTemplate({
   path: { id: 'template-id' },
 });
 ```
+
+Always pass an explicitly configured client to `Unlayer`. The generated
+parameterless constructor uses an unauthenticated shared client and is not
+intended for application use.
 
 SDK operations throw the parsed API error body by default. Generated error-body
 types are exported, but caught values should still be narrowed at runtime.
@@ -100,7 +103,6 @@ import { createClient } from '@unlayer/sdk/client';
 const unlayer = new Unlayer({
   client: createClient({
     auth: process.env['UNLAYER_API_KEY'],
-    baseUrl: 'https://api.unlayer.com',
   }),
 });
 
@@ -123,6 +125,10 @@ await unlayer.templates.listTemplates({
   signal: AbortSignal.timeout(60_000),
 });
 ```
+
+Git URL dependencies are no longer supported because generated build output is
+not committed. To test an unreleased revision, clone it and install the packed
+`dist` archive as described in `CONTRIBUTING.md`.
 
 ## Development
 
