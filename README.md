@@ -54,22 +54,10 @@ await unlayer.templates.convertFullToSimple({
 
 Types for request parameters, successful responses, and error responses are
 exported from `@unlayer/sdk`. Resource methods always return the data-only
-response shape. The lower-level client remains available from
-`@unlayer/sdk/client` for callers that need other native response styles.
-
-Pass `throwOnError: false` to an individual operation to return `undefined`
-instead of throwing for a failed API response:
-
-```ts
-const template = await unlayer.templates.getTemplate({
-  path: { id: 'template-id' },
-  throwOnError: false,
-});
-
-if (!template) {
-  // Handle the failed response.
-}
-```
+response shape and always throw on failures so HTTP, network, abort, URL, and
+response parsing errors cannot be mistaken for missing data. The lower-level
+client remains available from `@unlayer/sdk/client` for callers that need Hey
+API's native field response or non-throwing behavior.
 
 To override the API URL, Fetch implementation, headers, or other native client
 options, pass them to `createClient()`:
@@ -77,13 +65,16 @@ options, pass them to `createClient()`:
 ```ts
 const client = createClient({
   auth: process.env['UNLAYER_API_KEY'],
-  baseUrl: 'https://api.unlayer.com',
   fetch: customFetch,
   headers: { 'X-Request-ID': requestId },
 });
 
 const unlayer = new Unlayer({ client });
 ```
+
+`createClient()` defaults to `https://api.unlayer.com` and throwing on errors.
+Pass `baseUrl` or `throwOnError` only when intentionally overriding those
+defaults.
 
 Each `Unlayer` instance can receive its own client, so credentials and runtime
 configuration remain isolated.

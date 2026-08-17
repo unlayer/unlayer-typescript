@@ -4,8 +4,6 @@ import { createClient } from '@unlayer/sdk/client';
 const sdk = new Unlayer({
   client: createClient({
     auth: 'test-token',
-    baseUrl: 'https://api.unlayer.com',
-    throwOnError: true,
   }),
 });
 
@@ -19,12 +17,8 @@ void sdk.templates.getTemplate({
   responseStyle: 'fields',
 });
 
-void sdk.templates
-  .getTemplate({
-    path: { id: 'template-id' },
-    throwOnError: false,
-  })
-  .then((result) => {
-    // @ts-expect-error disabling errors means the result can be undefined
-    void result.data;
-  });
+void sdk.templates.getTemplate({
+  path: { id: 'template-id' },
+  // @ts-expect-error high-level SDK operations always throw
+  throwOnError: false,
+});

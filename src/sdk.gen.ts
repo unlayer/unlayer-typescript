@@ -4,7 +4,7 @@ import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape
 import { client } from './client.gen';
 import type { AddSuppressionData, AddSuppressionErrors, AddSuppressionResponses, CheckSuppressionData, CheckSuppressionErrors, CheckSuppressionResponses, ConvertFullToSimpleData, ConvertFullToSimpleErrors, ConvertFullToSimpleResponses, ConvertSimpleToFullData, ConvertSimpleToFullErrors, ConvertSimpleToFullResponses, CreateDomainData, CreateDomainErrors, CreateDomainResponses, CreateEditorSessionData, CreateEditorSessionErrors, CreateEditorSessionResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, DeleteDomainData, DeleteDomainErrors, DeleteDomainResponses, DeleteWebhookData, DeleteWebhookErrors, DeleteWebhookResponses, ExportHtmlData, ExportHtmlErrors, ExportHtmlResponses, ExportImageData, ExportImageErrors, ExportImageResponses, ExportPdfData, ExportPdfErrors, ExportPdfResponses, ExportZipData, ExportZipErrors, ExportZipResponses, GenerateDesignData, GenerateDesignErrors, GenerateDesignResponses, GetDesignSchemaData, GetDesignSchemaResponses, GetDomainData, GetDomainErrors, GetDomainResponses, GetEmailData, GetEmailErrors, GetEmailEventsData, GetEmailEventsErrors, GetEmailEventsResponses, GetEmailResponses, GetEmailSettingsData, GetEmailSettingsErrors, GetEmailSettingsResponses, GetEmailStatsData, GetEmailStatsErrors, GetEmailStatsResponses, GetMySubscriptionData, GetMySubscriptionErrors, GetMySubscriptionResponses, GetProjectAiCreditsData, GetProjectAiCreditsErrors, GetProjectAiCreditsResponses, GetProjectAiCreditsSettingsData, GetProjectAiCreditsSettingsErrors, GetProjectAiCreditsSettingsResponses, GetProjectAiCreditsUsageData, GetProjectAiCreditsUsageErrors, GetProjectAiCreditsUsageResponses, GetProjectData, GetProjectErrors, GetProjectResponses, GetTemplateData, GetTemplateErrors, GetTemplateResponses, GetWebhookData, GetWebhookErrors, GetWebhookResponses, GetWorkspaceData, GetWorkspaceErrors, GetWorkspaceResponses, ImportTemplateData, ImportTemplateErrors, ImportTemplateResponses, ListBlocksData, ListBlocksErrors, ListBlocksResponses, ListDomainsData, ListDomainsErrors, ListDomainsResponses, ListEmailsData, ListEmailsErrors, ListEmailsResponses, ListProjectAiCreditsWebhookDeliveriesData, ListProjectAiCreditsWebhookDeliveriesErrors, ListProjectAiCreditsWebhookDeliveriesResponses, ListProjectAiCreditsWebhookDeliveryAttemptsData, ListProjectAiCreditsWebhookDeliveryAttemptsErrors, ListProjectAiCreditsWebhookDeliveryAttemptsResponses, ListSuppressionsData, ListSuppressionsErrors, ListSuppressionsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWorkspacesData, ListWorkspacesErrors, ListWorkspacesResponses, RemoveSuppressionData, RemoveSuppressionErrors, RemoveSuppressionResponses, RenderEmailData, RenderEmailErrors, RenderEmailResponses, RetryProjectAiCreditsWebhookDeliveryData, RetryProjectAiCreditsWebhookDeliveryErrors, RetryProjectAiCreditsWebhookDeliveryResponses, RotateProjectAiCreditsSigningSecretData, RotateProjectAiCreditsSigningSecretErrors, RotateProjectAiCreditsSigningSecretResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SendEmailData, SendEmailErrors, SendEmailResponses, SendTemplateEmailData, SendTemplateEmailErrors, SendTemplateEmailResponses, UpdateEmailSettingsData, UpdateEmailSettingsErrors, UpdateEmailSettingsResponses, UpdateProjectAiCreditsSettingsData, UpdateProjectAiCreditsSettingsErrors, UpdateProjectAiCreditsSettingsResponses, UpdateWebhookData, UpdateWebhookErrors, UpdateWebhookResponses, ValidateDesignData, ValidateDesignErrors, ValidateDesignResponses, VerifyDomainData, VerifyDomainErrors, VerifyDomainResponses } from './types.gen';
 
-export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Omit<Options2<TData, ThrowOnError, TResponse>, 'responseStyle'> & {
+export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Omit<Options2<TData, ThrowOnError, TResponse>, 'responseStyle' | 'throwOnError'> & {
     /**
      * You can provide a client instance returned by `createClient()` instead of
      * individual options. This might be also useful if you want to implement a
@@ -65,7 +65,7 @@ export class Blocks extends HeyApiClient {
                 }],
             url: '/v3/blocks',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -90,7 +90,7 @@ export class Domains extends HeyApiClient {
                 }],
             url: '/v3/domains',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -113,7 +113,7 @@ export class Domains extends HeyApiClient {
                 }],
             url: '/v3/domains',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ export class Domains extends HeyApiClient {
                 }],
             url: '/v3/domains/{id}',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -163,7 +163,7 @@ export class Domains extends HeyApiClient {
                 }],
             url: '/v3/domains/{id}',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -186,7 +186,7 @@ export class Domains extends HeyApiClient {
                 }],
             url: '/v3/domains/{id}/verify',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -211,7 +211,7 @@ export class EditorSessions extends HeyApiClient {
                 }],
             url: '/v3/editor-sessions',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -240,7 +240,7 @@ export class Emails extends HeyApiClient {
                 }],
             url: '/v3/emails',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -263,7 +263,7 @@ export class Emails extends HeyApiClient {
                 }],
             url: '/v3/emails',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -290,7 +290,7 @@ export class Emails extends HeyApiClient {
                 }],
             url: '/v3/emails/{id}',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -313,7 +313,7 @@ export class Emails extends HeyApiClient {
                 }],
             url: '/v3/emails/{id}/events',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -336,7 +336,7 @@ export class Emails extends HeyApiClient {
                 }],
             url: '/v3/emails/render',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -363,7 +363,7 @@ export class Emails extends HeyApiClient {
                 }],
             url: '/v3/emails/settings',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -386,7 +386,7 @@ export class Emails extends HeyApiClient {
                 }],
             url: '/v3/emails/settings',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -413,7 +413,7 @@ export class Emails extends HeyApiClient {
                 }],
             url: '/v3/emails/stats',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -436,7 +436,7 @@ export class Emails extends HeyApiClient {
                 }],
             url: '/v3/emails/suppressions',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -459,7 +459,7 @@ export class Emails extends HeyApiClient {
                 }],
             url: '/v3/emails/suppressions',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -482,7 +482,7 @@ export class Emails extends HeyApiClient {
                 }],
             url: '/v3/emails/suppressions',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -509,7 +509,7 @@ export class Emails extends HeyApiClient {
                 }],
             url: '/v3/emails/suppressions/check',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -532,7 +532,7 @@ export class Emails extends HeyApiClient {
                 }],
             url: '/v3/emails/template',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -561,7 +561,7 @@ export class Me extends HeyApiClient {
                 }],
             url: '/v3/me/subscription',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -586,7 +586,7 @@ export class Projects extends HeyApiClient {
                 }],
             url: '/v3/projects/{id}',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -611,7 +611,7 @@ export class AiCredits extends HeyApiClient {
                 }],
             url: '/v3/projects/{id}/ai-credits',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -634,7 +634,7 @@ export class AiCredits extends HeyApiClient {
                 }],
             url: '/v3/projects/{id}/ai-credits/settings',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -657,7 +657,7 @@ export class AiCredits extends HeyApiClient {
                 }],
             url: '/v3/projects/{id}/ai-credits/settings',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -684,7 +684,7 @@ export class AiCredits extends HeyApiClient {
                 }],
             url: '/v3/projects/{id}/ai-credits/settings/rotate-secret',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -707,7 +707,7 @@ export class AiCredits extends HeyApiClient {
                 }],
             url: '/v3/projects/{id}/ai-credits/usage',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -730,7 +730,7 @@ export class AiCredits extends HeyApiClient {
                 }],
             url: '/v3/projects/{id}/ai-credits/webhooks/deliveries',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -753,7 +753,7 @@ export class AiCredits extends HeyApiClient {
                 }],
             url: '/v3/projects/{id}/ai-credits/webhooks/deliveries/{deliveryId}/attempts',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -776,7 +776,7 @@ export class AiCredits extends HeyApiClient {
                 }],
             url: '/v3/projects/{id}/ai-credits/webhooks/deliveries/{deliveryId}/retry',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -801,7 +801,7 @@ export class Templates extends HeyApiClient {
                 }],
             url: '/v3/templates',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -824,7 +824,7 @@ export class Templates extends HeyApiClient {
                 }],
             url: '/v3/templates/{id}',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -847,7 +847,7 @@ export class Templates extends HeyApiClient {
                 }],
             url: '/v3/templates/convert/full-to-simple',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -874,7 +874,7 @@ export class Templates extends HeyApiClient {
                 }],
             url: '/v3/templates/convert/simple-to-full',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -901,7 +901,7 @@ export class Templates extends HeyApiClient {
                 }],
             url: '/v3/templates/generate',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -928,7 +928,7 @@ export class Templates extends HeyApiClient {
                 }],
             url: '/v3/templates/import',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -955,7 +955,7 @@ export class Templates extends HeyApiClient {
                 }],
             url: '/v3/templates/schema',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -978,7 +978,7 @@ export class Templates extends HeyApiClient {
                 }],
             url: '/v3/templates/validate',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1007,7 +1007,7 @@ export class Export extends HeyApiClient {
                 }],
             url: '/v3/templates/export/html',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1034,7 +1034,7 @@ export class Export extends HeyApiClient {
                 }],
             url: '/v3/templates/export/image',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1061,7 +1061,7 @@ export class Export extends HeyApiClient {
                 }],
             url: '/v3/templates/export/pdf',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1088,7 +1088,7 @@ export class Export extends HeyApiClient {
                 }],
             url: '/v3/templates/export/zip',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1117,7 +1117,7 @@ export class Webhooks extends HeyApiClient {
                 }],
             url: '/v3/webhooks',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -1140,7 +1140,7 @@ export class Webhooks extends HeyApiClient {
                 }],
             url: '/v3/webhooks',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1167,7 +1167,7 @@ export class Webhooks extends HeyApiClient {
                 }],
             url: '/v3/webhooks/{id}',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -1190,7 +1190,7 @@ export class Webhooks extends HeyApiClient {
                 }],
             url: '/v3/webhooks/{id}',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -1213,7 +1213,7 @@ export class Webhooks extends HeyApiClient {
                 }],
             url: '/v3/webhooks/{id}',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
             headers: {
                 'Content-Type': 'application/json',
@@ -1240,7 +1240,7 @@ export class Webhooks extends HeyApiClient {
                 }],
             url: '/v3/webhooks/{id}/rotate-secret',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -1265,7 +1265,7 @@ export class Workspaces extends HeyApiClient {
                 }],
             url: '/v3/workspaces',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }
@@ -1288,7 +1288,7 @@ export class Workspaces extends HeyApiClient {
                 }],
             url: '/v3/workspaces/{workspaceId}',
             ...options,
-            throwOnError: (options?.throwOnError ?? true) as ThrowOnError,
+            throwOnError: true as ThrowOnError,
             responseStyle: 'data',
         });
     }

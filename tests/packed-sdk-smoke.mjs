@@ -108,11 +108,78 @@ try {
     },
   );
 
-  const noThrowResult = await sdk.templates.listTemplates({
-    query: { name: 'unauthorized-no-throw' },
-    throwOnError: false,
+  await assert.rejects(
+    sdk.templates.listTemplates({
+      query: { name: 'unauthorized-no-throw' },
+      // JavaScript callers can pass options omitted from the TypeScript SDK
+      // surface. High-level operations must still preserve their contract.
+      throwOnError: false,
+    }),
+    (error) => {
+      assert.deepEqual(error, {
+        error: 'unauthorized',
+        message: 'Bad token',
+      });
+      return true;
+    },
+  );
+
+  let defaultFactoryRequest;
+  const defaultFactorySdk = new Unlayer({
+    client: createClient({
+      auth: 'factory-token',
+      fetch: async (request) => {
+        defaultFactoryRequest = request;
+        return new Response(
+          JSON.stringify({
+            data: [],
+            has_more: false,
+            next_cursor: null,
+          }),
+          { headers: { 'Content-Type': 'application/json' } },
+        );
+      },
+    }),
   });
-  assert.equal(noThrowResult, undefined);
+
+  await defaultFactorySdk.templates.listTemplates();
+  assert.equal(defaultFactoryRequest.url, 'https://api.unlayer.com/v3/templates');
+  assert.equal(defaultFactoryRequest.headers.get('authorization'), 'Bearer factory-token');
+
+  const transportError = new TypeError('transport failed');
+  const transportClient = createClient({
+    fetch: async () => {
+      throw transportError;
+    },
+  });
+  const transportSdk = new Unlayer({ client: transportClient });
+
+  await assert.rejects(transportSdk.templates.listTemplates(), (error) => error === transportError);
+
+  const transportFields = await transportClient.get({
+    responseStyle: 'fields',
+    throwOnError: false,
+    url: '/v3/templates',
+  });
+  assert.equal(transportFields.error, transportError);
+  assert.equal(transportFields.response, undefined);
+
+  const abortController = new AbortController();
+  const abortError = new DOMException('request aborted', 'AbortError');
+  abortController.abort(abortError);
+  const abortSdk = new Unlayer({
+    client: createClient({
+      fetch: async (request) => {
+        assert.equal(request.signal.aborted, true);
+        throw request.signal.reason;
+      },
+    }),
+  });
+
+  await assert.rejects(
+    abortSdk.templates.listTemplates({ signal: abortController.signal }),
+    (error) => error === abortError,
+  );
 
   assert.equal(requests.length, 5);
 
@@ -131,7 +198,9 @@ try {
   assert.match(requests[1].headers['content-type'], /^application\/json/);
   assert.deepEqual(JSON.parse(requests[1].body), { domain: 'example.com' });
 
-  process.stdout.write('Packed SDK smoke passed: auth, query, body, success, and error behavior\n');
+  process.stdout.write(
+    'Packed SDK smoke passed: auth, serialization, factory defaults, HTTP, transport, and abort behavior\n',
+  );
 } finally {
   await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
 }
