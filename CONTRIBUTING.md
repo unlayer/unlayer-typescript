@@ -15,6 +15,21 @@ $ pnpm build
 
 This will install all the required dependencies and build output files to `dist/`.
 
+## Why Hey API
+
+The SDK uses Hey API because it produces an idiomatic TypeScript Fetch client,
+can run entirely from this repository, and adds no runtime dependency to the
+published package. The generator, OpenAPI snapshot, configuration, and
+postprocessing are all pinned and reviewable, so regeneration does not depend
+on a hosted SDK-generation service.
+
+OpenAPI Generator was considered for its broad language support, but Hey API's
+TypeScript output and native Fetch surface require less package-specific
+adaptation here. Hosted generators would retain an external control plane, and
+custom or LLM-generated runtime code would create more maintenance than a
+pinned open-source generator. This repository intentionally scopes generation
+to the TypeScript package.
+
 ## Modifying/Adding code
 
 The SDK source is generated with the pinned Hey API version and
