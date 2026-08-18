@@ -35,9 +35,8 @@ const template = await unlayer.templates.getTemplate({
 });
 ```
 
-Always pass an explicitly configured client to `Unlayer`. The generated
-parameterless constructor uses an unauthenticated shared client and is not
-intended for application use.
+`Unlayer` requires an explicitly configured client. SDK instances do not use a
+shared registry or shared credentials.
 
 SDK operations throw the parsed API error body by default. Generated error-body
 types are exported, but caught values should still be narrowed at runtime.

@@ -1,8 +1,16 @@
 import assert from 'node:assert/strict';
 import http from 'node:http';
 
-import { Unlayer } from '@unlayer/sdk';
-import { createClient } from '@unlayer/sdk/client';
+import * as sdkPackage from '@unlayer/sdk';
+import * as clientPackage from '@unlayer/sdk/client';
+
+const { Unlayer } = sdkPackage;
+const { createClient } = clientPackage;
+
+assert.equal(Object.hasOwn(sdkPackage, 'client'), false);
+assert.equal(Object.hasOwn(clientPackage, 'client'), false);
+assert.equal(Object.hasOwn(Unlayer, '__registry'), false);
+assert.throws(() => new Unlayer(), /client created with createClient\(\) is required/);
 
 const requests = [];
 
@@ -220,7 +228,7 @@ try {
   assert.deepEqual(JSON.parse(requests[2].body), { domain: 'example.com' });
 
   process.stdout.write(
-    'Packed SDK smoke passed: auth, path/query/body serialization, factory defaults, HTTP, transport, and abort behavior\n',
+    'Packed SDK smoke passed: isolated clients, auth, path/query/body serialization, factory defaults, HTTP, transport, and abort behavior\n',
   );
 } finally {
   await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
