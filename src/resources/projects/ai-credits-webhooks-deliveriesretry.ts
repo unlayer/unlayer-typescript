@@ -28,7 +28,7 @@ export class AICreditsWebhooksDeliveriesretry extends APIResource {
 }
 
 export interface AICreditsWebhooksDeliveriesretryCreateResponse {
-  status?: 'requeued';
+  status: 'requeued';
 }
 
 export interface AICreditsWebhooksDeliveriesretryCreateParams {

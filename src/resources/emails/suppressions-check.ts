@@ -4,6 +4,9 @@ import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
+/**
+ * Send and manage transactional email.
+ */
 export class SuppressionsCheck extends APIResource {
   /**
    * Look up a specific email address to see if it is currently on the suppression

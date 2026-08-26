@@ -24,33 +24,33 @@ export class AICreditsWebhooksDeliveries extends APIResource {
 }
 
 export interface AICreditsWebhooksDeliveryRetrieveResponse {
-  deliveries?: Array<AICreditsWebhooksDeliveryRetrieveResponse.Delivery>;
+  deliveries: Array<AICreditsWebhooksDeliveryRetrieveResponse.Delivery>;
 
   /**
    * Total deliveries matching the filter (ignores limit/offset).
    */
-  total?: number;
+  total: number;
 }
 
 export namespace AICreditsWebhooksDeliveryRetrieveResponse {
   export interface Delivery {
-    id?: string;
+    id: string;
 
-    attempts?: number;
+    attempts: number;
 
-    created_at?: string;
+    created_at: string;
 
-    delivered_at?: string | null;
+    delivered_at: string | null;
 
-    end_user_id?: string | null;
+    end_user_id: string | null;
 
-    event?: string;
+    event: 'ai.credits.usage_recorded' | 'ai.credits.threshold_reached' | 'ai.credits.exhausted';
 
-    last_status_code?: number | null;
+    last_status_code: number | null;
 
-    payload?: { [key: string]: unknown };
+    payload: { [key: string]: unknown };
 
-    status?: 'pending' | 'delivered' | 'failed';
+    status: 'pending' | 'delivered' | 'failed';
   }
 }
 

@@ -5,6 +5,9 @@ import { APIPromise } from '../../core/api-promise';
 import { buildHeaders } from '../../internal/headers';
 import { RequestOptions } from '../../internal/request-options';
 
+/**
+ * Send and manage transactional email.
+ */
 export class Template extends APIResource {
   /**
    * Send a transactional email by rendering a saved template with optional merge

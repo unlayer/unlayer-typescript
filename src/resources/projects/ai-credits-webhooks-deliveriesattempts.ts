@@ -28,23 +28,23 @@ export class AICreditsWebhooksDeliveriesattempts extends APIResource {
 }
 
 export interface AICreditsWebhooksDeliveriesattemptRetrieveResponse {
-  attempts?: Array<AICreditsWebhooksDeliveriesattemptRetrieveResponse.Attempt>;
+  attempts: Array<AICreditsWebhooksDeliveriesattemptRetrieveResponse.Attempt>;
 
   /**
    * Total attempts for the delivery (ignores limit/offset).
    */
-  total?: number;
+  total: number;
 }
 
 export namespace AICreditsWebhooksDeliveriesattemptRetrieveResponse {
   export interface Attempt {
-    attempt?: number;
+    attempt: number;
 
-    attempted_at?: string;
+    attempted_at: string;
 
-    error?: string | null;
+    error: string | null;
 
-    status_code?: number | null;
+    status_code: number | null;
   }
 }
 

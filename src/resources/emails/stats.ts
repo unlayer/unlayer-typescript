@@ -4,6 +4,9 @@ import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
+/**
+ * Send and manage transactional email.
+ */
 export class Stats extends APIResource {
   /**
    * Get aggregated email delivery statistics for a project. Returns totals or daily

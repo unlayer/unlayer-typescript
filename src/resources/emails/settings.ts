@@ -4,6 +4,9 @@ import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
+/**
+ * Send and manage transactional email.
+ */
 export class Settings extends APIResource {
   /**
    * Get the email sender settings for this project.
@@ -16,10 +19,7 @@ export class Settings extends APIResource {
    * Update the email sending configuration for this project. Only include the fields
    * you want to change.
    */
-  update(
-    body: SettingUpdateParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<SettingUpdateResponse> {
+  update(body: SettingUpdateParams, options?: RequestOptions): APIPromise<SettingUpdateResponse> {
     return this._client.patch('/v3/emails/settings', { body, ...options });
   }
 }

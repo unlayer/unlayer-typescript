@@ -4,6 +4,9 @@ import { APIResource } from '../core/resource';
 import { APIPromise } from '../core/api-promise';
 import { RequestOptions } from '../internal/request-options';
 
+/**
+ * Ephemeral editor session creation and access.
+ */
 export class EditorSessions extends APIResource {
   /**
    * Create an ephemeral, no-DB editor session for a design and return a hosted

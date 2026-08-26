@@ -4,6 +4,9 @@ import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
+/**
+ * Send and manage transactional email.
+ */
 export class Suppressions extends APIResource {
   /**
    * Manually add an email address to the suppression list. Future sends to this

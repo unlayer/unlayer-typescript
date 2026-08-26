@@ -5,6 +5,9 @@ import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
+/**
+ * Manage Developer Email API webhooks.
+ */
 export class RotateSecret extends APIResource {
   /**
    * Generate a new signing secret for a webhook. The new secret is returned once —

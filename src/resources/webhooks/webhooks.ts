@@ -7,6 +7,9 @@ import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
+/**
+ * Manage Developer Email API webhooks.
+ */
 export class Webhooks extends APIResource {
   rotateSecret: RotateSecretAPI.RotateSecret = new RotateSecretAPI.RotateSecret(this._client);
 
@@ -28,11 +31,7 @@ export class Webhooks extends APIResource {
   /**
    * Update a webhook endpoint URL, events, or active status.
    */
-  update(
-    id: string,
-    body: WebhookUpdateParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<WebhookUpdateResponse> {
+  update(id: string, body: WebhookUpdateParams, options?: RequestOptions): APIPromise<WebhookUpdateResponse> {
     return this._client.patch(path`/v3/webhooks/${id}`, { body, ...options });
   }
 

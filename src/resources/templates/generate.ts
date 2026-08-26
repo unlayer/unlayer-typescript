@@ -2,9 +2,11 @@
 
 import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
-import { buildHeaders } from '../../internal/headers';
 import { RequestOptions } from '../../internal/request-options';
 
+/**
+ * Template management — list, retrieve, generate, import, export, and convert designs.
+ */
 export class Generate extends APIResource {
   /**
    * Generate or modify an Unlayer design using AI. Send the conversation as
@@ -18,13 +20,6 @@ export class Generate extends APIResource {
   create(params: GenerateCreateParams, options?: RequestOptions): APIPromise<GenerateCreateResponse> {
     const { projectId, ...body } = params;
     return this._client.post('/v3/templates/generate', { query: { projectId }, body, ...options });
-  }
-
-  retrieve(options?: RequestOptions): APIPromise<void> {
-    return this._client.get('/v3/templates/generate', {
-      ...options,
-      headers: buildHeaders([{ Accept: '*/*' }, options?.headers]),
-    });
   }
 }
 

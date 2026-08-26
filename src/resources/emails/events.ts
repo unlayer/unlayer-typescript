@@ -5,6 +5,9 @@ import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
+/**
+ * Send and manage transactional email.
+ */
 export class Events extends APIResource {
   /**
    * Retrieve the operational event timeline for a sent email, showing send,
