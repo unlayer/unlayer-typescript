@@ -1,5 +1,75 @@
 # Changelog
 
+## 0.2.0 (2026-08-26)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/unlayer/unlayer-typescript/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** api update ([7c6acd0](https://github.com/unlayer/unlayer-typescript/commit/7c6acd01eeab54e31868ea21c84c78eb73367f0d))
+* **api:** api update ([94d6a0d](https://github.com/unlayer/unlayer-typescript/commit/94d6a0d536f8a6b99fe6da44b335a2359d4bb8a8))
+* **api:** api update ([bff9ad6](https://github.com/unlayer/unlayer-typescript/commit/bff9ad6962155e5b799146fd10258f22771c7043))
+* **api:** api update ([a072644](https://github.com/unlayer/unlayer-typescript/commit/a072644224a14f898ce0bf882f0800cbce82f69f))
+* **api:** api update ([ce56076](https://github.com/unlayer/unlayer-typescript/commit/ce56076fdab27b5da8c0cef75ea8547c1d6358ea))
+* **api:** api update ([cbe8534](https://github.com/unlayer/unlayer-typescript/commit/cbe853435e7d34377b9bc2dcfbf4044f1580a162))
+* **api:** api update ([8623c27](https://github.com/unlayer/unlayer-typescript/commit/8623c2748b9a625986cd5f605f76f7064a4f0c72))
+* **api:** api update ([2b13ee9](https://github.com/unlayer/unlayer-typescript/commit/2b13ee9e263cacd8d791eb6de9c2fe88f7328a99))
+* **api:** api update ([39f84a7](https://github.com/unlayer/unlayer-typescript/commit/39f84a74814c12d4435850400db6e88bf16868a2))
+* **api:** api update ([cfb84d3](https://github.com/unlayer/unlayer-typescript/commit/cfb84d3b217d5d40803307a7cb5bb6f6435f0fca))
+* **api:** api update ([0550aaa](https://github.com/unlayer/unlayer-typescript/commit/0550aaa172a7aa5b2ded7ff3f9b15e77e1533858))
+* **api:** api update ([b1896db](https://github.com/unlayer/unlayer-typescript/commit/b1896db3e0aa25efddf62c77b66faf1bd3271a55))
+* **api:** api update ([471570b](https://github.com/unlayer/unlayer-typescript/commit/471570b1df590071e3179e179a740c58667b8467))
+* **api:** api update ([1afb639](https://github.com/unlayer/unlayer-typescript/commit/1afb639343df8b5252556c6b445c0cbe93a25c0a))
+* **api:** api update ([83ea993](https://github.com/unlayer/unlayer-typescript/commit/83ea9936cd068e51773fc25d5b87beb8caa673d0))
+* **api:** api update ([2096590](https://github.com/unlayer/unlayer-typescript/commit/2096590a872261e1d9dfe6b1f70f513cb25d78cd))
+* **api:** api update ([58c42c3](https://github.com/unlayer/unlayer-typescript/commit/58c42c366680e518d1d9fa45e67ee1c915ebb5c7))
+* **api:** api update ([6f63cba](https://github.com/unlayer/unlayer-typescript/commit/6f63cba6c4e4158a76951f682b5391bac71e74ee))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([0e5b3fb](https://github.com/unlayer/unlayer-typescript/commit/0e5b3fb7ac418c69d4c1cec1ed09654241f75f2f))
+
+
+### Bug Fixes
+
+* **ci:** bump @arethetypeswrong/cli to ^0.18.0 and run CI workflows on Node 24 ([ba79f38](https://github.com/unlayer/unlayer-typescript/commit/ba79f382f9b86e18978decac75e2b2aa20f87e74))
+* **client:** preserve URL params already embedded in path ([aa35c3f](https://github.com/unlayer/unlayer-typescript/commit/aa35c3f9daed566ab225bb5460667b55accfdec3))
+* **client:** send content-type header for requests with an omitted optional body ([8716a27](https://github.com/unlayer/unlayer-typescript/commit/8716a278e99b36d3492f4086b50945300df6ce10))
+* **stlc:** stop hand-edited CI workflows from blocking seals and builds ([c97d13d](https://github.com/unlayer/unlayer-typescript/commit/c97d13de152cd021801d74ed4753c8a3b9da78e6))
+
+
+### Chores
+
+* **ci:** skip lint on metadata-only changes ([2ff6735](https://github.com/unlayer/unlayer-typescript/commit/2ff6735db5aee19634ac92a8f5903a2496b5d9fd))
+* **ci:** skip uploading artifacts on stainless-internal branches ([5ba5d28](https://github.com/unlayer/unlayer-typescript/commit/5ba5d2871132cd901801f72d9d82ae8a0d03adc1))
+* **internal:** allow the mock server port to be set with STAINLESS_MOCK_PORT ([98c5426](https://github.com/unlayer/unlayer-typescript/commit/98c542680aba84036b12b5cb899308faf5d43a11))
+* **internal:** codegen related update ([ebe2eb7](https://github.com/unlayer/unlayer-typescript/commit/ebe2eb769f8ec18596f18a547efb5c750dc53230))
+* **internal:** codegen related update ([b70eaba](https://github.com/unlayer/unlayer-typescript/commit/b70eaba3b4daf2159bd9107c932954631ff5d3ca))
+* **internal:** codegen related update ([5df33b9](https://github.com/unlayer/unlayer-typescript/commit/5df33b94a8781fe7de5c54c232cc3dd556d80a6b))
+* **internal:** codegen related update ([bbe3564](https://github.com/unlayer/unlayer-typescript/commit/bbe35648d10ca91c0d625385894e1dbeb6337bca))
+* **internal:** codegen related update ([c58eac2](https://github.com/unlayer/unlayer-typescript/commit/c58eac28e0d8a7c42225766239777c882f238632))
+* **internal:** codegen related update ([740e1ae](https://github.com/unlayer/unlayer-typescript/commit/740e1ae35ac61a36d7f1e109456844432d2bd6c6))
+* **internal:** codegen related update ([7ce40c6](https://github.com/unlayer/unlayer-typescript/commit/7ce40c6dd2c9ff9f0442e6f89b60ca47c19a9351))
+* **internal:** codegen related update ([6dc4c88](https://github.com/unlayer/unlayer-typescript/commit/6dc4c8844896dcc94667c0b7ff0d0ea37e886e1a))
+* **internal:** codegen related update ([5d0b8ca](https://github.com/unlayer/unlayer-typescript/commit/5d0b8cae4d04648e5904edde4c4be65d2f22b144))
+* **internal:** codegen related update ([c6204bd](https://github.com/unlayer/unlayer-typescript/commit/c6204bdf620e82a1b0de3859c74a0b04ddb220be))
+* **internal:** more robust bootstrap script ([3c105aa](https://github.com/unlayer/unlayer-typescript/commit/3c105aadb230acbf26379b4e7ac258f7c1cf8637))
+* **internal:** move stringifyQuery implementation to internal function ([a382843](https://github.com/unlayer/unlayer-typescript/commit/a3828431e022b0c294eea5dd6d3dfec91dc50f3c))
+* **internal:** tweak CI branches ([37047f6](https://github.com/unlayer/unlayer-typescript/commit/37047f64ad65e540363a5888057fb2031797fa89))
+* **internal:** update dependencies to address dependabot vulnerabilities ([cd210f0](https://github.com/unlayer/unlayer-typescript/commit/cd210f0014bf4c6f91f96b0458b97b28b9b02004))
+* **internal:** update gitignore ([3f8fe21](https://github.com/unlayer/unlayer-typescript/commit/3f8fe21e12dd47a7ec5381b1d01c4b3319d48f0d))
+* **internal:** update multipart form array serialization ([eb9810b](https://github.com/unlayer/unlayer-typescript/commit/eb9810b160faa0c0eb5607a900d0bc3efe80c837))
+* **test:** do not count install time for mock server timeout ([3f4f137](https://github.com/unlayer/unlayer-typescript/commit/3f4f1372bc0146d0abd93d289d1edf1a4c6ce864))
+* **tests:** bump steady to v0.19.4 ([bce44ad](https://github.com/unlayer/unlayer-typescript/commit/bce44adfdaa4fca510a83d182fc9b4788ad454c1))
+* **tests:** bump steady to v0.19.5 ([1ecdf4a](https://github.com/unlayer/unlayer-typescript/commit/1ecdf4a084af6afb151688f3d9ae50ed99d978cb))
+* **tests:** bump steady to v0.19.6 ([13a8f4a](https://github.com/unlayer/unlayer-typescript/commit/13a8f4ab35b1f6487aaf4b2ae1f9fcc771df00f8))
+* **tests:** bump steady to v0.19.7 ([3944238](https://github.com/unlayer/unlayer-typescript/commit/39442381621c93dbeed18b939de999606bcdf3f2))
+* **tests:** bump steady to v0.20.1 ([f058a02](https://github.com/unlayer/unlayer-typescript/commit/f058a02837772b49e641ab186988c76aa4445695))
+* **tests:** bump steady to v0.20.2 ([e312dc6](https://github.com/unlayer/unlayer-typescript/commit/e312dc60c1bf68b3faa91d94feee712f2ab22b60))
+* **tests:** bump steady to v0.22.1 ([005c463](https://github.com/unlayer/unlayer-typescript/commit/005c46350d8b94a4273e5f2490c6f450a7eb8459))
+
+
+### Refactors
+
+* **tests:** switch from prism to steady ([3b6f5e4](https://github.com/unlayer/unlayer-typescript/commit/3b6f5e4fe8b7e7df20f500d9191075331c56310e))
+
 ## 0.1.0 (2026-02-24)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/unlayer/unlayer-typescript/compare/v0.0.1...v0.1.0)
