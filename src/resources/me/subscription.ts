@@ -4,6 +4,9 @@ import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
+/**
+ * Current user and token context.
+ */
 export class Subscription extends APIResource {
   /**
    * Get the current plan, feature availability, and limits for a project. Used to

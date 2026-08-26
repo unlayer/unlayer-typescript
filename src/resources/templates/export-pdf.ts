@@ -4,6 +4,9 @@ import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
+/**
+ * Render designs as HTML, images, PDFs, or ZIP files.
+ */
 export class ExportPdf extends APIResource {
   /**
    * Export a design as a PDF document.

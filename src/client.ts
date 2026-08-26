@@ -857,8 +857,17 @@ export class Unlayer {
    * Reusable design blocks — list shared project blocks and end-user saved blocks for backup, migration, and usage reporting.
    */
   blocks: API.Blocks = new API.Blocks(this);
+  /**
+   * Manage verified sender domains.
+   */
   domains: API.Domains = new API.Domains(this);
+  /**
+   * Ephemeral editor session creation and access.
+   */
   editorSessions: API.EditorSessions = new API.EditorSessions(this);
+  /**
+   * Send and manage transactional email.
+   */
   emails: API.Emails = new API.Emails(this);
   me: API.Me = new API.Me(this);
   /**
@@ -869,6 +878,9 @@ export class Unlayer {
    * Template management — list, retrieve, generate, import, export, and convert designs.
    */
   templates: API.Templates = new API.Templates(this);
+  /**
+   * Manage Developer Email API webhooks.
+   */
   webhooks: API.Webhooks = new API.Webhooks(this);
   /**
    * Workspace access and management.

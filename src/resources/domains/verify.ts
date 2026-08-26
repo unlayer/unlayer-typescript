@@ -5,6 +5,9 @@ import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
+/**
+ * Manage verified sender domains.
+ */
 export class Verify extends APIResource {
   /**
    * Verify the ownership TXT challenge and SES DKIM identity for a sender domain

@@ -26,7 +26,7 @@ export class AICreditsSettings extends APIResource {
    */
   update(
     id: string,
-    body: AICreditsSettingUpdateParams | null | undefined = {},
+    body: AICreditsSettingUpdateParams,
     options?: RequestOptions,
   ): APIPromise<AICreditsSettingUpdateResponse> {
     return this._client.put(path`/v3/projects/${id}/ai-credits/settings`, { body, ...options });
@@ -34,28 +34,28 @@ export class AICreditsSettings extends APIResource {
 }
 
 export interface AICreditsSettingRetrieveResponse {
-  exhaustion_behavior?: string;
+  exhaustion_behavior: 'disable' | 'show_error';
 
-  has_signing_secret?: boolean;
+  has_signing_secret: boolean;
 
-  threshold_alerts?: Array<number>;
+  threshold_alerts: Array<number>;
 
-  webhook_url?: string | null;
+  webhook_url: string | null;
 }
 
 export interface AICreditsSettingUpdateResponse {
-  exhaustion_behavior?: string;
+  exhaustion_behavior: 'disable' | 'show_error';
 
-  has_signing_secret?: boolean;
+  has_signing_secret: boolean;
+
+  threshold_alerts: Array<number>;
+
+  webhook_url: string | null;
 
   /**
    * The HMAC signing secret. Returned ONLY on the response that first generates it.
    */
   signing_secret?: string;
-
-  threshold_alerts?: Array<number>;
-
-  webhook_url?: string | null;
 }
 
 export interface AICreditsSettingUpdateParams {

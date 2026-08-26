@@ -23,23 +23,23 @@ export interface AICreditRetrieveResponse {
   /**
    * AI credits remaining in the current period.
    */
-  credits_remaining?: number;
+  credits_remaining: number;
 
   /**
    * Total AI credits available for the current period.
    */
-  credits_total?: number;
+  credits_total: number;
 
   /**
    * AI credits consumed so far in the current period.
    */
-  credits_used?: number;
+  credits_used: number;
 
   /**
    * When the current credit period resets, or null if there is no active billing
    * period — including once a subscription is cancelled or its term has ended.
    */
-  reset_date?: string | null;
+  reset_date: string | null;
 }
 
 export declare namespace AICredits {

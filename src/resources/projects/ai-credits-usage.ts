@@ -28,18 +28,18 @@ export class AICreditsUsage extends APIResource {
 }
 
 export interface AICreditsUsageRetrieveResponse {
-  breakdown?: Array<AICreditsUsageRetrieveResponse.Breakdown>;
+  breakdown: Array<AICreditsUsageRetrieveResponse.Breakdown>;
 
   /**
    * Number of breakdown rows matching the filter (ignores paging).
    */
-  total?: number;
+  total: number;
 
   /**
    * Total AI credits used across the full filtered range (not just the returned
    * page).
    */
-  total_credits_used?: number;
+  total_credits_used: number;
 }
 
 export namespace AICreditsUsageRetrieveResponse {
@@ -47,17 +47,17 @@ export namespace AICreditsUsageRetrieveResponse {
     /**
      * AI credits used by this end user and feature type.
      */
-    credits?: number;
+    credits: number;
 
     /**
      * The end user id, or null for unattributed usage.
      */
-    end_user_id?: string | null;
+    end_user_id: string | null;
 
     /**
      * The partner-facing feature type.
      */
-    feature_type?: 'full_template_gen' | 'block_edit' | 'html_import' | 'image_import' | 'image_generation';
+    feature_type: 'full_template_gen' | 'block_edit' | 'html_import' | 'image_import' | 'image_generation';
   }
 }
 

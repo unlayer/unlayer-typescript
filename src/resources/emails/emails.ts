@@ -32,6 +32,9 @@ import { buildHeaders } from '../../internal/headers';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
+/**
+ * Send and manage transactional email.
+ */
 export class Emails extends APIResource {
   events: EventsAPI.Events = new EventsAPI.Events(this._client);
   render: RenderAPI.Render = new RenderAPI.Render(this._client);

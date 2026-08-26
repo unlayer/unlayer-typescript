@@ -23,7 +23,7 @@ export interface AICreditsSettingsRotateSecretCreateResponse {
   /**
    * The new HMAC signing secret. Shown only once.
    */
-  signing_secret?: string;
+  signing_secret: string;
 }
 
 export declare namespace AICreditsSettingsRotateSecret {
