@@ -30,7 +30,7 @@ export default defineConfig({
           return [['Unlayer', resource, operation.operationId]];
         },
       },
-      responseStyle: 'data',
+      responseStyle: 'fields',
     },
   ],
 });

@@ -1395,7 +1395,7 @@ export type GetEmailSettingsResponses = {
 export type GetEmailSettingsResponse = GetEmailSettingsResponses[keyof GetEmailSettingsResponses];
 
 export type UpdateEmailSettingsData = {
-    body?: {
+    body: {
         /**
          * Default sender display name
          */
@@ -1800,7 +1800,7 @@ export type ListSuppressionsResponses = {
             createdAt?: string;
         }>;
         has_more: boolean;
-        next_cursor?: unknown;
+        next_cursor?: null | string;
     };
 };
 
@@ -2463,19 +2463,19 @@ export type GetProjectAiCreditsResponses = {
         /**
          * Total AI credits available for the current period.
          */
-        credits_total?: number;
+        credits_total: number;
         /**
          * AI credits consumed so far in the current period.
          */
-        credits_used?: number;
+        credits_used: number;
         /**
          * AI credits remaining in the current period.
          */
-        credits_remaining?: number;
+        credits_remaining: number;
         /**
          * When the current credit period resets, or null if there is no active billing period — including once a subscription is cancelled or its term has ended.
          */
-        reset_date?: unknown;
+        reset_date: null | string;
     };
 };
 
@@ -2555,17 +2555,17 @@ export type GetProjectAiCreditsSettingsResponses = {
      * Default Response
      */
     200: {
-        exhaustion_behavior?: string;
-        threshold_alerts?: Array<number>;
-        webhook_url?: unknown;
-        has_signing_secret?: boolean;
+        exhaustion_behavior: 'disable' | 'show_error';
+        threshold_alerts: Array<number>;
+        webhook_url: null | string;
+        has_signing_secret: boolean;
     };
 };
 
 export type GetProjectAiCreditsSettingsResponse = GetProjectAiCreditsSettingsResponses[keyof GetProjectAiCreditsSettingsResponses];
 
 export type UpdateProjectAiCreditsSettingsData = {
-    body?: {
+    body: {
         /**
          * What the editor does when the credit balance is exhausted.
          */
@@ -2577,7 +2577,7 @@ export type UpdateProjectAiCreditsSettingsData = {
         /**
          * HTTPS endpoint that receives AI credit webhooks.
          */
-        webhook_url?: unknown;
+        webhook_url?: string | null;
     };
     path: {
         /**
@@ -2651,10 +2651,10 @@ export type UpdateProjectAiCreditsSettingsResponses = {
      * Default Response
      */
     200: {
-        exhaustion_behavior?: string;
-        threshold_alerts?: Array<number>;
-        webhook_url?: unknown;
-        has_signing_secret?: boolean;
+        exhaustion_behavior: 'disable' | 'show_error';
+        threshold_alerts: Array<number>;
+        webhook_url: null | string;
+        has_signing_secret: boolean;
         /**
          * The HMAC signing secret. Returned ONLY on the response that first generates it.
          */
@@ -2741,7 +2741,7 @@ export type RotateProjectAiCreditsSigningSecretResponses = {
         /**
          * The new HMAC signing secret. Shown only once.
          */
-        signing_secret?: string;
+        signing_secret: string;
     };
 };
 
@@ -2857,24 +2857,24 @@ export type GetProjectAiCreditsUsageResponses = {
         /**
          * Total AI credits used across the full filtered range (not just the returned page).
          */
-        total_credits_used?: number;
+        total_credits_used: number;
         /**
          * Number of breakdown rows matching the filter (ignores paging).
          */
-        total?: number;
-        breakdown?: Array<{
+        total: number;
+        breakdown: Array<{
             /**
              * The end user id, or null for unattributed usage.
              */
-            end_user_id?: unknown;
+            end_user_id: null | string;
             /**
              * The partner-facing feature type.
              */
-            feature_type?: 'full_template_gen' | 'block_edit' | 'html_import' | 'image_import' | 'image_generation';
+            feature_type: 'full_template_gen' | 'block_edit' | 'html_import' | 'image_import' | 'image_generation';
             /**
              * AI credits used by this end user and feature type.
              */
-            credits?: number;
+            credits: number;
         }>;
     };
 };
@@ -2972,23 +2972,23 @@ export type ListProjectAiCreditsWebhookDeliveriesResponses = {
      * Default Response
      */
     200: {
-        deliveries?: Array<{
-            id?: string;
-            event?: string;
-            status?: 'pending' | 'delivered' | 'failed';
-            attempts?: number;
-            last_status_code?: unknown;
-            end_user_id?: unknown;
-            created_at?: string;
-            delivered_at?: unknown;
-            payload?: {
+        deliveries: Array<{
+            id: string;
+            event: 'ai.credits.usage_recorded' | 'ai.credits.threshold_reached' | 'ai.credits.exhausted';
+            status: 'pending' | 'delivered' | 'failed';
+            attempts: number;
+            last_status_code: null | number;
+            end_user_id: null | string;
+            created_at: string;
+            delivered_at: null | string;
+            payload: {
                 [key: string]: unknown;
             };
         }>;
         /**
          * Total deliveries matching the filter (ignores limit/offset).
          */
-        total?: number;
+        total: number;
     };
 };
 
@@ -3072,32 +3072,6 @@ export type ListProjectAiCreditsWebhookDeliveryAttemptsErrors = {
          */
         message: string;
     };
-    /**
-     * Default Response
-     */
-    409: {
-        /**
-         * Error code
-         */
-        error: string;
-        /**
-         * Human-readable error message
-         */
-        message: string;
-    };
-    /**
-     * Default Response
-     */
-    429: {
-        /**
-         * Error code
-         */
-        error: string;
-        /**
-         * Human-readable error message
-         */
-        message: string;
-    };
 };
 
 export type ListProjectAiCreditsWebhookDeliveryAttemptsError = ListProjectAiCreditsWebhookDeliveryAttemptsErrors[keyof ListProjectAiCreditsWebhookDeliveryAttemptsErrors];
@@ -3107,16 +3081,16 @@ export type ListProjectAiCreditsWebhookDeliveryAttemptsResponses = {
      * Default Response
      */
     200: {
-        attempts?: Array<{
-            attempt?: number;
-            status_code?: unknown;
-            error?: unknown;
-            attempted_at?: string;
+        attempts: Array<{
+            attempt: number;
+            status_code: null | number;
+            error: null | string;
+            attempted_at: string;
         }>;
         /**
          * Total attempts for the delivery (ignores limit/offset).
          */
-        total?: number;
+        total: number;
     };
 };
 
@@ -3217,6 +3191,19 @@ export type RetryProjectAiCreditsWebhookDeliveryErrors = {
          */
         message: string;
     };
+    /**
+     * Default Response
+     */
+    503: {
+        /**
+         * Error code
+         */
+        error: string;
+        /**
+         * Human-readable error message
+         */
+        message: string;
+    };
 };
 
 export type RetryProjectAiCreditsWebhookDeliveryError = RetryProjectAiCreditsWebhookDeliveryErrors[keyof RetryProjectAiCreditsWebhookDeliveryErrors];
@@ -3226,7 +3213,7 @@ export type RetryProjectAiCreditsWebhookDeliveryResponses = {
      * Default Response
      */
     200: {
-        status?: 'requeued';
+        status: 'requeued';
     };
 };
 
@@ -3601,7 +3588,7 @@ export type ExportHtmlData = {
             [key: string]: unknown;
         };
         displayMode?: 'email' | 'web' | 'popup' | 'document';
-        customJS?: unknown;
+        customJS?: string | Array<string>;
         editorVersion?: string;
         mergeTags?: {
             [key: string]: unknown;
@@ -3774,7 +3761,7 @@ export type ExportImageData = {
             [key: string]: unknown;
         };
         displayMode?: 'email' | 'web' | 'popup' | 'document';
-        customJS?: unknown;
+        customJS?: string | Array<string>;
         editorVersion?: string;
         mergeTags?: {
             [key: string]: unknown;
@@ -3938,7 +3925,7 @@ export type ExportPdfData = {
             [key: string]: unknown;
         };
         displayMode?: 'email' | 'web' | 'popup' | 'document';
-        customJS?: unknown;
+        customJS?: string | Array<string>;
         editorVersion?: string;
         mergeTags?: {
             [key: string]: unknown;
@@ -4100,7 +4087,7 @@ export type ExportZipData = {
             [key: string]: unknown;
         };
         displayMode?: 'email' | 'web' | 'popup' | 'document';
-        customJS?: unknown;
+        customJS?: string | Array<string>;
         editorVersion?: string;
         mergeTags?: {
             [key: string]: unknown;
@@ -4250,20 +4237,6 @@ export type ExportZipResponses = {
 };
 
 export type ExportZipResponse = ExportZipResponses[keyof ExportZipResponses];
-
-export type GetV3TemplatesGenerateData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/v3/templates/generate';
-};
-
-export type GetV3TemplatesGenerateResponses = {
-    /**
-     * Default Response
-     */
-    200: unknown;
-};
 
 export type GenerateDesignData = {
     body: {
@@ -4592,6 +4565,13 @@ export type ImportTemplateErrors = {
          * Human-readable error message
          */
         message: string;
+    };
+    /**
+     * Default Response
+     */
+    429: {
+        error?: string;
+        message?: string;
     };
 };
 
@@ -5138,7 +5118,7 @@ export type GetWebhookResponses = {
 export type GetWebhookResponse = GetWebhookResponses[keyof GetWebhookResponses];
 
 export type UpdateWebhookData = {
-    body?: {
+    body: {
         /**
          * The HTTPS URL to receive webhook events
          */

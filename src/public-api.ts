@@ -2,6 +2,7 @@
 
 import { createClient } from './client';
 import type { Client } from './client';
+import { createQuerySerializer } from './client/utils.gen';
 
 import { Projects as GeneratedProjects, Templates as GeneratedTemplates, Workspaces as GeneratedWorkspaces } from './sdk.gen';
 import type { ConvertFullToSimpleData, ConvertFullToSimpleResponse, ConvertSimpleToFullData, ConvertSimpleToFullResponse, GetProjectResponse, GetTemplateData, GetTemplateResponse, GetWorkspaceResponse, ListTemplatesData, ListTemplatesResponse, ListWorkspacesResponse } from './types.gen';
@@ -15,6 +16,14 @@ export interface Logger {
   warn(...args: unknown[]): void;
 }
 
+type HeaderValue = string | null | undefined;
+type HeadersLike =
+  | Headers
+  | ReadonlyArray<readonly [string, HeaderValue]>
+  | Record<string, HeaderValue | ReadonlyArray<HeaderValue>>
+  | null
+  | undefined;
+
 export interface ClientOptions {
   apiKey?: string | null;
   personalAccessToken?: string | null;
@@ -24,14 +33,15 @@ export interface ClientOptions {
   timeout?: number;
   fetch?: typeof fetch;
   fetchOptions?: RequestInit;
-  defaultHeaders?: HeadersInit;
+  defaultHeaders?: HeadersLike;
   defaultQuery?: Record<string, string | undefined>;
   logger?: Logger;
   logLevel?: LogLevel;
 }
 
-export interface RequestOptions extends Omit<RequestInit, 'body' | 'method'> {
+export interface RequestOptions extends Omit<RequestInit, 'body' | 'headers' | 'method'> {
   fetchOptions?: RequestInit;
+  headers?: HeadersLike;
   maxRetries?: number;
   timeout?: number;
 }
@@ -82,8 +92,54 @@ export namespace SimpleToFullCreateResponse {
   export type Data = NonNullable<SimpleToFullCreateResponse['data']>;
 }
 
-export const APIPromise = Promise;
-export type APIPromise<T> = Promise<T>;
+type APIResponseProps<T> = {
+  data: T;
+  response: Response;
+};
+
+const rawResponses = new WeakMap<Response, Response>();
+
+export class APIPromise<T> extends Promise<T> {
+  readonly #responsePromise: Promise<APIResponseProps<T>>;
+  #parsedPromise: Promise<T> | undefined;
+
+  constructor(responsePromise: PromiseLike<APIResponseProps<T>>) {
+    super((resolve) => resolve(undefined as T));
+    this.#responsePromise = Promise.resolve(responsePromise).then((result) => ({
+      data: result.data,
+      response: rawResponses.get(result.response) ?? result.response,
+    }));
+  }
+
+  asResponse(): Promise<Response> {
+    return this.#responsePromise.then(({ response }) => response);
+  }
+
+  withResponse(): Promise<{ data: T; response: Response }> {
+    return this.#responsePromise;
+  }
+
+  #parse(): Promise<T> {
+    return (this.#parsedPromise ??= this.#responsePromise.then(({ data }) => data));
+  }
+
+  override then<TResult1 = T, TResult2 = never>(
+    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
+    onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null,
+  ): Promise<TResult1 | TResult2> {
+    return this.#parse().then(onfulfilled, onrejected);
+  }
+
+  override catch<TResult = never>(
+    onrejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | null,
+  ): Promise<T | TResult> {
+    return this.#parse().catch(onrejected);
+  }
+
+  override finally(onfinally?: (() => void) | null): Promise<T> {
+    return this.#parse().finally(onfinally);
+  }
+}
 
 export class UnlayerError extends Error {
   constructor(message: string) {
@@ -182,85 +238,119 @@ export class CursorPage<T> implements AsyncIterable<T> {
   }
 
   hasNextPage(): boolean {
-    return this.has_more && Boolean(this.next_cursor);
+    return this.data.length > 0 && this.has_more && Boolean(this.next_cursor);
   }
 
-  async getNextPage(): Promise<CursorPage<T>> {
+  getPaginatedItems(): Array<T> {
+    return this.data;
+  }
+
+  async getNextPage(): Promise<this> {
     if (!this.next_cursor) {
       throw new UnlayerError('No next page is available.');
     }
-    return this.loadPage(this.next_cursor);
+    return (await this.loadPage(this.next_cursor)) as this;
   }
 
-  async *[Symbol.asyncIterator](): AsyncIterator<T> {
-    for (const item of this.data) yield item;
-  }
-}
-
-export class PagePromise<T> implements PromiseLike<CursorPage<T>>, AsyncIterable<T> {
-  private readonly promise: Promise<CursorPage<T>>;
-
-  constructor(fetchPage: (cursor?: string) => Promise<CursorResponse<T>>) {
-    const loadPage = async (cursor?: string): Promise<CursorPage<T>> => {
-      const response = await fetchPage(cursor);
-      return new CursorPage(response, (nextCursor) => loadPage(nextCursor));
-    };
-    this.promise = loadPage();
-  }
-
-  then<TResult1 = CursorPage<T>, TResult2 = never>(
-    onfulfilled?: ((value: CursorPage<T>) => TResult1 | PromiseLike<TResult1>) | null,
-    onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null,
-  ): Promise<TResult1 | TResult2> {
-    return this.promise.then(onfulfilled, onrejected);
-  }
-
-  catch<TResult = never>(
-    onrejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | null,
-  ): Promise<CursorPage<T> | TResult> {
-    return this.promise.catch(onrejected);
-  }
-
-  finally(onfinally?: (() => void) | null): Promise<CursorPage<T>> {
-    return this.promise.finally(onfinally);
-  }
-
-  async *[Symbol.asyncIterator](): AsyncIterator<T> {
-    let page = await this.promise;
-    while (true) {
-      for (const item of page.data) yield item;
-      if (!page.hasNextPage()) return;
+  async *iterPages(): AsyncGenerator<this> {
+    let page: this = this;
+    yield page;
+    while (page.hasNextPage()) {
       page = await page.getNextPage();
+      yield page;
+    }
+  }
+
+  async *[Symbol.asyncIterator](): AsyncGenerator<T> {
+    for await (const page of this.iterPages()) {
+      for (const item of page.getPaginatedItems()) yield item;
     }
   }
 }
 
-type NativeRequestOptions = Omit<RequestOptions, 'maxRetries' | 'timeout'>;
+export class PagePromise<
+    PageClass extends CursorPage<Item>,
+    Item = ReturnType<PageClass['getPaginatedItems']>[number],
+  >
+  extends APIPromise<PageClass>
+  implements AsyncIterable<Item>
+{
+  constructor(fetchPage: (cursor?: string) => PromiseLike<APIResponseProps<CursorResponse<Item>>>) {
+    const loadPage = async (cursor?: string): Promise<APIResponseProps<PageClass>> => {
+      const result = await fetchPage(cursor);
+      const page = new CursorPage<Item>(result.data, async (nextCursor) => {
+        const nextPage = await loadPage(nextCursor);
+        return nextPage.data;
+      }) as PageClass;
+      return { data: page, response: result.response };
+    };
+    super(loadPage());
+  }
+
+  async *[Symbol.asyncIterator](): AsyncGenerator<Item> {
+    const page = await this;
+    for await (const item of page) yield item;
+  }
+}
+
+type NativeHeaderValue = string | ReadonlyArray<string> | null | undefined;
+const INTERNAL_ALLOW_MISSING_AUTH = 'x-unlayer-sdk-internal-allow-missing-auth';
+const INTERNAL_MAX_RETRIES = 'x-unlayer-sdk-internal-max-retries';
+const INTERNAL_TIMEOUT = 'x-unlayer-sdk-internal-timeout';
+type NativeRequestOptions = Omit<RequestOptions, 'fetchOptions' | 'headers' | 'maxRetries' | 'timeout'> & {
+  headers?: Record<string, NativeHeaderValue>;
+};
+
+const mergeNullableHeaders = (...sources: Array<HeadersLike>): Record<string, NativeHeaderValue> => {
+  const headers = new Map<string, { name: string; value: NativeHeaderValue }>();
+  for (const source of sources) {
+    if (!source) continue;
+    const entries: Iterable<readonly [string, HeaderValue | ReadonlyArray<HeaderValue>]> =
+      source instanceof Headers ? source.entries()
+      : Array.isArray(source) ? source
+      : Object.entries(source);
+    for (const [name, value] of entries) {
+      if (value === undefined) continue;
+      const normalized: NativeHeaderValue =
+        Array.isArray(value) ?
+          value.filter((item): item is string => item !== null && item !== undefined)
+        : (value as HeaderValue);
+      headers.set(name.toLowerCase(), { name, value: normalized });
+    }
+  }
+  return Object.fromEntries([...headers.values()].map(({ name, value }) => [name, value]));
+};
 
 const nativeRequestOptions = (options?: RequestOptions): NativeRequestOptions => {
-  const { fetchOptions, maxRetries, timeout, ...requestOptions } = options ?? {};
+  const {
+    client: _client,
+    fetchOptions,
+    headers: requestHeaders,
+    maxRetries,
+    timeout,
+    ...requestOptions
+  } = (options ?? {}) as RequestOptions & { client?: unknown };
   const {
     body: _fetchBody,
     headers: fetchHeaders,
     method: _fetchMethod,
     ...fetchConfig
   } = fetchOptions ?? {};
-  const nativeOptions = { ...requestOptions, ...fetchConfig };
-  if (
-    fetchHeaders === undefined &&
-    requestOptions.headers === undefined &&
-    maxRetries === undefined &&
-    timeout === undefined
-  ) {
-    return nativeOptions;
+  const headers = mergeNullableHeaders(requestHeaders, fetchHeaders);
+  if (headerValue(headers, 'authorization') === null) {
+    headers[INTERNAL_ALLOW_MISSING_AUTH] = 'true';
   }
-
-  const headers = new Headers(requestOptions.headers);
-  new Headers(fetchHeaders).forEach((value, key) => headers.set(key, value));
-  if (maxRetries !== undefined) headers.set('x-unlayer-sdk-internal-max-retries', String(maxRetries));
-  if (timeout !== undefined) headers.set('x-unlayer-sdk-internal-timeout', String(timeout));
-  return { ...nativeOptions, headers };
+  if (maxRetries !== undefined) headers[INTERNAL_MAX_RETRIES] = String(maxRetries);
+  if (timeout !== undefined) headers[INTERNAL_TIMEOUT] = String(timeout);
+  return {
+    ...requestOptions,
+    ...fetchConfig,
+    ...(Object.keys(headers).length ? { headers } : {}),
+  };
 };
+
+const headerValue = (headers: Record<string, NativeHeaderValue>, name: string): NativeHeaderValue =>
+  Object.entries(headers).find(([header]) => header.toLowerCase() === name.toLowerCase())?.[1];
 
 const defaultLogger: Logger = {
   debug: (...args) => console.debug(...args),
@@ -280,6 +370,7 @@ type ResolvedCompatibilityClient = {
   personalAccessToken: string | null;
   projectID: string | null;
   timeout: number;
+  options: ClientOptions;
 };
 
 const resolveCompatibilityClient = (options: ClientOptions): ResolvedCompatibilityClient => {
@@ -303,13 +394,17 @@ const resolveCompatibilityClient = (options: ClientOptions): ResolvedCompatibili
     method: _fetchMethod,
     ...fetchConfig
   } = options.fetchOptions ?? {};
-  const headers = new Headers(fetchHeaders);
-  new Headers(options.defaultHeaders).forEach((value, key) => headers.set(key, value));
-  if (projectID) headers.set('X-Project-ID', projectID);
+  const headers = mergeNullableHeaders(
+    projectID ? { 'X-Project-ID': projectID } : undefined,
+    fetchHeaders,
+    options.defaultHeaders,
+  );
+  const fetchImplementation = options.fetch ?? globalThis.fetch;
+  const querySerializer = createQuerySerializer();
 
   const compatibilityFetch = createCompatibilityFetch({
-    defaultQuery: options.defaultQuery,
-    fetch: options.fetch ?? globalThis.fetch,
+    allowMissingAuth: headerValue(headers, 'authorization') === null,
+    fetch: fetchImplementation,
     logLevel,
     logger,
     maxRetries,
@@ -322,6 +417,7 @@ const resolveCompatibilityClient = (options: ClientOptions): ResolvedCompatibili
     baseUrl: baseURL,
     fetch: compatibilityFetch,
     headers,
+    querySerializer: (query) => querySerializer({ ...options.defaultQuery, ...query }),
   });
 
   client.interceptors.error.use((error, response, request) => {
@@ -344,11 +440,23 @@ const resolveCompatibilityClient = (options: ClientOptions): ResolvedCompatibili
     personalAccessToken,
     projectID,
     timeout,
+    options: {
+      ...options,
+      apiKey,
+      baseURL,
+      fetch: fetchImplementation,
+      logLevel,
+      logger,
+      maxRetries,
+      personalAccessToken,
+      projectID,
+      timeout,
+    },
   };
 };
 
 type CompatibilityFetchOptions = {
-  defaultQuery: Record<string, string | undefined> | undefined;
+  allowMissingAuth: boolean;
   fetch: typeof fetch;
   logLevel: LogLevel;
   logger: Logger;
@@ -360,16 +468,19 @@ const createCompatibilityFetch =
   (options: CompatibilityFetchOptions): typeof fetch =>
   async (input, init): Promise<Response> => {
     const originalRequest = input instanceof Request ? input : new Request(input, init);
-    const url = new URL(originalRequest.url);
-    for (const [key, value] of Object.entries(options.defaultQuery ?? {})) {
-      if (value !== undefined && !url.searchParams.has(key)) url.searchParams.set(key, value);
-    }
-    const inputRequest = new Request(url, originalRequest);
+    const inputRequest = originalRequest;
     const headers = new Headers(inputRequest.headers);
-    const maxRetriesHeader = headers.get('x-unlayer-sdk-internal-max-retries');
-    const timeoutHeader = headers.get('x-unlayer-sdk-internal-timeout');
-    headers.delete('x-unlayer-sdk-internal-max-retries');
-    headers.delete('x-unlayer-sdk-internal-timeout');
+    const allowMissingAuth = options.allowMissingAuth || headers.get(INTERNAL_ALLOW_MISSING_AUTH) === 'true';
+    const maxRetriesHeader = headers.get(INTERNAL_MAX_RETRIES);
+    const timeoutHeader = headers.get(INTERNAL_TIMEOUT);
+    headers.delete(INTERNAL_ALLOW_MISSING_AUTH);
+    headers.delete(INTERNAL_MAX_RETRIES);
+    headers.delete(INTERNAL_TIMEOUT);
+    if (!headers.has('authorization') && !allowMissingAuth) {
+      throw new UnlayerError(
+        'Could not resolve authentication method. Expected either apiKey or personalAccessToken to be set. Or for the Authorization header to be explicitly omitted.',
+      );
+    }
     const request = new Request(inputRequest, { headers });
     const maxRetries =
       maxRetriesHeader === null ?
@@ -386,26 +497,29 @@ const createCompatibilityFetch =
       }
       const controller = new AbortController();
       let timedOut = false;
-      const abortFromCaller = () => controller.abort(request.signal.reason);
-      request.signal.addEventListener('abort', abortFromCaller, { once: true });
-      if (request.signal.aborted) abortFromCaller();
+      const attemptSignal = AbortSignal.any([request.signal, controller.signal]);
       const timeoutID = setTimeout(() => {
         timedOut = true;
         controller.abort(new APIConnectionTimeoutError({ message: `Request timed out after ${timeout}ms.` }));
       }, timeout);
 
       try {
-        if (controller.signal.aborted) {
-          throw new APIUserAbortError({ cause: controller.signal.reason });
-        }
-        const response = await options.fetch(new Request(request.clone(), { signal: controller.signal }));
+        const response = await options.fetch(new Request(request.clone(), { signal: attemptSignal }));
+        clearTimeout(timeoutID);
         if (attempt < maxRetries && retryableStatus(response.status)) {
           await response.body?.cancel();
           logRetry(requestOptions, attempt + 1, `HTTP ${response.status}`);
-          await retryDelay(attempt, request.signal, response.headers.get('retry-after'));
+          await retryDelay(
+            attempt,
+            request.signal,
+            response.headers.get('retry-after'),
+            response.headers.get('retry-after-ms'),
+          );
           continue;
         }
-        return response;
+        const responseForParsing = response.clone();
+        rawResponses.set(responseForParsing, response);
+        return responseForParsing;
       } catch (error) {
         lastError = error;
         if (request.signal.aborted) throw new APIUserAbortError({ cause: error });
@@ -422,7 +536,6 @@ const createCompatibilityFetch =
         await retryDelay(attempt, request.signal);
       } finally {
         clearTimeout(timeoutID);
-        request.signal.removeEventListener('abort', abortFromCaller);
       }
     }
 
@@ -436,11 +549,20 @@ const retryDelay = async (
   attempt: number,
   signal: AbortSignal,
   retryAfter?: string | null,
+  retryAfterMilliseconds?: string | null,
 ): Promise<void> => {
+  const retryAfterMillisecondsValue = retryAfterMilliseconds ? Number(retryAfterMilliseconds) : Number.NaN;
   const retryAfterSeconds = retryAfter ? Number(retryAfter) : Number.NaN;
+  const retryAfterDate =
+    retryAfter && !Number.isFinite(retryAfterSeconds) ? Date.parse(retryAfter) : Number.NaN;
+  const requestedDelay =
+    Number.isFinite(retryAfterMillisecondsValue) ? retryAfterMillisecondsValue
+    : Number.isFinite(retryAfterSeconds) ? retryAfterSeconds * 1_000
+    : Number.isFinite(retryAfterDate) ? retryAfterDate - Date.now()
+    : Number.NaN;
   const delay =
-    Number.isFinite(retryAfterSeconds) ?
-      Math.max(0, retryAfterSeconds * 1_000)
+    Number.isFinite(requestedDelay) && requestedDelay >= 0 && requestedDelay < 60_000 ?
+      requestedDelay
     : Math.min(250 * 2 ** attempt, 2_000);
 
   await new Promise<void>((resolve, reject) => {
@@ -533,11 +655,11 @@ export class Templates {
   list(
     query: TemplateListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<TemplateListResponse> {
+  ): PagePromise<TemplateListResponsesCursorPage, TemplateListResponse> {
     return new PagePromise(async (cursor) =>
       this.#generatedTemplates.listTemplates({
         ...nativeRequestOptions(options),
-        query: { ...(query ?? {}), cursor: cursor },
+        query: { ...(query ?? {}), ...(cursor === undefined ? {} : { cursor: cursor }) },
       }),
     );
   }
@@ -547,11 +669,11 @@ export class Templates {
     query: TemplateRetrieveParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<TemplateRetrieveResponse> {
-    return this.#generatedTemplates.getTemplate({
+    return new APIPromise(this.#generatedTemplates.getTemplate({
       ...nativeRequestOptions(options),
       path: { id: id },
       query: query ?? undefined,
-    });
+    }));
   }
 }
 
@@ -566,10 +688,10 @@ export class Projects {
     id: string,
     options?: RequestOptions,
   ): APIPromise<ProjectRetrieveResponse> {
-    return this.#generatedProjects.getProject({
+    return new APIPromise(this.#generatedProjects.getProject({
       ...nativeRequestOptions(options),
       path: { id: id },
-    });
+    }));
   }
 }
 
@@ -583,17 +705,17 @@ export class Workspaces {
   list(
     options?: RequestOptions,
   ): APIPromise<WorkspaceListResponse> {
-    return this.#generatedWorkspaces.listWorkspaces(nativeRequestOptions(options));
+    return new APIPromise(this.#generatedWorkspaces.listWorkspaces(nativeRequestOptions(options)));
   }
 
   retrieve(
     workspaceID: string,
     options?: RequestOptions,
   ): APIPromise<WorkspaceRetrieveResponse> {
-    return this.#generatedWorkspaces.getWorkspace({
+    return new APIPromise(this.#generatedWorkspaces.getWorkspace({
       ...nativeRequestOptions(options),
       path: { workspaceId: workspaceID },
-    });
+    }));
   }
 }
 
@@ -608,10 +730,10 @@ export class FullToSimple {
     body: FullToSimpleCreateParams,
     options?: RequestOptions,
   ): APIPromise<FullToSimpleCreateResponse> {
-    return this.#generatedTemplates.convertFullToSimple({
+    return new APIPromise(this.#generatedTemplates.convertFullToSimple({
       ...nativeRequestOptions(options),
       body: body,
-    });
+    }));
   }
 }
 
@@ -626,10 +748,10 @@ export class SimpleToFull {
     body: SimpleToFullCreateParams,
     options?: RequestOptions,
   ): APIPromise<SimpleToFullCreateResponse> {
-    return this.#generatedTemplates.convertSimpleToFull({
+    return new APIPromise(this.#generatedTemplates.convertSimpleToFull({
       ...nativeRequestOptions(options),
       body: body,
-    });
+    }));
   }
 }
 
@@ -729,7 +851,7 @@ export class Unlayer {
 
   constructor(options: ClientOptions = {}) {
     const resolved = resolveCompatibilityClient(options);
-    this.compatibilityOptions = options;
+    this.compatibilityOptions = resolved.options;
     this.apiKey = resolved.apiKey;
     this.personalAccessToken = resolved.personalAccessToken;
     this.projectID = resolved.projectID;
@@ -745,8 +867,21 @@ export class Unlayer {
     this.convert = new Convert(resolved.client);
   }
 
-  withOptions(options: Partial<ClientOptions>): Unlayer {
-    return new Unlayer({ ...this.compatibilityOptions, ...options });
+  withOptions(options: Partial<ClientOptions>): this {
+    const Client = this.constructor as new (options: ClientOptions) => this;
+    return new Client({
+      ...this.compatibilityOptions,
+      apiKey: this.apiKey,
+      baseURL: this.baseURL,
+      fetchOptions: this.fetchOptions,
+      logLevel: this.logLevel,
+      logger: this.logger,
+      maxRetries: this.maxRetries,
+      personalAccessToken: this.personalAccessToken,
+      projectID: this.projectID,
+      timeout: this.timeout,
+      ...options,
+    });
   }
 }
 

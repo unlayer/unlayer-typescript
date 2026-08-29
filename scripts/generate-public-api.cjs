@@ -367,7 +367,9 @@ const renderMethod = (entry) => {
   parameters.push('options?: RequestOptions');
 
   const returnType =
-    entry.pagination ? `PagePromise<${entry.response.type}>` : `APIPromise<${entry.response.type}>`;
+    entry.pagination ?
+      `PagePromise<${entry.pagination.pageType}, ${entry.response.type}>`
+    : `APIPromise<${entry.response.type}>`;
   const transport = `this.#${transportFieldName(entry.transport)}`;
 
   if (entry.pagination) {
@@ -376,9 +378,9 @@ const renderMethod = (entry) => {
       ',\n    ',
     )},\n  ): ${returnType} {\n    return new PagePromise(async (cursor) =>\n      ${transport}.${
       entry.operationId
-    }({\n        ...nativeRequestOptions(options),\n        query: { ...(${paramsName} ?? {}), ${
+    }({\n        ...nativeRequestOptions(options),\n        query: { ...(${paramsName} ?? {}), ...(cursor === undefined ? {} : { ${
       entry.pagination.cursor
-    }: cursor },\n      }),\n    );\n  }`;
+    }: cursor }) },\n      }),\n    );\n  }`;
   }
 
   const requestFields = [];
@@ -404,7 +406,7 @@ const renderMethod = (entry) => {
 
   return `  ${entry.method}(\n    ${parameters.join(
     ',\n    ',
-  )},\n  ): ${returnType} {\n    return ${call};\n  }`;
+  )},\n  ): ${returnType} {\n    return new APIPromise(${call});\n  }`;
 };
 
 const renderResourceClass = (node) => {
@@ -509,7 +511,7 @@ const renderFacade = (operations) => {
     .map(renderResourceClass)
     .join(
       '\n\n',
-    )}\n\n${resourceNamespaces}\n\nexport class Unlayer {\n  static readonly Unlayer = Unlayer;\n  static readonly DEFAULT_TIMEOUT = 60_000;\n  static readonly UnlayerError = UnlayerError;\n  static readonly APIError = APIError;\n  static readonly APIConnectionError = APIConnectionError;\n  static readonly APIConnectionTimeoutError = APIConnectionTimeoutError;\n  static readonly APIUserAbortError = APIUserAbortError;\n  static readonly NotFoundError = NotFoundError;\n  static readonly ConflictError = ConflictError;\n  static readonly RateLimitError = RateLimitError;\n  static readonly BadRequestError = BadRequestError;\n  static readonly AuthenticationError = AuthenticationError;\n  static readonly InternalServerError = InternalServerError;\n  static readonly PermissionDeniedError = PermissionDeniedError;\n  static readonly UnprocessableEntityError = UnprocessableEntityError;\n\n  readonly apiKey: string | null;\n  readonly personalAccessToken: string | null;\n  readonly projectID: string | null;\n  readonly baseURL: string;\n  readonly maxRetries: number;\n  readonly timeout: number;\n  readonly logger: Logger;\n  readonly logLevel: LogLevel;\n  readonly fetchOptions: RequestInit | undefined;\n${resourceProperties}\n\n  private readonly compatibilityOptions: ClientOptions;\n\n  constructor(options: ClientOptions = {}) {\n    const resolved = resolveCompatibilityClient(options);\n    this.compatibilityOptions = options;\n    this.apiKey = resolved.apiKey;\n    this.personalAccessToken = resolved.personalAccessToken;\n    this.projectID = resolved.projectID;\n    this.baseURL = resolved.baseURL;\n    this.maxRetries = resolved.maxRetries;\n    this.timeout = resolved.timeout;\n    this.logger = resolved.logger;\n    this.logLevel = resolved.logLevel;\n    this.fetchOptions = resolved.fetchOptions;\n${resourceInitializers}\n  }\n\n  withOptions(options: Partial<ClientOptions>): Unlayer {\n    return new Unlayer({ ...this.compatibilityOptions, ...options });\n  }\n}\n\n${staticResourceAssignments}\n\nexport declare namespace Unlayer {\n  export {\n    CursorPage as CursorPage,\n    type CursorPageParams as CursorPageParams,\n    type CursorPageResponse as CursorPageResponse,\n    type RequestOptions as RequestOptions,\n${unlayerResourceExports
+    )}\n\n${resourceNamespaces}\n\nexport class Unlayer {\n  static readonly Unlayer = Unlayer;\n  static readonly DEFAULT_TIMEOUT = 60_000;\n  static readonly UnlayerError = UnlayerError;\n  static readonly APIError = APIError;\n  static readonly APIConnectionError = APIConnectionError;\n  static readonly APIConnectionTimeoutError = APIConnectionTimeoutError;\n  static readonly APIUserAbortError = APIUserAbortError;\n  static readonly NotFoundError = NotFoundError;\n  static readonly ConflictError = ConflictError;\n  static readonly RateLimitError = RateLimitError;\n  static readonly BadRequestError = BadRequestError;\n  static readonly AuthenticationError = AuthenticationError;\n  static readonly InternalServerError = InternalServerError;\n  static readonly PermissionDeniedError = PermissionDeniedError;\n  static readonly UnprocessableEntityError = UnprocessableEntityError;\n\n  readonly apiKey: string | null;\n  readonly personalAccessToken: string | null;\n  readonly projectID: string | null;\n  readonly baseURL: string;\n  readonly maxRetries: number;\n  readonly timeout: number;\n  readonly logger: Logger;\n  readonly logLevel: LogLevel;\n  readonly fetchOptions: RequestInit | undefined;\n${resourceProperties}\n\n  private readonly compatibilityOptions: ClientOptions;\n\n  constructor(options: ClientOptions = {}) {\n    const resolved = resolveCompatibilityClient(options);\n    this.compatibilityOptions = resolved.options;\n    this.apiKey = resolved.apiKey;\n    this.personalAccessToken = resolved.personalAccessToken;\n    this.projectID = resolved.projectID;\n    this.baseURL = resolved.baseURL;\n    this.maxRetries = resolved.maxRetries;\n    this.timeout = resolved.timeout;\n    this.logger = resolved.logger;\n    this.logLevel = resolved.logLevel;\n    this.fetchOptions = resolved.fetchOptions;\n${resourceInitializers}\n  }\n\n  withOptions(options: Partial<ClientOptions>): this {\n    const Client = this.constructor as new (options: ClientOptions) => this;\n    return new Client({\n      ...this.compatibilityOptions,\n      apiKey: this.apiKey,\n      baseURL: this.baseURL,\n      fetchOptions: this.fetchOptions,\n      logLevel: this.logLevel,\n      logger: this.logger,\n      maxRetries: this.maxRetries,\n      personalAccessToken: this.personalAccessToken,\n      projectID: this.projectID,\n      timeout: this.timeout,\n      ...options,\n    });\n  }\n}\n\n${staticResourceAssignments}\n\nexport declare namespace Unlayer {\n  export {\n    CursorPage as CursorPage,\n    type CursorPageParams as CursorPageParams,\n    type CursorPageResponse as CursorPageResponse,\n    type RequestOptions as RequestOptions,\n${unlayerResourceExports
     .map((entry) => `    ${entry},`)
     .join('\n')}\n  };\n}\n\nexport default Unlayer;`;
 };

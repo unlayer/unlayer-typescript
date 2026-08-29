@@ -11,7 +11,7 @@ let clientIndexSource = fs.readFileSync(clientIndexPath, 'utf8');
 source = source.replace(/[ \t]+$/gm, '');
 
 const optionsPattern = /> = Options2<TData, ThrowOnError, TResponse> & \{/g;
-const responseStylePattern = /^\s+responseStyle: 'data',\n/gm;
+const responseStylePattern = /^\s+responseStyle: '(?:data|fields)',\n/gm;
 const optionsSpreadPattern = /^(\s+)\.\.\.options,?\n/gm;
 const defaultClientImport = "import { client } from './client.gen';\n";
 const generatedClientBase = `class HeyApiClient {
@@ -83,7 +83,10 @@ if (optionsMatches.length !== 1) {
   throw new Error(`Expected one generated SDK Options alias, found ${optionsMatches.length}`);
 }
 
-if (responseStyleMatches.length === 0 || responseStyleMatches.length !== optionsSpreadMatches.length) {
+if (
+  optionsSpreadMatches.length === 0 ||
+  (responseStyleMatches.length !== 0 && responseStyleMatches.length !== optionsSpreadMatches.length)
+) {
   throw new Error('Generated SDK request layout changed; refusing to apply unsafe contract fixes');
 }
 
@@ -108,7 +111,7 @@ source = source.replace(
   (_, indentation) =>
     `${indentation}...options,\n` +
     `${indentation}throwOnError: true as ThrowOnError,\n` +
-    `${indentation}responseStyle: 'data',\n`,
+    `${indentation}responseStyle: 'fields',\n`,
 );
 source = source.replace(defaultClientImport, '');
 source = source.replace(generatedClientBase, explicitClientBase);
@@ -143,5 +146,5 @@ clientIndexSource = clientIndexSource.replace(
 fs.writeFileSync(sdkPath, source);
 fs.writeFileSync(clientIndexPath, clientIndexSource);
 process.stdout.write(
-  `Applied internal SDK contracts to ${responseStyleMatches.length} operations and removed global client state\n`,
+  `Applied internal SDK contracts to ${optionsSpreadMatches.length} operations and removed global client state\n`,
 );

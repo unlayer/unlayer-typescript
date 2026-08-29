@@ -1,9 +1,9 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
   "info": {
     "title": "Unlayer API",
     "version": "3.0.0",
-    "description": "Unlayer API\n\n## Authentication\n\nAll endpoints require a Bearer token. Pass it in the `Authorization` header:\n\n```\nAuthorization: Bearer <your-token>\n```\n\nTwo token types are supported:\n\n| Token | Prefix | Scope | Use case |\n|-------|--------|-------|----------|\n| **API Key** | `unlayer_sk_` | Project | Server-to-server integration. The project ID is embedded in the key — no `projectId` parameter needed. |\n| **Personal Access Token** | `unlayer_pat_` | User | Admin operations. Required for workspace endpoints. Must provide `projectId` via query param or `X-Project-Id` header for project endpoints. |\n\nMost integrations should use an **API Key**. Use a PAT only for workspace management or admin tasks.\n\n> ⚠️ **Server-side use only.** This API does not send CORS headers and cannot be called from a browser. API keys (`unlayer_sk_*`) must never be shipped to client-side code — treat them as secrets."
+    "description": "Unlayer API\n\n## Authentication\n\nMost endpoints require a Bearer token. Pass it in the `Authorization` header:\n\n```\nAuthorization: Bearer <your-token>\n```\n\nTwo token types are supported:\n\n| Token | Prefix | Scope | Use case |\n|-------|--------|-------|----------|\n| **API Key** | `unlayer_sk_` | Project | Server-to-server integration. The project ID is embedded in the key — no `projectId` parameter needed. |\n| **Personal Access Token** | `unlayer_pat_` | User | Admin operations. Required for workspace endpoints. Must provide `projectId` via query param or `X-Project-Id` header for project endpoints. |\n\nMost integrations should use an **API Key**. Use a PAT only for workspace management or admin tasks.\n\nThe design schema reference at `GET /v3/templates/schema` is public and does not require authentication.\n\n> ⚠️ **Server-side use only.** This API does not send CORS headers and cannot be called from a browser. API keys (`unlayer_sk_*`) must never be shipped to client-side code — treat them as secrets."
   },
   "components": {
     "securitySchemes": {
@@ -141,8 +141,10 @@
                             "description": "Block ID"
                           },
                           "userId": {
-                            "type": "string",
-                            "nullable": true,
+                            "type": [
+                              "string",
+                              "null"
+                            ],
                             "description": "End-user ID the block was saved under (the user id your app passes to the editor). Null for shared project blocks."
                           },
                           "displayMode": {
@@ -166,13 +168,17 @@
                             "description": "The block design JSON. Omitted when includeData=false is passed."
                           },
                           "thumbnailUrl": {
-                            "type": "string",
-                            "nullable": true,
+                            "type": [
+                              "string",
+                              "null"
+                            ],
                             "description": "URL of the auto-generated block thumbnail, if available"
                           },
                           "syncId": {
-                            "type": "string",
-                            "nullable": true,
+                            "type": [
+                              "string",
+                              "null"
+                            ],
                             "description": "Synced-block ID referenced by designs using this block. Null when the block has never been synced."
                           },
                           "isSyncEnabled": {
@@ -191,8 +197,10 @@
                       }
                     },
                     "next_cursor": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Cursor for the next page. Null if no more results."
                     },
                     "has_more": {
@@ -311,6 +319,11 @@
           "domains"
         ],
         "description": "List sender domains shared by every Developer Email API project in the workspace. Requires a personal access token belonging to a workspace owner or admin; project API keys cannot manage domains.",
+        "security": [
+          {
+            "personalAccessTokenAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Default Response",
@@ -477,6 +490,11 @@
           },
           "required": true
         },
+        "security": [
+          {
+            "personalAccessTokenAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Default Response",
@@ -660,6 +678,11 @@
             "description": "Domain ID"
           }
         ],
+        "security": [
+          {
+            "personalAccessTokenAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Default Response",
@@ -836,6 +859,11 @@
             "description": "Domain ID"
           }
         ],
+        "security": [
+          {
+            "personalAccessTokenAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Default Response",
@@ -973,6 +1001,11 @@
             "name": "id",
             "required": true,
             "description": "Domain ID"
+          }
+        ],
+        "security": [
+          {
+            "personalAccessTokenAuth": []
           }
         ],
         "responses": {
@@ -1422,8 +1455,10 @@
                           },
                           "to": {},
                           "subject": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "status": {
                             "type": "string"
@@ -1441,8 +1476,10 @@
                       }
                     },
                     "next_cursor": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Cursor for the next page. Null if no more results."
                     },
                     "has_more": {
@@ -1984,36 +2021,46 @@
                         },
                         "to": {},
                         "cc": {
-                          "type": "array",
+                          "type": [
+                            "array",
+                            "null"
+                          ],
                           "items": {
                             "type": "string"
-                          },
-                          "nullable": true
+                          }
                         },
                         "bcc": {
-                          "type": "array",
+                          "type": [
+                            "array",
+                            "null"
+                          ],
                           "items": {
                             "type": "string"
-                          },
-                          "nullable": true
+                          }
                         },
                         "subject": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "status": {
                           "type": "string"
                         },
                         "failureReason": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "tags": {
-                          "type": "object",
+                          "type": [
+                            "object",
+                            "null"
+                          ],
                           "additionalProperties": {
                             "type": "string"
-                          },
-                          "nullable": true
+                          }
                         },
                         "createdAt": {
                           "type": "string",
@@ -2169,9 +2216,11 @@
                             "format": "date-time"
                           },
                           "metadata": {
-                            "type": "object",
-                            "additionalProperties": true,
-                            "nullable": true
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "additionalProperties": true
                           }
                         }
                       }
@@ -2339,8 +2388,10 @@
                           "description": "Rendered HTML content"
                         },
                         "subject": {
-                          "type": "string",
-                          "nullable": true,
+                          "type": [
+                            "string",
+                            "null"
+                          ],
                           "description": "Template name (can be used as default subject)"
                         }
                       }
@@ -2613,7 +2664,8 @@
                 "additionalProperties": false
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -4071,16 +4123,22 @@
                       "type": "object",
                       "properties": {
                         "planName": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "status": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "expiresAt": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "features": {
                           "type": "array",
@@ -4409,6 +4467,12 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "credits_total",
+                    "credits_used",
+                    "credits_remaining",
+                    "reset_date"
+                  ],
                   "properties": {
                     "credits_total": {
                       "type": "number",
@@ -4560,14 +4624,24 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "exhaustion_behavior",
+                    "threshold_alerts",
+                    "webhook_url",
+                    "has_signing_secret"
+                  ],
                   "properties": {
                     "exhaustion_behavior": {
-                      "type": "string"
+                      "type": "string",
+                      "enum": [
+                        "disable",
+                        "show_error"
+                      ]
                     },
                     "threshold_alerts": {
                       "type": "array",
                       "items": {
-                        "type": "number"
+                        "type": "integer"
                       }
                     },
                     "webhook_url": {
@@ -4725,7 +4799,8 @@
                 }
               }
             }
-          }
+          },
+          "required": true
         },
         "parameters": [
           {
@@ -4745,14 +4820,24 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "exhaustion_behavior",
+                    "threshold_alerts",
+                    "webhook_url",
+                    "has_signing_secret"
+                  ],
                   "properties": {
                     "exhaustion_behavior": {
-                      "type": "string"
+                      "type": "string",
+                      "enum": [
+                        "disable",
+                        "show_error"
+                      ]
                     },
                     "threshold_alerts": {
                       "type": "array",
                       "items": {
-                        "type": "number"
+                        "type": "integer"
                       }
                     },
                     "webhook_url": {
@@ -4898,6 +4983,9 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "signing_secret"
+                  ],
                   "properties": {
                     "signing_secret": {
                       "type": "string",
@@ -5130,19 +5218,29 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "total_credits_used",
+                    "total",
+                    "breakdown"
+                  ],
                   "properties": {
                     "total_credits_used": {
-                      "type": "number",
+                      "type": "integer",
                       "description": "Total AI credits used across the full filtered range (not just the returned page)."
                     },
                     "total": {
-                      "type": "number",
+                      "type": "integer",
                       "description": "Number of breakdown rows matching the filter (ignores paging)."
                     },
                     "breakdown": {
                       "type": "array",
                       "items": {
                         "type": "object",
+                        "required": [
+                          "end_user_id",
+                          "feature_type",
+                          "credits"
+                        ],
                         "properties": {
                           "end_user_id": {
                             "type": [
@@ -5163,7 +5261,7 @@
                             "description": "The partner-facing feature type."
                           },
                           "credits": {
-                            "type": "number",
+                            "type": "integer",
                             "description": "AI credits used by this end user and feature type."
                           }
                         }
@@ -5350,17 +5448,37 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "deliveries",
+                    "total"
+                  ],
                   "properties": {
                     "deliveries": {
                       "type": "array",
                       "items": {
                         "type": "object",
+                        "required": [
+                          "id",
+                          "event",
+                          "status",
+                          "attempts",
+                          "last_status_code",
+                          "end_user_id",
+                          "created_at",
+                          "delivered_at",
+                          "payload"
+                        ],
                         "properties": {
                           "id": {
                             "type": "string"
                           },
                           "event": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                              "ai.credits.usage_recorded",
+                              "ai.credits.threshold_reached",
+                              "ai.credits.exhausted"
+                            ]
                           },
                           "status": {
                             "type": "string",
@@ -5371,12 +5489,12 @@
                             ]
                           },
                           "attempts": {
-                            "type": "number"
+                            "type": "integer"
                           },
                           "last_status_code": {
                             "type": [
                               "null",
-                              "number"
+                              "integer"
                             ]
                           },
                           "end_user_id": {
@@ -5393,7 +5511,8 @@
                             "type": [
                               "null",
                               "string"
-                            ]
+                            ],
+                            "format": "date-time"
                           },
                           "payload": {
                             "type": "object",
@@ -5403,7 +5522,7 @@
                       }
                     },
                     "total": {
-                      "type": "number",
+                      "type": "integer",
                       "description": "Total deliveries matching the filter (ignores limit/offset)."
                     }
                   }
@@ -5568,19 +5687,29 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "attempts",
+                    "total"
+                  ],
                   "properties": {
                     "attempts": {
                       "type": "array",
                       "items": {
                         "type": "object",
+                        "required": [
+                          "attempt",
+                          "status_code",
+                          "error",
+                          "attempted_at"
+                        ],
                         "properties": {
                           "attempt": {
-                            "type": "number"
+                            "type": "integer"
                           },
                           "status_code": {
                             "type": [
                               "null",
-                              "number"
+                              "integer"
                             ]
                           },
                           "error": {
@@ -5597,7 +5726,7 @@
                       }
                     },
                     "total": {
-                      "type": "number",
+                      "type": "integer",
                       "description": "Total attempts for the delivery (ignores limit/offset)."
                     }
                   }
@@ -5700,54 +5829,6 @@
                 }
               }
             }
-          },
-          "409": {
-            "description": "Default Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "description": "Error code"
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Human-readable error message"
-                    }
-                  },
-                  "required": [
-                    "error",
-                    "message"
-                  ]
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Default Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "description": "Error code"
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Human-readable error message"
-                    }
-                  },
-                  "required": [
-                    "error",
-                    "message"
-                  ]
-                }
-              }
-            }
           }
         }
       }
@@ -5787,6 +5868,9 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "status"
+                  ],
                   "properties": {
                     "status": {
                       "type": "string",
@@ -5942,6 +6026,30 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Human-readable error message"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "message"
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -6055,8 +6163,10 @@
                       }
                     },
                     "next_cursor": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Cursor for the next page. Null if no more results."
                     },
                     "has_more": {
@@ -6225,8 +6335,10 @@
                           "additionalProperties": true
                         },
                         "html": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "createdAt": {
                           "type": "string",
@@ -7911,13 +8023,6 @@
       }
     },
     "/v3/templates/generate": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "Default Response"
-          }
-        }
-      },
       "post": {
         "operationId": "generateDesign",
         "summary": "AI design generation",
@@ -8079,13 +8184,17 @@
                     "type": "object",
                     "properties": {
                       "fullDesign": {
-                        "type": "object",
-                        "nullable": true,
+                        "type": [
+                          "object",
+                          "null"
+                        ],
                         "additionalProperties": true
                       },
                       "selection": {
-                        "type": "object",
-                        "nullable": true,
+                        "type": [
+                          "object",
+                          "null"
+                        ],
                         "properties": {
                           "collection": {
                             "type": "string",
@@ -8170,8 +8279,10 @@
                         }
                       },
                       "brand": {
-                        "type": "object",
-                        "nullable": true,
+                        "type": [
+                          "object",
+                          "null"
+                        ],
                         "properties": {
                           "companyName": {
                             "type": "string",
@@ -8735,6 +8846,24 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -8775,6 +8904,7 @@
             "description": "Display mode whose rules the schema describes (email, web, document, popup). Defaults to \"email\"."
           }
         ],
+        "security": [],
         "responses": {
           "200": {
             "description": "Default Response"
@@ -9547,7 +9677,8 @@
                 }
               }
             }
-          }
+          },
+          "required": true
         },
         "parameters": [
           {
@@ -10005,6 +10136,11 @@
           "workspaces"
         ],
         "description": "Get all workspaces accessible by the current token. Requires a Personal Access Token (PAT).",
+        "security": [
+          {
+            "personalAccessTokenAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Default Response",
@@ -10150,6 +10286,11 @@
             "description": "The workspace ID"
           }
         ],
+        "security": [
+          {
+            "personalAccessTokenAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Default Response",
@@ -10291,6 +10432,11 @@
       }
     }
   },
+  "servers": [
+    {
+      "url": "https://api.unlayer.com"
+    }
+  ],
   "security": [
     {
       "apiKeyAuth": []
@@ -10300,6 +10446,10 @@
     }
   ],
   "tags": [
+    {
+      "name": "me",
+      "description": "Current user and token context."
+    },
     {
       "name": "projects",
       "description": "Project details and configuration."
@@ -10319,23 +10469,44 @@
     {
       "name": "ai-credits",
       "description": "AI credit balance, usage breakdown, and webhook/alert settings. Credits are pooled per workspace; settings are per project."
+    },
+    {
+      "name": "editor-sessions",
+      "description": "Ephemeral editor session creation and access."
+    },
+    {
+      "name": "export",
+      "description": "Render designs as HTML, images, PDFs, or ZIP files."
+    },
+    {
+      "name": "emails",
+      "description": "Send and manage transactional email."
+    },
+    {
+      "name": "domains",
+      "description": "Manage verified sender domains."
+    },
+    {
+      "name": "webhooks",
+      "description": "Manage Developer Email API webhooks."
     }
   ],
-  "x-tag-groups": [
+  "x-tagGroups": [
     {
       "name": "Resources",
       "tags": [
+        "me",
         "projects",
         "templates",
         "workspaces",
         "blocks",
-        "ai-credits"
+        "ai-credits",
+        "editor-sessions",
+        "export",
+        "emails",
+        "domains",
+        "webhooks"
       ]
-    }
-  ],
-  "servers": [
-    {
-      "url": "https://api.unlayer.com"
     }
   ]
 }

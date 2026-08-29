@@ -36,8 +36,8 @@ export class Blocks extends HeyApiClient {
      *
      * List blocks with cursor-based pagination. Returns both shared project blocks and blocks saved by end-users; each user-saved block carries the userId it was saved under (null for shared blocks), so usage can be aggregated per end-user without enumerating user IDs. Returns blocks in descending order by creation.
      */
-    public listBlocks<ThrowOnError extends boolean = true>(options?: Options<ListBlocksData, ThrowOnError>): RequestResult<ListBlocksResponses, ListBlocksErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<ListBlocksResponses, ListBlocksErrors, ThrowOnError, 'data'>({
+    public listBlocks<ThrowOnError extends boolean = true>(options?: Options<ListBlocksData, ThrowOnError>): RequestResult<ListBlocksResponses, ListBlocksErrors, ThrowOnError> {
+        return (options?.client ?? this.client).get<ListBlocksResponses, ListBlocksErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -50,7 +50,7 @@ export class Blocks extends HeyApiClient {
             url: '/v3/blocks',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 }
@@ -61,13 +61,9 @@ export class Domains extends HeyApiClient {
      *
      * List sender domains shared by every Developer Email API project in the workspace. Requires a personal access token belonging to a workspace owner or admin; project API keys cannot manage domains.
      */
-    public listDomains<ThrowOnError extends boolean = true>(options?: Options<ListDomainsData, ThrowOnError>): RequestResult<ListDomainsResponses, ListDomainsErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<ListDomainsResponses, ListDomainsErrors, ThrowOnError, 'data'>({
+    public listDomains<ThrowOnError extends boolean = true>(options?: Options<ListDomainsData, ThrowOnError>): RequestResult<ListDomainsResponses, ListDomainsErrors, ThrowOnError> {
+        return (options?.client ?? this.client).get<ListDomainsResponses, ListDomainsErrors, ThrowOnError>({
             security: [{
-                    key: 'apiKeyAuth',
-                    scheme: 'bearer',
-                    type: 'http'
-                }, {
                     key: 'personalAccessTokenAuth',
                     scheme: 'bearer',
                     type: 'http'
@@ -75,7 +71,7 @@ export class Domains extends HeyApiClient {
             url: '/v3/domains',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -84,13 +80,9 @@ export class Domains extends HeyApiClient {
      *
      * Register a sender domain shared by every Developer Email API project in the workspace. Requires a personal access token belonging to a workspace owner or admin. Verification requires the workspace-specific TXT record and the returned SES DKIM records.
      */
-    public createDomain<ThrowOnError extends boolean = true>(options: Options<CreateDomainData, ThrowOnError>): RequestResult<CreateDomainResponses, CreateDomainErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<CreateDomainResponses, CreateDomainErrors, ThrowOnError, 'data'>({
+    public createDomain<ThrowOnError extends boolean = true>(options: Options<CreateDomainData, ThrowOnError>): RequestResult<CreateDomainResponses, CreateDomainErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<CreateDomainResponses, CreateDomainErrors, ThrowOnError>({
             security: [{
-                    key: 'apiKeyAuth',
-                    scheme: 'bearer',
-                    type: 'http'
-                }, {
                     key: 'personalAccessTokenAuth',
                     scheme: 'bearer',
                     type: 'http'
@@ -98,7 +90,7 @@ export class Domains extends HeyApiClient {
             url: '/v3/domains',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -111,13 +103,9 @@ export class Domains extends HeyApiClient {
      *
      * Delete a sender domain shared by every Developer Email API project in the workspace. Requires a personal access token belonging to a workspace owner or admin. The SES identity remains so a later reconciler can clean it up safely.
      */
-    public deleteDomain<ThrowOnError extends boolean = true>(options: Options<DeleteDomainData, ThrowOnError>): RequestResult<DeleteDomainResponses, DeleteDomainErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).delete<DeleteDomainResponses, DeleteDomainErrors, ThrowOnError, 'data'>({
+    public deleteDomain<ThrowOnError extends boolean = true>(options: Options<DeleteDomainData, ThrowOnError>): RequestResult<DeleteDomainResponses, DeleteDomainErrors, ThrowOnError> {
+        return (options.client ?? this.client).delete<DeleteDomainResponses, DeleteDomainErrors, ThrowOnError>({
             security: [{
-                    key: 'apiKeyAuth',
-                    scheme: 'bearer',
-                    type: 'http'
-                }, {
                     key: 'personalAccessTokenAuth',
                     scheme: 'bearer',
                     type: 'http'
@@ -125,7 +113,7 @@ export class Domains extends HeyApiClient {
             url: '/v3/domains/{id}',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -134,13 +122,9 @@ export class Domains extends HeyApiClient {
      *
      * Get the ownership TXT challenge and SES DKIM records for a sender domain shared by every Developer Email API project in the workspace. Requires a personal access token belonging to a workspace owner or admin.
      */
-    public getDomain<ThrowOnError extends boolean = true>(options: Options<GetDomainData, ThrowOnError>): RequestResult<GetDomainResponses, GetDomainErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<GetDomainResponses, GetDomainErrors, ThrowOnError, 'data'>({
+    public getDomain<ThrowOnError extends boolean = true>(options: Options<GetDomainData, ThrowOnError>): RequestResult<GetDomainResponses, GetDomainErrors, ThrowOnError> {
+        return (options.client ?? this.client).get<GetDomainResponses, GetDomainErrors, ThrowOnError>({
             security: [{
-                    key: 'apiKeyAuth',
-                    scheme: 'bearer',
-                    type: 'http'
-                }, {
                     key: 'personalAccessTokenAuth',
                     scheme: 'bearer',
                     type: 'http'
@@ -148,7 +132,7 @@ export class Domains extends HeyApiClient {
             url: '/v3/domains/{id}',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -157,13 +141,9 @@ export class Domains extends HeyApiClient {
      *
      * Verify the ownership TXT challenge and SES DKIM identity for a sender domain shared by every Developer Email API project in the workspace. Requires a personal access token belonging to a workspace owner or admin.
      */
-    public verifyDomain<ThrowOnError extends boolean = true>(options: Options<VerifyDomainData, ThrowOnError>): RequestResult<VerifyDomainResponses, VerifyDomainErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<VerifyDomainResponses, VerifyDomainErrors, ThrowOnError, 'data'>({
+    public verifyDomain<ThrowOnError extends boolean = true>(options: Options<VerifyDomainData, ThrowOnError>): RequestResult<VerifyDomainResponses, VerifyDomainErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<VerifyDomainResponses, VerifyDomainErrors, ThrowOnError>({
             security: [{
-                    key: 'apiKeyAuth',
-                    scheme: 'bearer',
-                    type: 'http'
-                }, {
                     key: 'personalAccessTokenAuth',
                     scheme: 'bearer',
                     type: 'http'
@@ -171,7 +151,7 @@ export class Domains extends HeyApiClient {
             url: '/v3/domains/{id}/verify',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 }
@@ -182,8 +162,8 @@ export class EditorSessions extends HeyApiClient {
      *
      * Create an ephemeral, no-DB editor session for a design and return a hosted editor URL the user can open to edit it in the real Unlayer editor.
      */
-    public createEditorSession<ThrowOnError extends boolean = true>(options: Options<CreateEditorSessionData, ThrowOnError>): RequestResult<CreateEditorSessionResponses, CreateEditorSessionErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<CreateEditorSessionResponses, CreateEditorSessionErrors, ThrowOnError, 'data'>({
+    public createEditorSession<ThrowOnError extends boolean = true>(options: Options<CreateEditorSessionData, ThrowOnError>): RequestResult<CreateEditorSessionResponses, CreateEditorSessionErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<CreateEditorSessionResponses, CreateEditorSessionErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -196,7 +176,7 @@ export class EditorSessions extends HeyApiClient {
             url: '/v3/editor-sessions',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -211,8 +191,8 @@ export class Emails extends HeyApiClient {
      *
      * List emails sent from this project within the rolling 90-day history window. Without a status filter, results and date bounds use acceptance time. With a status filter, results and date bounds use the time each email entered that status.
      */
-    public listEmails<ThrowOnError extends boolean = true>(options?: Options<ListEmailsData, ThrowOnError>): RequestResult<ListEmailsResponses, ListEmailsErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<ListEmailsResponses, ListEmailsErrors, ThrowOnError, 'data'>({
+    public listEmails<ThrowOnError extends boolean = true>(options?: Options<ListEmailsData, ThrowOnError>): RequestResult<ListEmailsResponses, ListEmailsErrors, ThrowOnError> {
+        return (options?.client ?? this.client).get<ListEmailsResponses, ListEmailsErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -225,7 +205,7 @@ export class Emails extends HeyApiClient {
             url: '/v3/emails',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -234,8 +214,8 @@ export class Emails extends HeyApiClient {
      *
      * Send a transactional email with raw HTML content. The sender domain must be verified in the project workspace; verified sender domains are shared by every Developer Email API project in that workspace.
      */
-    public sendEmail<ThrowOnError extends boolean = true>(options: Options<SendEmailData, ThrowOnError>): RequestResult<SendEmailResponses, SendEmailErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<SendEmailResponses, SendEmailErrors, ThrowOnError, 'data'>({
+    public sendEmail<ThrowOnError extends boolean = true>(options: Options<SendEmailData, ThrowOnError>): RequestResult<SendEmailResponses, SendEmailErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<SendEmailResponses, SendEmailErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -248,7 +228,7 @@ export class Emails extends HeyApiClient {
             url: '/v3/emails',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -261,8 +241,8 @@ export class Emails extends HeyApiClient {
      *
      * Retrieve details of a sent email, including its current delivery status, during the rolling 90-day history window. Expired emails return 404.
      */
-    public getEmail<ThrowOnError extends boolean = true>(options: Options<GetEmailData, ThrowOnError>): RequestResult<GetEmailResponses, GetEmailErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<GetEmailResponses, GetEmailErrors, ThrowOnError, 'data'>({
+    public getEmail<ThrowOnError extends boolean = true>(options: Options<GetEmailData, ThrowOnError>): RequestResult<GetEmailResponses, GetEmailErrors, ThrowOnError> {
+        return (options.client ?? this.client).get<GetEmailResponses, GetEmailErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -275,7 +255,7 @@ export class Emails extends HeyApiClient {
             url: '/v3/emails/{id}',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -284,8 +264,8 @@ export class Emails extends HeyApiClient {
      *
      * Retrieve the operational event timeline for a sent email, showing send, delivery, bounce, and complaint events in chronological order during the rolling 90-day history window. Expired emails return 404.
      */
-    public getEmailEvents<ThrowOnError extends boolean = true>(options: Options<GetEmailEventsData, ThrowOnError>): RequestResult<GetEmailEventsResponses, GetEmailEventsErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<GetEmailEventsResponses, GetEmailEventsErrors, ThrowOnError, 'data'>({
+    public getEmailEvents<ThrowOnError extends boolean = true>(options: Options<GetEmailEventsData, ThrowOnError>): RequestResult<GetEmailEventsResponses, GetEmailEventsErrors, ThrowOnError> {
+        return (options.client ?? this.client).get<GetEmailEventsResponses, GetEmailEventsErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -298,7 +278,7 @@ export class Emails extends HeyApiClient {
             url: '/v3/emails/{id}/events',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -307,8 +287,8 @@ export class Emails extends HeyApiClient {
      *
      * Render a saved email template with optional merge variables. Returns the final HTML without sending. Useful for previewing emails before sending.
      */
-    public renderEmail<ThrowOnError extends boolean = true>(options: Options<RenderEmailData, ThrowOnError>): RequestResult<RenderEmailResponses, RenderEmailErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<RenderEmailResponses, RenderEmailErrors, ThrowOnError, 'data'>({
+    public renderEmail<ThrowOnError extends boolean = true>(options: Options<RenderEmailData, ThrowOnError>): RequestResult<RenderEmailResponses, RenderEmailErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<RenderEmailResponses, RenderEmailErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -321,7 +301,7 @@ export class Emails extends HeyApiClient {
             url: '/v3/emails/render',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -334,8 +314,8 @@ export class Emails extends HeyApiClient {
      *
      * Get the email sender settings for this project.
      */
-    public getEmailSettings<ThrowOnError extends boolean = true>(options?: Options<GetEmailSettingsData, ThrowOnError>): RequestResult<GetEmailSettingsResponses, GetEmailSettingsErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<GetEmailSettingsResponses, GetEmailSettingsErrors, ThrowOnError, 'data'>({
+    public getEmailSettings<ThrowOnError extends boolean = true>(options?: Options<GetEmailSettingsData, ThrowOnError>): RequestResult<GetEmailSettingsResponses, GetEmailSettingsErrors, ThrowOnError> {
+        return (options?.client ?? this.client).get<GetEmailSettingsResponses, GetEmailSettingsErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -348,7 +328,7 @@ export class Emails extends HeyApiClient {
             url: '/v3/emails/settings',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -357,8 +337,8 @@ export class Emails extends HeyApiClient {
      *
      * Update the email sending configuration for this project. Only include the fields you want to change.
      */
-    public updateEmailSettings<ThrowOnError extends boolean = true>(options?: Options<UpdateEmailSettingsData, ThrowOnError>): RequestResult<UpdateEmailSettingsResponses, UpdateEmailSettingsErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).patch<UpdateEmailSettingsResponses, UpdateEmailSettingsErrors, ThrowOnError, 'data'>({
+    public updateEmailSettings<ThrowOnError extends boolean = true>(options: Options<UpdateEmailSettingsData, ThrowOnError>): RequestResult<UpdateEmailSettingsResponses, UpdateEmailSettingsErrors, ThrowOnError> {
+        return (options.client ?? this.client).patch<UpdateEmailSettingsResponses, UpdateEmailSettingsErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -371,10 +351,10 @@ export class Emails extends HeyApiClient {
             url: '/v3/emails/settings',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
-                ...options?.headers
+                ...options.headers
             }
         });
     }
@@ -384,8 +364,8 @@ export class Emails extends HeyApiClient {
      *
      * Get aggregated email delivery statistics for a project. Returns totals or daily breakdown for the specified period. Statistics are asynchronous and may lag by about one hour.
      */
-    public getEmailStats<ThrowOnError extends boolean = true>(options?: Options<GetEmailStatsData, ThrowOnError>): RequestResult<GetEmailStatsResponses, GetEmailStatsErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<GetEmailStatsResponses, GetEmailStatsErrors, ThrowOnError, 'data'>({
+    public getEmailStats<ThrowOnError extends boolean = true>(options?: Options<GetEmailStatsData, ThrowOnError>): RequestResult<GetEmailStatsResponses, GetEmailStatsErrors, ThrowOnError> {
+        return (options?.client ?? this.client).get<GetEmailStatsResponses, GetEmailStatsErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -398,7 +378,7 @@ export class Emails extends HeyApiClient {
             url: '/v3/emails/stats',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -407,8 +387,8 @@ export class Emails extends HeyApiClient {
      *
      * Remove an email address from the suppression list so it can receive emails again.
      */
-    public removeSuppression<ThrowOnError extends boolean = true>(options: Options<RemoveSuppressionData, ThrowOnError>): RequestResult<RemoveSuppressionResponses, RemoveSuppressionErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).delete<RemoveSuppressionResponses, RemoveSuppressionErrors, ThrowOnError, 'data'>({
+    public removeSuppression<ThrowOnError extends boolean = true>(options: Options<RemoveSuppressionData, ThrowOnError>): RequestResult<RemoveSuppressionResponses, RemoveSuppressionErrors, ThrowOnError> {
+        return (options.client ?? this.client).delete<RemoveSuppressionResponses, RemoveSuppressionErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -421,7 +401,7 @@ export class Emails extends HeyApiClient {
             url: '/v3/emails/suppressions',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -430,8 +410,8 @@ export class Emails extends HeyApiClient {
      *
      * List all email addresses suppressed for this project due to bounces, complaints, or manual suppression. Cursor-paginated.
      */
-    public listSuppressions<ThrowOnError extends boolean = true>(options?: Options<ListSuppressionsData, ThrowOnError>): RequestResult<ListSuppressionsResponses, ListSuppressionsErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<ListSuppressionsResponses, ListSuppressionsErrors, ThrowOnError, 'data'>({
+    public listSuppressions<ThrowOnError extends boolean = true>(options?: Options<ListSuppressionsData, ThrowOnError>): RequestResult<ListSuppressionsResponses, ListSuppressionsErrors, ThrowOnError> {
+        return (options?.client ?? this.client).get<ListSuppressionsResponses, ListSuppressionsErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -444,7 +424,7 @@ export class Emails extends HeyApiClient {
             url: '/v3/emails/suppressions',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -453,8 +433,8 @@ export class Emails extends HeyApiClient {
      *
      * Manually add an email address to the suppression list. Future sends to this address will be blocked.
      */
-    public addSuppression<ThrowOnError extends boolean = true>(options: Options<AddSuppressionData, ThrowOnError>): RequestResult<AddSuppressionResponses, AddSuppressionErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<AddSuppressionResponses, AddSuppressionErrors, ThrowOnError, 'data'>({
+    public addSuppression<ThrowOnError extends boolean = true>(options: Options<AddSuppressionData, ThrowOnError>): RequestResult<AddSuppressionResponses, AddSuppressionErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<AddSuppressionResponses, AddSuppressionErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -467,7 +447,7 @@ export class Emails extends HeyApiClient {
             url: '/v3/emails/suppressions',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -480,8 +460,8 @@ export class Emails extends HeyApiClient {
      *
      * Look up a specific email address to see if it is currently on the suppression list.
      */
-    public checkSuppression<ThrowOnError extends boolean = true>(options: Options<CheckSuppressionData, ThrowOnError>): RequestResult<CheckSuppressionResponses, CheckSuppressionErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<CheckSuppressionResponses, CheckSuppressionErrors, ThrowOnError, 'data'>({
+    public checkSuppression<ThrowOnError extends boolean = true>(options: Options<CheckSuppressionData, ThrowOnError>): RequestResult<CheckSuppressionResponses, CheckSuppressionErrors, ThrowOnError> {
+        return (options.client ?? this.client).get<CheckSuppressionResponses, CheckSuppressionErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -494,7 +474,7 @@ export class Emails extends HeyApiClient {
             url: '/v3/emails/suppressions/check',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -503,8 +483,8 @@ export class Emails extends HeyApiClient {
      *
      * Send a transactional email by rendering a saved template with optional merge variables. The template must have rendered HTML (saved at least once in the editor). The sender domain must be verified in the project workspace; verified sender domains are shared by every Developer Email API project in that workspace.
      */
-    public sendTemplateEmail<ThrowOnError extends boolean = true>(options: Options<SendTemplateEmailData, ThrowOnError>): RequestResult<SendTemplateEmailResponses, SendTemplateEmailErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<SendTemplateEmailResponses, SendTemplateEmailErrors, ThrowOnError, 'data'>({
+    public sendTemplateEmail<ThrowOnError extends boolean = true>(options: Options<SendTemplateEmailData, ThrowOnError>): RequestResult<SendTemplateEmailResponses, SendTemplateEmailErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<SendTemplateEmailResponses, SendTemplateEmailErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -517,7 +497,7 @@ export class Emails extends HeyApiClient {
             url: '/v3/emails/template',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -532,8 +512,8 @@ export class Me extends HeyApiClient {
      *
      * Get the current plan, feature availability, and limits for a project. Used to answer "can I do X" / "what plan do I need" questions with ground-truth data instead of guessing.
      */
-    public getMySubscription<ThrowOnError extends boolean = true>(options?: Options<GetMySubscriptionData, ThrowOnError>): RequestResult<GetMySubscriptionResponses, GetMySubscriptionErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<GetMySubscriptionResponses, GetMySubscriptionErrors, ThrowOnError, 'data'>({
+    public getMySubscription<ThrowOnError extends boolean = true>(options?: Options<GetMySubscriptionData, ThrowOnError>): RequestResult<GetMySubscriptionResponses, GetMySubscriptionErrors, ThrowOnError> {
+        return (options?.client ?? this.client).get<GetMySubscriptionResponses, GetMySubscriptionErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -546,7 +526,7 @@ export class Me extends HeyApiClient {
             url: '/v3/me/subscription',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 }
@@ -557,8 +537,8 @@ export class Projects extends HeyApiClient {
      *
      * Get project details by ID.
      */
-    public getProject<ThrowOnError extends boolean = true>(options: Options<GetProjectData, ThrowOnError>): RequestResult<GetProjectResponses, GetProjectErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<GetProjectResponses, GetProjectErrors, ThrowOnError, 'data'>({
+    public getProject<ThrowOnError extends boolean = true>(options: Options<GetProjectData, ThrowOnError>): RequestResult<GetProjectResponses, GetProjectErrors, ThrowOnError> {
+        return (options.client ?? this.client).get<GetProjectResponses, GetProjectErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -571,7 +551,7 @@ export class Projects extends HeyApiClient {
             url: '/v3/projects/{id}',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 }
@@ -582,8 +562,8 @@ export class AiCredits extends HeyApiClient {
      *
      * Returns the current AI credit balance for the project. Credits are pooled per workspace — every project in a workspace shares one balance. Only credit counts are returned; token counts, model names, and costs are never exposed.
      */
-    public getProjectAiCredits<ThrowOnError extends boolean = true>(options: Options<GetProjectAiCreditsData, ThrowOnError>): RequestResult<GetProjectAiCreditsResponses, GetProjectAiCreditsErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<GetProjectAiCreditsResponses, GetProjectAiCreditsErrors, ThrowOnError, 'data'>({
+    public getProjectAiCredits<ThrowOnError extends boolean = true>(options: Options<GetProjectAiCreditsData, ThrowOnError>): RequestResult<GetProjectAiCreditsResponses, GetProjectAiCreditsErrors, ThrowOnError> {
+        return (options.client ?? this.client).get<GetProjectAiCreditsResponses, GetProjectAiCreditsErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -596,7 +576,7 @@ export class AiCredits extends HeyApiClient {
             url: '/v3/projects/{id}/ai-credits',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -605,8 +585,8 @@ export class AiCredits extends HeyApiClient {
      *
      * Returns a project's AI credit exhaustion behavior, alert thresholds, and webhook endpoint. The signing secret is never returned — only whether one exists (`has_signing_secret`).
      */
-    public getProjectAiCreditsSettings<ThrowOnError extends boolean = true>(options: Options<GetProjectAiCreditsSettingsData, ThrowOnError>): RequestResult<GetProjectAiCreditsSettingsResponses, GetProjectAiCreditsSettingsErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<GetProjectAiCreditsSettingsResponses, GetProjectAiCreditsSettingsErrors, ThrowOnError, 'data'>({
+    public getProjectAiCreditsSettings<ThrowOnError extends boolean = true>(options: Options<GetProjectAiCreditsSettingsData, ThrowOnError>): RequestResult<GetProjectAiCreditsSettingsResponses, GetProjectAiCreditsSettingsErrors, ThrowOnError> {
+        return (options.client ?? this.client).get<GetProjectAiCreditsSettingsResponses, GetProjectAiCreditsSettingsErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -619,7 +599,7 @@ export class AiCredits extends HeyApiClient {
             url: '/v3/projects/{id}/ai-credits/settings',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -628,8 +608,8 @@ export class AiCredits extends HeyApiClient {
      *
      * Configures AI credit exhaustion behavior, usage alert thresholds, and the webhook endpoint for a project. The HMAC signing secret is generated the first time a webhook URL is set and returned exactly once in the response — store it securely; it is never shown again.
      */
-    public updateProjectAiCreditsSettings<ThrowOnError extends boolean = true>(options: Options<UpdateProjectAiCreditsSettingsData, ThrowOnError>): RequestResult<UpdateProjectAiCreditsSettingsResponses, UpdateProjectAiCreditsSettingsErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).put<UpdateProjectAiCreditsSettingsResponses, UpdateProjectAiCreditsSettingsErrors, ThrowOnError, 'data'>({
+    public updateProjectAiCreditsSettings<ThrowOnError extends boolean = true>(options: Options<UpdateProjectAiCreditsSettingsData, ThrowOnError>): RequestResult<UpdateProjectAiCreditsSettingsResponses, UpdateProjectAiCreditsSettingsErrors, ThrowOnError> {
+        return (options.client ?? this.client).put<UpdateProjectAiCreditsSettingsResponses, UpdateProjectAiCreditsSettingsErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -642,7 +622,7 @@ export class AiCredits extends HeyApiClient {
             url: '/v3/projects/{id}/ai-credits/settings',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -655,8 +635,8 @@ export class AiCredits extends HeyApiClient {
      *
      * Generates a new HMAC signing secret for the project and returns it exactly once. The previous secret stops working immediately, so update your webhook verification before rotating. Requires a webhook URL to be configured first.
      */
-    public rotateProjectAiCreditsSigningSecret<ThrowOnError extends boolean = true>(options: Options<RotateProjectAiCreditsSigningSecretData, ThrowOnError>): RequestResult<RotateProjectAiCreditsSigningSecretResponses, RotateProjectAiCreditsSigningSecretErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<RotateProjectAiCreditsSigningSecretResponses, RotateProjectAiCreditsSigningSecretErrors, ThrowOnError, 'data'>({
+    public rotateProjectAiCreditsSigningSecret<ThrowOnError extends boolean = true>(options: Options<RotateProjectAiCreditsSigningSecretData, ThrowOnError>): RequestResult<RotateProjectAiCreditsSigningSecretResponses, RotateProjectAiCreditsSigningSecretErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<RotateProjectAiCreditsSigningSecretResponses, RotateProjectAiCreditsSigningSecretErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -669,7 +649,7 @@ export class AiCredits extends HeyApiClient {
             url: '/v3/projects/{id}/ai-credits/settings/rotate-secret',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -678,8 +658,8 @@ export class AiCredits extends HeyApiClient {
      *
      * Returns AI credit consumption for the project, broken down by end user and feature type. Filterable by date range, end user, and feature type. Usage is updated near real time and grouped by the UTC date when the AI activity occurred. Recent activity may take a short time to appear. Defaults to the current billing period. Only credit counts are returned; token counts, model names, and costs are never exposed. Per-end-user attribution requires the partner to pass `endUserId` on editor initialization.
      */
-    public getProjectAiCreditsUsage<ThrowOnError extends boolean = true>(options: Options<GetProjectAiCreditsUsageData, ThrowOnError>): RequestResult<GetProjectAiCreditsUsageResponses, GetProjectAiCreditsUsageErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<GetProjectAiCreditsUsageResponses, GetProjectAiCreditsUsageErrors, ThrowOnError, 'data'>({
+    public getProjectAiCreditsUsage<ThrowOnError extends boolean = true>(options: Options<GetProjectAiCreditsUsageData, ThrowOnError>): RequestResult<GetProjectAiCreditsUsageResponses, GetProjectAiCreditsUsageErrors, ThrowOnError> {
+        return (options.client ?? this.client).get<GetProjectAiCreditsUsageResponses, GetProjectAiCreditsUsageErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -692,7 +672,7 @@ export class AiCredits extends HeyApiClient {
             url: '/v3/projects/{id}/ai-credits/usage',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -701,8 +681,8 @@ export class AiCredits extends HeyApiClient {
      *
      * Returns the webhook delivery history for the project, newest first — the event, delivery status, attempt count, and last response code for each. Use it to spot failed deliveries and drive the retry endpoint. Payloads expose credits only.
      */
-    public listProjectAiCreditsWebhookDeliveries<ThrowOnError extends boolean = true>(options: Options<ListProjectAiCreditsWebhookDeliveriesData, ThrowOnError>): RequestResult<ListProjectAiCreditsWebhookDeliveriesResponses, ListProjectAiCreditsWebhookDeliveriesErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<ListProjectAiCreditsWebhookDeliveriesResponses, ListProjectAiCreditsWebhookDeliveriesErrors, ThrowOnError, 'data'>({
+    public listProjectAiCreditsWebhookDeliveries<ThrowOnError extends boolean = true>(options: Options<ListProjectAiCreditsWebhookDeliveriesData, ThrowOnError>): RequestResult<ListProjectAiCreditsWebhookDeliveriesResponses, ListProjectAiCreditsWebhookDeliveriesErrors, ThrowOnError> {
+        return (options.client ?? this.client).get<ListProjectAiCreditsWebhookDeliveriesResponses, ListProjectAiCreditsWebhookDeliveriesErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -715,7 +695,7 @@ export class AiCredits extends HeyApiClient {
             url: '/v3/projects/{id}/ai-credits/webhooks/deliveries',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -724,8 +704,8 @@ export class AiCredits extends HeyApiClient {
      *
      * Returns the per-attempt history for a single delivery, newest attempt first — the response code, error, and time of each POST (including automatic retries). Returns 404 if the delivery is not found for this project.
      */
-    public listProjectAiCreditsWebhookDeliveryAttempts<ThrowOnError extends boolean = true>(options: Options<ListProjectAiCreditsWebhookDeliveryAttemptsData, ThrowOnError>): RequestResult<ListProjectAiCreditsWebhookDeliveryAttemptsResponses, ListProjectAiCreditsWebhookDeliveryAttemptsErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<ListProjectAiCreditsWebhookDeliveryAttemptsResponses, ListProjectAiCreditsWebhookDeliveryAttemptsErrors, ThrowOnError, 'data'>({
+    public listProjectAiCreditsWebhookDeliveryAttempts<ThrowOnError extends boolean = true>(options: Options<ListProjectAiCreditsWebhookDeliveryAttemptsData, ThrowOnError>): RequestResult<ListProjectAiCreditsWebhookDeliveryAttemptsResponses, ListProjectAiCreditsWebhookDeliveryAttemptsErrors, ThrowOnError> {
+        return (options.client ?? this.client).get<ListProjectAiCreditsWebhookDeliveryAttemptsResponses, ListProjectAiCreditsWebhookDeliveryAttemptsErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -738,7 +718,7 @@ export class AiCredits extends HeyApiClient {
             url: '/v3/projects/{id}/ai-credits/webhooks/deliveries/{deliveryId}/attempts',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -747,8 +727,8 @@ export class AiCredits extends HeyApiClient {
      *
      * Re-queues a single previously-failed (or pending) webhook delivery for another attempt. Returns 404 if the delivery is not found for this project, and 409 if it was already delivered.
      */
-    public retryProjectAiCreditsWebhookDelivery<ThrowOnError extends boolean = true>(options: Options<RetryProjectAiCreditsWebhookDeliveryData, ThrowOnError>): RequestResult<RetryProjectAiCreditsWebhookDeliveryResponses, RetryProjectAiCreditsWebhookDeliveryErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<RetryProjectAiCreditsWebhookDeliveryResponses, RetryProjectAiCreditsWebhookDeliveryErrors, ThrowOnError, 'data'>({
+    public retryProjectAiCreditsWebhookDelivery<ThrowOnError extends boolean = true>(options: Options<RetryProjectAiCreditsWebhookDeliveryData, ThrowOnError>): RequestResult<RetryProjectAiCreditsWebhookDeliveryResponses, RetryProjectAiCreditsWebhookDeliveryErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<RetryProjectAiCreditsWebhookDeliveryResponses, RetryProjectAiCreditsWebhookDeliveryErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -761,7 +741,7 @@ export class AiCredits extends HeyApiClient {
             url: '/v3/projects/{id}/ai-credits/webhooks/deliveries/{deliveryId}/retry',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 }
@@ -772,8 +752,8 @@ export class Templates extends HeyApiClient {
      *
      * List templates with cursor-based pagination. Returns templates in descending order by update time.
      */
-    public listTemplates<ThrowOnError extends boolean = true>(options?: Options<ListTemplatesData, ThrowOnError>): RequestResult<ListTemplatesResponses, ListTemplatesErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<ListTemplatesResponses, ListTemplatesErrors, ThrowOnError, 'data'>({
+    public listTemplates<ThrowOnError extends boolean = true>(options?: Options<ListTemplatesData, ThrowOnError>): RequestResult<ListTemplatesResponses, ListTemplatesErrors, ThrowOnError> {
+        return (options?.client ?? this.client).get<ListTemplatesResponses, ListTemplatesErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -786,7 +766,7 @@ export class Templates extends HeyApiClient {
             url: '/v3/templates',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -795,8 +775,8 @@ export class Templates extends HeyApiClient {
      *
      * Get template by ID.
      */
-    public getTemplate<ThrowOnError extends boolean = true>(options: Options<GetTemplateData, ThrowOnError>): RequestResult<GetTemplateResponses, GetTemplateErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<GetTemplateResponses, GetTemplateErrors, ThrowOnError, 'data'>({
+    public getTemplate<ThrowOnError extends boolean = true>(options: Options<GetTemplateData, ThrowOnError>): RequestResult<GetTemplateResponses, GetTemplateErrors, ThrowOnError> {
+        return (options.client ?? this.client).get<GetTemplateResponses, GetTemplateErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -809,7 +789,7 @@ export class Templates extends HeyApiClient {
             url: '/v3/templates/{id}',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -818,8 +798,8 @@ export class Templates extends HeyApiClient {
      *
      * Convert design json from Full to Simple schema.
      */
-    public convertFullToSimple<ThrowOnError extends boolean = true>(options: Options<ConvertFullToSimpleData, ThrowOnError>): RequestResult<ConvertFullToSimpleResponses, ConvertFullToSimpleErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<ConvertFullToSimpleResponses, ConvertFullToSimpleErrors, ThrowOnError, 'data'>({
+    public convertFullToSimple<ThrowOnError extends boolean = true>(options: Options<ConvertFullToSimpleData, ThrowOnError>): RequestResult<ConvertFullToSimpleResponses, ConvertFullToSimpleErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<ConvertFullToSimpleResponses, ConvertFullToSimpleErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -832,7 +812,7 @@ export class Templates extends HeyApiClient {
             url: '/v3/templates/convert/full-to-simple',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -845,8 +825,8 @@ export class Templates extends HeyApiClient {
      *
      * Convert design json from Simple to Full schema.
      */
-    public convertSimpleToFull<ThrowOnError extends boolean = true>(options: Options<ConvertSimpleToFullData, ThrowOnError>): RequestResult<ConvertSimpleToFullResponses, ConvertSimpleToFullErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<ConvertSimpleToFullResponses, ConvertSimpleToFullErrors, ThrowOnError, 'data'>({
+    public convertSimpleToFull<ThrowOnError extends boolean = true>(options: Options<ConvertSimpleToFullData, ThrowOnError>): RequestResult<ConvertSimpleToFullResponses, ConvertSimpleToFullErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<ConvertSimpleToFullResponses, ConvertSimpleToFullErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -859,7 +839,7 @@ export class Templates extends HeyApiClient {
             url: '/v3/templates/convert/simple-to-full',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -872,8 +852,8 @@ export class Templates extends HeyApiClient {
      *
      * Generate or modify an Unlayer design using AI. Send the conversation as `messages` (today only the last user message is consumed; earlier turns are accepted as chat history) and describe the target with `output.kind` + `output.displayMode`. Pass the current canvas state in `context` (full design JSON + selection pointer) to modify an existing design. Only `anthropic` and `openai` models are supported. To import existing HTML or an image instead, use POST /v3/templates/import.
      */
-    public generateDesign<ThrowOnError extends boolean = true>(options: Options<GenerateDesignData, ThrowOnError>): RequestResult<GenerateDesignResponses, GenerateDesignErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<GenerateDesignResponses, GenerateDesignErrors, ThrowOnError, 'data'>({
+    public generateDesign<ThrowOnError extends boolean = true>(options: Options<GenerateDesignData, ThrowOnError>): RequestResult<GenerateDesignResponses, GenerateDesignErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<GenerateDesignResponses, GenerateDesignErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -886,7 +866,7 @@ export class Templates extends HeyApiClient {
             url: '/v3/templates/generate',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -899,8 +879,8 @@ export class Templates extends HeyApiClient {
      *
      * Import an existing template from HTML or an image (URL or base64) and return the resulting Unlayer design JSON. No template DB entry is created.
      */
-    public importTemplate<ThrowOnError extends boolean = true>(options: Options<ImportTemplateData, ThrowOnError>): RequestResult<ImportTemplateResponses, ImportTemplateErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<ImportTemplateResponses, ImportTemplateErrors, ThrowOnError, 'data'>({
+    public importTemplate<ThrowOnError extends boolean = true>(options: Options<ImportTemplateData, ThrowOnError>): RequestResult<ImportTemplateResponses, ImportTemplateErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<ImportTemplateResponses, ImportTemplateErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -913,7 +893,7 @@ export class Templates extends HeyApiClient {
             url: '/v3/templates/import',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -926,22 +906,8 @@ export class Templates extends HeyApiClient {
      *
      * Returns the canonical design schema as a standard JSON Schema document — the exact schema POST /v3/templates/validate checks against, ready to plug into any JSON Schema validator or editor tooling. Serves the Full schema by default; pass simple=true for the compact Simple schema. No authentication required. Responses carry a strong ETag and long-lived cache headers; send If-None-Match to revalidate for free.
      */
-    public getDesignSchema<ThrowOnError extends boolean = true>(options?: Options<GetDesignSchemaData, ThrowOnError>): RequestResult<GetDesignSchemaResponses, unknown, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<GetDesignSchemaResponses, unknown, ThrowOnError, 'data'>({
-            security: [{
-                    key: 'apiKeyAuth',
-                    scheme: 'bearer',
-                    type: 'http'
-                }, {
-                    key: 'personalAccessTokenAuth',
-                    scheme: 'bearer',
-                    type: 'http'
-                }],
-            url: '/v3/templates/schema',
-            ...options,
-            throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
-        });
+    public getDesignSchema<ThrowOnError extends boolean = true>(options?: Options<GetDesignSchemaData, ThrowOnError>): RequestResult<GetDesignSchemaResponses, unknown, ThrowOnError> {
+        return (options?.client ?? this.client).get<GetDesignSchemaResponses, unknown, ThrowOnError>({ url: '/v3/templates/schema', ...options });
     }
 
     /**
@@ -949,8 +915,8 @@ export class Templates extends HeyApiClient {
      *
      * Validate a design JSON against the Unlayer design schema. Returns { success: true, data: { valid: true } } when the payload conforms; otherwise data is { valid: false, errors: [...] } with descriptive issues. Every checked design gets HTTP 200 — `data.valid` is the source of truth, not the status code. Only malformed requests (e.g. a missing design field or an unknown displayMode) fail request validation with 400 VALIDATION_ERROR.
      */
-    public validateDesign<ThrowOnError extends boolean = true>(options: Options<ValidateDesignData, ThrowOnError>): RequestResult<ValidateDesignResponses, ValidateDesignErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<ValidateDesignResponses, ValidateDesignErrors, ThrowOnError, 'data'>({
+    public validateDesign<ThrowOnError extends boolean = true>(options: Options<ValidateDesignData, ThrowOnError>): RequestResult<ValidateDesignResponses, ValidateDesignErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<ValidateDesignResponses, ValidateDesignErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -963,7 +929,7 @@ export class Templates extends HeyApiClient {
             url: '/v3/templates/validate',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -978,8 +944,8 @@ export class Export extends HeyApiClient {
      *
      * Export a design as rendered HTML.
      */
-    public exportHtml<ThrowOnError extends boolean = true>(options: Options<ExportHtmlData, ThrowOnError>): RequestResult<ExportHtmlResponses, ExportHtmlErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<ExportHtmlResponses, ExportHtmlErrors, ThrowOnError, 'data'>({
+    public exportHtml<ThrowOnError extends boolean = true>(options: Options<ExportHtmlData, ThrowOnError>): RequestResult<ExportHtmlResponses, ExportHtmlErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<ExportHtmlResponses, ExportHtmlErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -992,7 +958,7 @@ export class Export extends HeyApiClient {
             url: '/v3/templates/export/html',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -1005,8 +971,8 @@ export class Export extends HeyApiClient {
      *
      * Export a design as a PNG image.
      */
-    public exportImage<ThrowOnError extends boolean = true>(options: Options<ExportImageData, ThrowOnError>): RequestResult<ExportImageResponses, ExportImageErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<ExportImageResponses, ExportImageErrors, ThrowOnError, 'data'>({
+    public exportImage<ThrowOnError extends boolean = true>(options: Options<ExportImageData, ThrowOnError>): RequestResult<ExportImageResponses, ExportImageErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<ExportImageResponses, ExportImageErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -1019,7 +985,7 @@ export class Export extends HeyApiClient {
             url: '/v3/templates/export/image',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -1032,8 +998,8 @@ export class Export extends HeyApiClient {
      *
      * Export a design as a PDF document.
      */
-    public exportPdf<ThrowOnError extends boolean = true>(options: Options<ExportPdfData, ThrowOnError>): RequestResult<ExportPdfResponses, ExportPdfErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<ExportPdfResponses, ExportPdfErrors, ThrowOnError, 'data'>({
+    public exportPdf<ThrowOnError extends boolean = true>(options: Options<ExportPdfData, ThrowOnError>): RequestResult<ExportPdfResponses, ExportPdfErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<ExportPdfResponses, ExportPdfErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -1046,7 +1012,7 @@ export class Export extends HeyApiClient {
             url: '/v3/templates/export/pdf',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -1059,8 +1025,8 @@ export class Export extends HeyApiClient {
      *
      * Export a design as a ZIP archive containing HTML and assets.
      */
-    public exportZip<ThrowOnError extends boolean = true>(options: Options<ExportZipData, ThrowOnError>): RequestResult<ExportZipResponses, ExportZipErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<ExportZipResponses, ExportZipErrors, ThrowOnError, 'data'>({
+    public exportZip<ThrowOnError extends boolean = true>(options: Options<ExportZipData, ThrowOnError>): RequestResult<ExportZipResponses, ExportZipErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<ExportZipResponses, ExportZipErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -1073,7 +1039,7 @@ export class Export extends HeyApiClient {
             url: '/v3/templates/export/zip',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -1088,8 +1054,8 @@ export class Webhooks extends HeyApiClient {
      *
      * List all webhook endpoints configured for a project.
      */
-    public listWebhooks<ThrowOnError extends boolean = true>(options?: Options<ListWebhooksData, ThrowOnError>): RequestResult<ListWebhooksResponses, ListWebhooksErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<ListWebhooksResponses, ListWebhooksErrors, ThrowOnError, 'data'>({
+    public listWebhooks<ThrowOnError extends boolean = true>(options?: Options<ListWebhooksData, ThrowOnError>): RequestResult<ListWebhooksResponses, ListWebhooksErrors, ThrowOnError> {
+        return (options?.client ?? this.client).get<ListWebhooksResponses, ListWebhooksErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -1102,7 +1068,7 @@ export class Webhooks extends HeyApiClient {
             url: '/v3/webhooks',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -1111,8 +1077,8 @@ export class Webhooks extends HeyApiClient {
      *
      * Create a new webhook endpoint. A signing secret is auto-generated and returned once. Use it to verify webhook signatures.
      */
-    public createWebhook<ThrowOnError extends boolean = true>(options: Options<CreateWebhookData, ThrowOnError>): RequestResult<CreateWebhookResponses, CreateWebhookErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<CreateWebhookResponses, CreateWebhookErrors, ThrowOnError, 'data'>({
+    public createWebhook<ThrowOnError extends boolean = true>(options: Options<CreateWebhookData, ThrowOnError>): RequestResult<CreateWebhookResponses, CreateWebhookErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<CreateWebhookResponses, CreateWebhookErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -1125,7 +1091,7 @@ export class Webhooks extends HeyApiClient {
             url: '/v3/webhooks',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -1138,8 +1104,8 @@ export class Webhooks extends HeyApiClient {
      *
      * Delete a webhook endpoint. It will no longer receive events.
      */
-    public deleteWebhook<ThrowOnError extends boolean = true>(options: Options<DeleteWebhookData, ThrowOnError>): RequestResult<DeleteWebhookResponses, DeleteWebhookErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).delete<DeleteWebhookResponses, DeleteWebhookErrors, ThrowOnError, 'data'>({
+    public deleteWebhook<ThrowOnError extends boolean = true>(options: Options<DeleteWebhookData, ThrowOnError>): RequestResult<DeleteWebhookResponses, DeleteWebhookErrors, ThrowOnError> {
+        return (options.client ?? this.client).delete<DeleteWebhookResponses, DeleteWebhookErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -1152,7 +1118,7 @@ export class Webhooks extends HeyApiClient {
             url: '/v3/webhooks/{id}',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -1161,8 +1127,8 @@ export class Webhooks extends HeyApiClient {
      *
      * Get details of a specific webhook endpoint.
      */
-    public getWebhook<ThrowOnError extends boolean = true>(options: Options<GetWebhookData, ThrowOnError>): RequestResult<GetWebhookResponses, GetWebhookErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<GetWebhookResponses, GetWebhookErrors, ThrowOnError, 'data'>({
+    public getWebhook<ThrowOnError extends boolean = true>(options: Options<GetWebhookData, ThrowOnError>): RequestResult<GetWebhookResponses, GetWebhookErrors, ThrowOnError> {
+        return (options.client ?? this.client).get<GetWebhookResponses, GetWebhookErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -1175,7 +1141,7 @@ export class Webhooks extends HeyApiClient {
             url: '/v3/webhooks/{id}',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -1184,8 +1150,8 @@ export class Webhooks extends HeyApiClient {
      *
      * Update a webhook endpoint URL, events, or active status.
      */
-    public updateWebhook<ThrowOnError extends boolean = true>(options: Options<UpdateWebhookData, ThrowOnError>): RequestResult<UpdateWebhookResponses, UpdateWebhookErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).patch<UpdateWebhookResponses, UpdateWebhookErrors, ThrowOnError, 'data'>({
+    public updateWebhook<ThrowOnError extends boolean = true>(options: Options<UpdateWebhookData, ThrowOnError>): RequestResult<UpdateWebhookResponses, UpdateWebhookErrors, ThrowOnError> {
+        return (options.client ?? this.client).patch<UpdateWebhookResponses, UpdateWebhookErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -1198,7 +1164,7 @@ export class Webhooks extends HeyApiClient {
             url: '/v3/webhooks/{id}',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -1211,8 +1177,8 @@ export class Webhooks extends HeyApiClient {
      *
      * Generate a new signing secret for a webhook. The new secret is returned once — store it securely. The old secret is invalidated immediately.
      */
-    public rotateWebhookSecret<ThrowOnError extends boolean = true>(options: Options<RotateWebhookSecretData, ThrowOnError>): RequestResult<RotateWebhookSecretResponses, RotateWebhookSecretErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<RotateWebhookSecretResponses, RotateWebhookSecretErrors, ThrowOnError, 'data'>({
+    public rotateWebhookSecret<ThrowOnError extends boolean = true>(options: Options<RotateWebhookSecretData, ThrowOnError>): RequestResult<RotateWebhookSecretResponses, RotateWebhookSecretErrors, ThrowOnError> {
+        return (options.client ?? this.client).post<RotateWebhookSecretResponses, RotateWebhookSecretErrors, ThrowOnError>({
             security: [{
                     key: 'apiKeyAuth',
                     scheme: 'bearer',
@@ -1225,7 +1191,7 @@ export class Webhooks extends HeyApiClient {
             url: '/v3/webhooks/{id}/rotate-secret',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 }
@@ -1236,13 +1202,9 @@ export class Workspaces extends HeyApiClient {
      *
      * Get all workspaces accessible by the current token. Requires a Personal Access Token (PAT).
      */
-    public listWorkspaces<ThrowOnError extends boolean = true>(options?: Options<ListWorkspacesData, ThrowOnError>): RequestResult<ListWorkspacesResponses, ListWorkspacesErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<ListWorkspacesResponses, ListWorkspacesErrors, ThrowOnError, 'data'>({
+    public listWorkspaces<ThrowOnError extends boolean = true>(options?: Options<ListWorkspacesData, ThrowOnError>): RequestResult<ListWorkspacesResponses, ListWorkspacesErrors, ThrowOnError> {
+        return (options?.client ?? this.client).get<ListWorkspacesResponses, ListWorkspacesErrors, ThrowOnError>({
             security: [{
-                    key: 'apiKeyAuth',
-                    scheme: 'bearer',
-                    type: 'http'
-                }, {
                     key: 'personalAccessTokenAuth',
                     scheme: 'bearer',
                     type: 'http'
@@ -1250,7 +1212,7 @@ export class Workspaces extends HeyApiClient {
             url: '/v3/workspaces',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 
@@ -1259,13 +1221,9 @@ export class Workspaces extends HeyApiClient {
      *
      * Get a specific workspace by ID with its projects. Requires a Personal Access Token (PAT).
      */
-    public getWorkspace<ThrowOnError extends boolean = true>(options: Options<GetWorkspaceData, ThrowOnError>): RequestResult<GetWorkspaceResponses, GetWorkspaceErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<GetWorkspaceResponses, GetWorkspaceErrors, ThrowOnError, 'data'>({
+    public getWorkspace<ThrowOnError extends boolean = true>(options: Options<GetWorkspaceData, ThrowOnError>): RequestResult<GetWorkspaceResponses, GetWorkspaceErrors, ThrowOnError> {
+        return (options.client ?? this.client).get<GetWorkspaceResponses, GetWorkspaceErrors, ThrowOnError>({
             security: [{
-                    key: 'apiKeyAuth',
-                    scheme: 'bearer',
-                    type: 'http'
-                }, {
                     key: 'personalAccessTokenAuth',
                     scheme: 'bearer',
                     type: 'http'
@@ -1273,7 +1231,7 @@ export class Workspaces extends HeyApiClient {
             url: '/v3/workspaces/{workspaceId}',
             ...options,
             throwOnError: true as ThrowOnError,
-            responseStyle: 'data',
+            responseStyle: 'fields',
         });
     }
 }

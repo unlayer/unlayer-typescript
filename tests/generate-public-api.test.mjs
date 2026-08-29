@@ -41,8 +41,13 @@ test('the initial public SDK exposes only the seven allowlisted operations', () 
   assert.match(typeAliases, /export namespace TemplateRetrieveResponse/);
   assert.match(facade, /export declare namespace Unlayer/);
   assert.match(facade, /type TemplateListResponsesCursorPage as TemplateListResponsesCursorPage/);
+  assert.match(facade, /PagePromise<TemplateListResponsesCursorPage, TemplateListResponse>/);
+  assert.match(facade, /cursor === undefined \? \{\} : \{ cursor: cursor \}/);
+  assert.match(facade, /return new APIPromise\(this\.#generatedTemplates\.getTemplate/);
   assert.equal(packageIndex.includes('NativeUnlayer'), false);
   assert.equal(packageIndex.includes('ListBlocksData'), false);
+  assert.equal(sdkSource.includes("responseStyle: 'data'"), false);
+  assert.match(sdkSource, /responseStyle: 'fields'/);
 });
 
 test('adding an operation to the allowlist generates its public resource', () => {

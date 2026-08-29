@@ -12,10 +12,13 @@ const options: ClientOptions = {
 const sdk = new Unlayer(options);
 const defaultSdk = new UnlayerDefault(options);
 
-void defaultSdk.templates.retrieve('template-id', { projectId: 'project-id' });
+const templatePromise = defaultSdk.templates.retrieve('template-id', { projectId: 'project-id' });
+void templatePromise.asResponse();
+void templatePromise.withResponse();
 void sdk.projects.retrieve('project-id');
 void sdk.workspaces.list();
 void sdk.workspaces.list({ fetchOptions: { cache: 'no-store' } });
+void sdk.workspaces.list({ headers: { 'X-Remove-Me': null } });
 void sdk.workspaces.retrieve('workspace-id');
 void sdk.convert.fullToSimple.create({ design: { body: {} } });
 void sdk.convert.simpleToFull.create({ design: { body: {} } });
@@ -27,6 +30,15 @@ const consumePages = async (): Promise<void> => {
   for await (const template of sdk.templates.list(params)) {
     void template.id;
   }
+  const pagePromise = sdk.templates.list(params);
+  void pagePromise.asResponse();
+  void pagePromise.withResponse();
+  const firstPage = await pagePromise;
+  void firstPage.getPaginatedItems();
+  void firstPage.hasNextPage();
+  void firstPage.getNextPage();
+  for await (const page of firstPage.iterPages()) void page.data;
+  for await (const template of firstPage) void template.id;
 };
 
 void consumePages;
@@ -44,6 +56,10 @@ void (undefined as unknown as APIError);
 const connectionError: APIError = new APIConnectionError();
 void connectionError;
 
+class CustomUnlayer extends Unlayer {}
+const customSdk: CustomUnlayer = new CustomUnlayer(options).withOptions({ maxRetries: 1 });
+void customSdk;
+
 // @ts-expect-error Blocks is in OpenAPI but is not in the public SDK allowlist.
 void sdk.blocks;
 
@@ -52,3 +68,6 @@ void sdk.templates.listTemplates;
 
 // @ts-expect-error Native client injection is not part of the single public API.
 new Unlayer({ client: {} });
+
+// @ts-expect-error Native client overrides are not accepted per request either.
+void sdk.workspaces.list({ client: {} });
