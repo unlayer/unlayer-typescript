@@ -26,7 +26,7 @@ node scripts/utils/make-dist-package-json.cjs > dist/package.json
 
 cp tsconfig.dist-src.json dist/src/tsconfig.json
 
-# Verify both public entry points in CommonJS and ESM.
-(cd dist && node -e 'const sdk = require("@unlayer/sdk"); const client = require("@unlayer/sdk/client"); const unlayer = new sdk.Unlayer({ client: client.createClient({ auth: "test", baseUrl: "https://api.unlayer.com", throwOnError: true }) }); if (typeof unlayer.templates.listTemplates !== "function") process.exit(1)')
-(cd dist && node -e 'const sdk = await import("@unlayer/sdk"); const client = await import("@unlayer/sdk/client"); const unlayer = new sdk.Unlayer({ client: client.createClient({ auth: "test", baseUrl: "https://api.unlayer.com", throwOnError: true }) }); if (typeof unlayer.templates.listTemplates !== "function") process.exit(1)' --input-type=module)
+# Verify the single allowlisted public entry point in CommonJS and ESM.
+(cd dist && node -e 'const sdk = require("@unlayer/sdk"); const unlayer = new sdk.Unlayer({ apiKey: "test" }); if (typeof unlayer.templates.list !== "function" || "listTemplates" in unlayer.templates || "blocks" in unlayer || "NativeUnlayer" in sdk) process.exit(1)')
+(cd dist && node -e 'const sdk = await import("@unlayer/sdk"); const unlayer = new sdk.Unlayer({ apiKey: "test" }); if (typeof unlayer.templates.list !== "function" || "listTemplates" in unlayer.templates || "blocks" in unlayer || "NativeUnlayer" in sdk) process.exit(1)' --input-type=module)
 ./node_modules/.bin/tsc --project tsconfig.consumer.json

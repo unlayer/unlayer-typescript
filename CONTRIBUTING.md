@@ -17,11 +17,11 @@ This will install all the required dependencies and build output files to `dist/
 
 ## Why Hey API
 
-The SDK uses Hey API because it produces an idiomatic TypeScript Fetch client,
-can run entirely from this repository, and adds no runtime dependency to the
-published package. The generator, OpenAPI snapshot, configuration, and
-postprocessing are all pinned and reviewable, so regeneration does not depend
-on a hosted SDK-generation service.
+The SDK uses Hey API because it produces a typed internal Fetch transport, can
+run entirely from this repository, and adds no runtime dependency to the
+published package. The generator, OpenAPI snapshot, public API allowlist,
+configuration, and postprocessing are all pinned and reviewable, so
+regeneration does not depend on a hosted SDK-generation service.
 
 OpenAPI Generator was considered for its broad language support, but Hey API's
 TypeScript output and native Fetch surface require less package-specific
@@ -39,10 +39,17 @@ The SDK source is generated with the pinned Hey API version and
 $ pnpm generate
 ```
 
-Generation replaces `src/` and then applies the small, fail-closed SDK contract
-postprocessor. Do not edit generated source by hand. If Hey API changes its
-generated request layout, the postprocessor stops instead of producing an SDK
-with mismatched runtime and TypeScript behavior.
+Generation replaces `src/`, applies the fail-closed internal transport
+postprocessor, and generates the public facade from `public-api.json`. Do not
+edit generated source by hand. If Hey API changes its generated request layout
+or an allowlisted operation changes its declared path or pagination contract,
+generation stops instead of producing a mismatched SDK.
+
+`public-api.json` is the only operation allowlist. OpenAPI operations absent
+from it remain internal and are not reachable from the published `Unlayer`
+client. To expose an operation, add its public resource, method, parameters,
+response, and pagination metadata to that file, run `pnpm generate`, and review
+the generated facade and consumer tests.
 
 To intentionally update the snapshot from the public production API document,
 run both commands and review the specification and generated-source diffs:

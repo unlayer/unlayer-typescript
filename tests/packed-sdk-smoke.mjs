@@ -1,18 +1,30 @@
 import assert from 'node:assert/strict';
 import http from 'node:http';
 
-import * as sdkPackage from '@unlayer/sdk';
-import * as clientPackage from '@unlayer/sdk/client';
+import UnlayerDefault, * as sdkPackage from '@unlayer/sdk';
 
-const { Unlayer } = sdkPackage;
-const { createClient } = clientPackage;
+const {
+  APIConnectionError,
+  APIConnectionTimeoutError,
+  APIError,
+  APIUserAbortError,
+  AuthenticationError,
+  Unlayer,
+} = sdkPackage;
 
-assert.equal(Object.hasOwn(sdkPackage, 'client'), false);
-assert.equal(Object.hasOwn(clientPackage, 'client'), false);
-assert.equal(Object.hasOwn(Unlayer, '__registry'), false);
-assert.throws(() => new Unlayer(), /client created with createClient\(\) is required/);
+assert.equal(UnlayerDefault, Unlayer);
+assert.equal(new APIConnectionError() instanceof APIError, true);
+for (const internalExport of ['Blocks', 'NativeUnlayer', 'createClient', 'ListBlocksData', 'Templates']) {
+  assert.equal(Object.hasOwn(sdkPackage, internalExport), false);
+}
+
+await assert.rejects(
+  import('@unlayer/sdk/client'),
+  (error) => error?.code === 'ERR_PACKAGE_PATH_NOT_EXPORTED',
+);
 
 const requests = [];
+let retryRequests = 0;
 
 const server = http.createServer(async (request, response) => {
   const chunks = [];
@@ -33,13 +45,32 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
-  if (request.method === 'POST' && request.url === '/v3/domains') {
+  if (request.url?.includes('name=compat')) {
+    const url = new URL(request.url, 'http://localhost');
+    const cursor = url.searchParams.get('cursor');
     response.end(
       JSON.stringify({
-        data: { domain: 'example.com', id: 42, status: 'pending' },
+        data: [
+          {
+            id: cursor ? 'compat-template-2' : 'compat-template-1',
+            name: cursor ? 'Second page' : 'First page',
+          },
+        ],
+        has_more: !cursor,
+        next_cursor: cursor ? null : 'compat-page-2',
       }),
     );
     return;
+  }
+
+  if (request.url?.includes('name=retry')) {
+    retryRequests += 1;
+    if (retryRequests === 1) {
+      response.statusCode = 503;
+      response.setHeader('Retry-After', '0');
+      response.end(JSON.stringify({ error: 'unavailable', message: 'Try again' }));
+      return;
+    }
   }
 
   if (request.method === 'GET' && request.url?.startsWith('/v3/templates/folder')) {
@@ -48,6 +79,26 @@ const server = http.createServer(async (request, response) => {
         data: { id: 'folder/Welcome & Spring', name: 'Path template' },
       }),
     );
+    return;
+  }
+
+  if (request.method === 'GET' && request.url === '/v3/projects/project-1') {
+    response.end(JSON.stringify({ data: { id: 1, name: 'Project' } }));
+    return;
+  }
+
+  if (request.method === 'GET' && request.url === '/v3/workspaces') {
+    response.end(JSON.stringify({ data: [{ id: 2, name: 'Workspace' }] }));
+    return;
+  }
+
+  if (request.method === 'GET' && request.url === '/v3/workspaces/workspace-1') {
+    response.end(JSON.stringify({ data: { id: 2, name: 'Workspace', projects: [] } }));
+    return;
+  }
+
+  if (request.method === 'POST' && request.url?.startsWith('/v3/templates/convert/')) {
+    response.end(JSON.stringify({ success: true, data: { design: { body: {} } } }));
     return;
   }
 
@@ -70,165 +121,148 @@ try {
   assert.notEqual(address, null);
   assert.equal(typeof address, 'object');
 
-  const sdk = new Unlayer({
-    client: createClient({
-      auth: 'test-token',
-      baseUrl: `http://127.0.0.1:${address.port}`,
-    }),
+  const publicSdk = new UnlayerDefault({
+    baseURL: `http://127.0.0.1:${address.port}`,
+    maxRetries: 1,
+    personalAccessToken: 'compat-token',
+    projectID: 'compat-project',
+    timeout: 1_000,
   });
 
-  const templates = await sdk.templates.listTemplates({
-    query: {
-      displayMode: 'email',
-      limit: 10,
-      name: 'Summer & Sale',
-      projectId: 'project-1',
-    },
-    // JavaScript callers can still pass this low-level option. SDK methods
-    // must keep their documented data-only shape at runtime.
-    responseStyle: 'fields',
-  });
+  assert.equal(typeof publicSdk.templates.list, 'function');
+  assert.equal(typeof publicSdk.templates.retrieve, 'function');
+  assert.equal('listTemplates' in publicSdk.templates, false);
+  assert.deepEqual(Object.keys(publicSdk.templates), []);
+  assert.equal('blocks' in publicSdk, false);
+  assert.equal('domains' in publicSdk, false);
+  assert.equal(Unlayer.Templates, publicSdk.templates.constructor);
+  assert.equal(Unlayer.Convert.FullToSimple, publicSdk.convert.fullToSimple.constructor);
 
-  assert.deepEqual(templates, {
-    data: [{ displayMode: 'email', id: 'template-1', name: 'Welcome' }],
-    has_more: false,
-    next_cursor: null,
-  });
+  const publicTemplates = [];
+  for await (const item of publicSdk.templates.list({ name: 'compat' })) {
+    publicTemplates.push(item);
+  }
+  assert.deepEqual(
+    publicTemplates.map((item) => item.id),
+    ['compat-template-1', 'compat-template-2'],
+  );
 
-  const template = await sdk.templates.getTemplate({
-    path: { id: 'folder/Welcome & Spring' },
-  });
+  const template = await publicSdk.templates.retrieve('folder/Welcome & Spring');
+  assert.equal(template.data.id, 'folder/Welcome & Spring');
 
-  assert.deepEqual(template, {
-    data: { id: 'folder/Welcome & Spring', name: 'Path template' },
-  });
+  const project = await publicSdk.projects.retrieve('project-1');
+  assert.equal(project.data.name, 'Project');
 
-  const domain = await sdk.domains.createDomain({
-    body: { domain: 'example.com' },
-  });
+  const workspaces = await publicSdk.workspaces.list();
+  assert.equal(workspaces.data[0].name, 'Workspace');
+  const workspace = await publicSdk.workspaces.retrieve('workspace-1');
+  assert.equal(workspace.data.name, 'Workspace');
 
-  assert.deepEqual(domain, {
-    data: { domain: 'example.com', id: 42, status: 'pending' },
-  });
+  const fullToSimple = await publicSdk.convert.fullToSimple.create({ design: { body: {} } });
+  const simpleToFull = await publicSdk.convert.simpleToFull.create({ design: { body: {} } });
+  assert.equal(fullToSimple.success, true);
+  assert.equal(simpleToFull.success, true);
 
-  await assert.rejects(sdk.templates.listTemplates({ query: { name: 'unauthorized' } }), (error) => {
-    assert.deepEqual(error, {
-      error: 'unauthorized',
-      message: 'Bad token',
+  await assert.rejects(
+    publicSdk.templates.list({ name: 'unauthorized' }),
+    (error) =>
+      error instanceof AuthenticationError && error.status === 401 && error.message === '401 Bad token',
+  );
+
+  const retriedTemplates = await publicSdk.templates.list({ name: 'retry' });
+  assert.equal(retriedTemplates.data[0].id, 'template-1');
+  assert.equal(retryRequests, 2);
+
+  const authenticatedRequest = requests.find((request) => request.url?.includes('name=compat'));
+  assert.equal(authenticatedRequest.headers.authorization, 'Bearer compat-token');
+  assert.equal(authenticatedRequest.headers['x-project-id'], 'compat-project');
+
+  const retrieveRequest = requests.find((request) => request.url?.startsWith('/v3/templates/folder'));
+  assert.equal(retrieveRequest.url, '/v3/templates/folder%2FWelcome%20%26%20Spring');
+
+  const conversionRequests = requests.filter((request) => request.url?.includes('/convert/'));
+  assert.equal(conversionRequests.length, 2);
+  for (const request of conversionRequests) {
+    assert.equal(request.method, 'POST');
+    assert.deepEqual(JSON.parse(request.body), { design: { body: {} } });
+  }
+
+  const timeoutSdk = new UnlayerDefault({
+    maxRetries: 0,
+    personalAccessToken: 'compat-token',
+    timeout: 1_000,
+    fetch: async (request) =>
+      new Promise((_resolve, reject) => {
+        request.signal.addEventListener('abort', () => reject(request.signal.reason), {
+          once: true,
+        });
+      }),
+  });
+  await assert.rejects(
+    timeoutSdk.workspaces.list({ timeout: 5 }),
+    (error) => error instanceof APIConnectionTimeoutError,
+  );
+
+  const previousEnvironmentAPIKey = process.env.UNLAYER_API_KEY;
+  let explicitNullAuthorization;
+  try {
+    process.env.UNLAYER_API_KEY = 'environment-api-key';
+    const explicitNullSdk = new UnlayerDefault({
+      apiKey: null,
+      baseURL: 'https://example.test',
+      maxRetries: 0,
+      personalAccessToken: 'explicit-personal-token',
+      fetch: async (request) => {
+        explicitNullAuthorization = request.headers.get('authorization');
+        return new Response(JSON.stringify({ data: [] }), {
+          headers: { 'content-type': 'application/json' },
+        });
+      },
     });
-    return true;
-  });
+    await explicitNullSdk.workspaces.list();
+  } finally {
+    if (previousEnvironmentAPIKey === undefined) delete process.env.UNLAYER_API_KEY;
+    else process.env.UNLAYER_API_KEY = previousEnvironmentAPIKey;
+  }
+  assert.equal(explicitNullAuthorization, 'Bearer explicit-personal-token');
 
-  await assert.rejects(
-    sdk.templates.listTemplates({
-      query: { name: 'unauthorized-undefined' },
-      throwOnError: undefined,
-    }),
-    (error) => {
-      assert.deepEqual(error, {
-        error: 'unauthorized',
-        message: 'Bad token',
+  let requestCache;
+  const requestOptionsSdk = new UnlayerDefault({
+    apiKey: 'compat-token',
+    baseURL: 'https://example.test',
+    maxRetries: 0,
+    fetch: async (request) => {
+      requestCache = request.cache;
+      return new Response(JSON.stringify({ data: [] }), {
+        headers: { 'content-type': 'application/json' },
       });
-      return true;
     },
-  );
-
-  await assert.rejects(
-    sdk.templates.listTemplates({
-      query: { name: 'unauthorized-no-throw' },
-      // JavaScript callers can pass options omitted from the TypeScript SDK
-      // surface. High-level operations must still preserve their contract.
-      throwOnError: false,
-    }),
-    (error) => {
-      assert.deepEqual(error, {
-        error: 'unauthorized',
-        message: 'Bad token',
-      });
-      return true;
-    },
-  );
-
-  let defaultFactoryRequest;
-  const defaultFactorySdk = new Unlayer({
-    client: createClient({
-      auth: 'factory-token',
-      fetch: async (request) => {
-        defaultFactoryRequest = request;
-        return new Response(
-          JSON.stringify({
-            data: [],
-            has_more: false,
-            next_cursor: null,
-          }),
-          { headers: { 'Content-Type': 'application/json' } },
-        );
-      },
-    }),
   });
+  await requestOptionsSdk.workspaces.list({ fetchOptions: { cache: 'no-store' } });
+  assert.equal(requestCache, 'no-store');
 
-  await defaultFactorySdk.templates.listTemplates();
-  assert.equal(defaultFactoryRequest.url, 'https://api.unlayer.com/v3/templates');
-  assert.equal(defaultFactoryRequest.headers.get('authorization'), 'Bearer factory-token');
-
-  const transportError = new TypeError('transport failed');
-  const transportClient = createClient({
+  let abortedFetchCalls = 0;
+  const abortSdk = new UnlayerDefault({
+    apiKey: 'compat-token',
+    baseURL: 'https://example.test',
+    maxRetries: 0,
     fetch: async () => {
-      throw transportError;
+      abortedFetchCalls += 1;
+      return new Response(JSON.stringify({ data: [] }), {
+        headers: { 'content-type': 'application/json' },
+      });
     },
   });
-  const transportSdk = new Unlayer({ client: transportClient });
-
-  await assert.rejects(transportSdk.templates.listTemplates(), (error) => error === transportError);
-
-  const transportFields = await transportClient.get({
-    responseStyle: 'fields',
-    throwOnError: false,
-    url: '/v3/templates',
-  });
-  assert.equal(transportFields.error, transportError);
-  assert.equal(transportFields.response, undefined);
-
   const abortController = new AbortController();
-  const abortError = new DOMException('request aborted', 'AbortError');
-  abortController.abort(abortError);
-  const abortSdk = new Unlayer({
-    client: createClient({
-      fetch: async (request) => {
-        assert.equal(request.signal.aborted, true);
-        throw request.signal.reason;
-      },
-    }),
-  });
-
+  abortController.abort('already aborted');
   await assert.rejects(
-    abortSdk.templates.listTemplates({ signal: abortController.signal }),
-    (error) => error === abortError,
+    abortSdk.workspaces.list({ signal: abortController.signal }),
+    (error) => error instanceof APIUserAbortError,
   );
-
-  assert.equal(requests.length, 6);
-
-  const listUrl = new URL(requests[0].url, 'http://localhost');
-  assert.equal(requests[0].method, 'GET');
-  assert.equal(requests[0].headers.authorization, 'Bearer test-token');
-  assert.equal(listUrl.pathname, '/v3/templates');
-  assert.equal(listUrl.searchParams.get('displayMode'), 'email');
-  assert.equal(listUrl.searchParams.get('limit'), '10');
-  assert.equal(listUrl.searchParams.get('name'), 'Summer & Sale');
-  assert.equal(listUrl.searchParams.get('projectId'), 'project-1');
-
-  assert.equal(requests[1].method, 'GET');
-  assert.equal(requests[1].url, '/v3/templates/folder%2FWelcome%20%26%20Spring');
-  assert.equal(requests[1].headers.authorization, 'Bearer test-token');
-
-  assert.equal(requests[2].method, 'POST');
-  assert.equal(requests[2].url, '/v3/domains');
-  assert.equal(requests[2].headers.authorization, 'Bearer test-token');
-  assert.match(requests[2].headers['content-type'], /^application\/json/);
-  assert.deepEqual(JSON.parse(requests[2].body), { domain: 'example.com' });
+  assert.equal(abortedFetchCalls, 0);
 
   process.stdout.write(
-    'Packed SDK smoke passed: isolated clients, auth, path/query/body serialization, factory defaults, HTTP, transport, and abort behavior\n',
+    'Packed SDK smoke passed: one allowlisted client, legacy compatibility, closed exports, auth, pagination, retries, timeouts, cancellation, errors, and all seven public operations\n',
   );
 } finally {
   await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));

@@ -6,12 +6,14 @@ export default defineConfig({
     sourcemap: true,
   },
   entry: {
-    'client/index': 'src/client/index.ts',
     index: 'src/index.ts',
   },
   failOnWarn: true,
   fixedExtension: true,
   format: ['esm', 'cjs'],
+  outputOptions: {
+    exports: 'named',
+  },
   platform: 'neutral',
   sourcemap: true,
   target: 'es2020',

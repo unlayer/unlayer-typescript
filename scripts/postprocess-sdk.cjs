@@ -143,5 +143,5 @@ clientIndexSource = clientIndexSource.replace(
 fs.writeFileSync(sdkPath, source);
 fs.writeFileSync(clientIndexPath, clientIndexSource);
 process.stdout.write(
-  `Applied SDK contracts to ${responseStyleMatches.length} operations, removed global client state, and configured createClient\n`,
+  `Applied internal SDK contracts to ${responseStyleMatches.length} operations and removed global client state\n`,
 );

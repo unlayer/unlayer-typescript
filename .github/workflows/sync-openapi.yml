@@ -91,7 +91,9 @@ jobs:
 
             Generation uses the pinned Hey API toolchain and configuration from
             this repository. The source under `src/` is generated and must not
-            be edited by hand.
+            be edited by hand. Only operations already approved in
+            `public-api.json` are emitted through the public `Unlayer` facade;
+            newly discovered OpenAPI operations remain internal.
 
       - name: Run CI for the generated branch
         if: >-

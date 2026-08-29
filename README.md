@@ -17,113 +17,81 @@ npm install @unlayer/sdk
 ## Quick start
 
 ```ts
-import { Unlayer } from '@unlayer/sdk';
-import { createClient } from '@unlayer/sdk/client';
-
-const unlayer = new Unlayer({
-  client: createClient({
-    auth: process.env['UNLAYER_API_KEY'],
-  }),
-});
-
-const templates = await unlayer.templates.listTemplates({
-  query: { limit: 20, projectId: 'your-project-id' },
-});
-
-const template = await unlayer.templates.getTemplate({
-  path: { id: 'template-id' },
-});
-```
-
-`Unlayer` requires an explicitly configured client. SDK instances do not use a
-shared registry or shared credentials.
-
-SDK operations throw the parsed API error body by default. Generated error-body
-types are exported, but caught values should still be narrowed at runtime.
-API failures throw the parsed body rather than an `Error` instance; network
-failures retain the native Fetch error behavior.
-
-## Native API shape
-
-Operations are grouped by their API resource. Parameters use Hey API's native
-`path`, `query`, and `body` groups:
-
-```ts
-await unlayer.templates.convertFullToSimple({
-  body: { design },
-});
-```
-
-Types for request parameters, successful responses, and error responses are
-exported from `@unlayer/sdk`. Resource methods always return the data-only
-response shape and always throw on failures so HTTP, network, abort, URL, and
-response parsing errors cannot be mistaken for missing data. The lower-level
-client remains available from `@unlayer/sdk/client` for callers that need Hey
-API's native field response or non-throwing behavior.
-
-To override the API URL, Fetch implementation, headers, or other native client
-options, pass them to `createClient()`:
-
-```ts
-const client = createClient({
-  auth: process.env['UNLAYER_API_KEY'],
-  fetch: customFetch,
-  headers: { 'X-Request-ID': requestId },
-});
-
-const unlayer = new Unlayer({ client });
-```
-
-`createClient()` defaults to `https://api.unlayer.com` and throwing on errors.
-Pass `baseUrl` or `throwOnError` only when intentionally overriding those
-defaults.
-
-Each `Unlayer` instance can receive its own client, so credentials and runtime
-configuration remain isolated.
-
-## Migrating from 0.1
-
-Version 0.2 replaces the generated wrapper runtime with the native Hey API
-client. Construct a client explicitly and pass it to `Unlayer`:
-
-```ts
-// 0.1
 import Unlayer from '@unlayer/sdk';
 
-const unlayer = new Unlayer({ apiKey: process.env['UNLAYER_API_KEY'] });
-await unlayer.templates.list({ limit: 20, projectId: 'your-project-id' });
-```
-
-```ts
-// 0.2+
-import { Unlayer } from '@unlayer/sdk';
-import { createClient } from '@unlayer/sdk/client';
-
 const unlayer = new Unlayer({
-  client: createClient({
-    auth: process.env['UNLAYER_API_KEY'],
-  }),
+  apiKey: process.env['UNLAYER_API_KEY'],
+  projectID: 'your-project-id',
 });
 
-await unlayer.templates.listTemplates({
-  query: { limit: 20, projectId: 'your-project-id' },
-});
+const templates = await unlayer.templates.list({ limit: 20 });
+
+const template = await unlayer.templates.retrieve('template-id');
 ```
 
-Operation names now match the OpenAPI operation IDs, and parameters are grouped
-under `path`, `query`, and `body`. The default export, implicit environment
-configuration, custom error hierarchy, retries, timeouts, and pagination
-helpers from 0.1 are no longer part of the SDK. API errors are parsed bodies,
-not `Error` subclasses, and do not carry response status or headers. Configure
-retry behavior with a custom Fetch implementation and timeouts with a request
-signal when needed:
+The client also reads `UNLAYER_API_KEY`, `UNLAYER_PERSONAL_ACCESS_TOKEN`,
+`UNLAYER_PROJECT_ID`, and `UNLAYER_BASE_URL` when their corresponding options
+are omitted.
+
+## Public API
+
+The SDK exposes one allowlisted API with the same resource and method shapes as
+version 0.1:
+
+```text
+templates.list(params?, options?)
+templates.retrieve(id, params?, options?)
+projects.retrieve(id, options?)
+workspaces.list(options?)
+workspaces.retrieve(id, options?)
+convert.fullToSimple.create(body, options?)
+convert.simpleToFull.create(body, options?)
+```
+
+The OpenAPI-generated transport is internal. Operations do not become public
+merely because they appear in the production OpenAPI document, and generated
+operation-ID names such as `listTemplates()` are not exported.
+
+## Pagination, retries, and errors
 
 ```ts
-await unlayer.templates.listTemplates({
-  query: { projectId: 'your-project-id' },
-  signal: AbortSignal.timeout(60_000),
+for await (const item of unlayer.templates.list({ limit: 20 })) {
+  console.log(item.id);
+}
+```
+
+Requests retry connection failures, 408, 409, 429, and 5xx responses twice by
+default. Configure client-level retry and timeout behavior when constructing
+the SDK:
+
+```ts
+const unlayer = new Unlayer({
+  maxRetries: 3,
+  timeout: 30_000,
 });
 ```
+
+API failures throw an `APIError` subclass with the response status, headers,
+and parsed error body. Network, timeout, and abort failures use
+`APIConnectionError`, `APIConnectionTimeoutError`, and `APIUserAbortError`.
+
+```ts
+try {
+  await unlayer.templates.retrieve('missing-template');
+} catch (error) {
+  if (error instanceof Unlayer.NotFoundError) {
+    console.error(error.status, error.message);
+  }
+}
+```
+
+## Adding a public endpoint
+
+[`public-api.json`](public-api.json) is the public SDK contract. Adding an
+operation there and running `pnpm generate` validates it against OpenAPI and
+generates its public resource, method, and types. Operations absent from the
+allowlist remain internal. Generation fails if an allowlisted operation is
+removed or its declared path or pagination contract changes.
 
 Git URL dependencies are no longer supported because generated build output is
 not committed. To test an unreleased revision, clone it and install the packed

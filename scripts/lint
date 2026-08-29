@@ -40,6 +40,7 @@ if GITHUB_ACTIONS=true GITHUB_REF_TYPE=tag GITHUB_REF_NAME=v999.0.0 \
 fi
 
 node --test tests/sync-openapi.test.mjs
+node --test tests/generate-public-api.test.mjs
 node --test tests/publish-npm.test.mjs
 
 echo "==> Testing the packed SDK"
