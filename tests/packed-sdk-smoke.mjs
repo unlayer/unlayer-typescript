@@ -257,8 +257,11 @@ try {
   assert.equal(fullToSimple.success, true);
   assert.equal(simpleToFull.success, true);
 
+  const unauthorizedRequest = publicSdk.templates.list({ name: 'unauthorized' });
+  const unauthorizedResponse = await unauthorizedRequest.asResponse();
+  assert.equal(unauthorizedResponse.status, 401);
   await assert.rejects(
-    publicSdk.templates.list({ name: 'unauthorized' }),
+    unauthorizedRequest,
     (error) =>
       error instanceof AuthenticationError && error.status === 401 && error.message === '401 Bad token',
   );
@@ -414,13 +417,21 @@ try {
 
   let requestCache;
   const requestAuthorizations = [];
+  const requestBodies = [];
+  const requestMethods = [];
+  const requestURLs = [];
+  let customFetchReceiver = 'not called';
   const requestOptionsSdk = new UnlayerDefault({
     apiKey: 'compat-token',
     baseURL: 'https://example.test',
     maxRetries: 0,
-    fetch: async (request) => {
+    fetch: async function (request) {
+      customFetchReceiver = this;
       requestCache = request.cache;
       requestAuthorizations.push(request.headers.get('authorization'));
+      requestBodies.push(request.body);
+      requestMethods.push(request.method);
+      requestURLs.push(request.url);
       return new Response(JSON.stringify({ data: [] }), {
         headers: { 'content-type': 'application/json' },
       });
@@ -428,6 +439,7 @@ try {
   });
   await requestOptionsSdk.workspaces.list({ fetchOptions: { cache: 'no-store' } });
   assert.equal(requestCache, 'no-store');
+  assert.equal(customFetchReceiver, undefined);
   await requestOptionsSdk.workspaces.list({
     headers: { Authorization: 'Bearer request-authorization' },
   });
@@ -444,6 +456,41 @@ try {
     },
   });
   assert.equal(generatedClientOverrideUsed, false);
+  await requestOptionsSdk.workspaces.list({
+    baseUrl: 'https://attacker.example',
+    body: 'injected body',
+    method: 'POST',
+    path: { workspaceId: 'injected' },
+    query: { injected: 'true' },
+    security: [],
+    url: '/v3/blocks',
+    fetchOptions: {
+      baseUrl: 'https://fetch-options-attacker.example',
+      body: 'fetch options body',
+      method: 'DELETE',
+      url: '/v3/domains',
+    },
+  });
+  assert.equal(requestURLs.at(-1), 'https://example.test/v3/workspaces');
+  assert.equal(requestMethods.at(-1), 'GET');
+  assert.equal(requestBodies.at(-1), null);
+  assert.equal(requestAuthorizations.at(-1), 'Bearer compat-token');
+
+  const malformedSdk = new UnlayerDefault({
+    apiKey: 'compat-token',
+    baseURL: 'https://example.test',
+    maxRetries: 0,
+    fetch: async () =>
+      new Response('{malformed JSON', {
+        headers: { 'content-type': 'application/json' },
+        status: 200,
+      }),
+  });
+  const malformedRequest = malformedSdk.workspaces.list();
+  const malformedResponse = await malformedRequest.asResponse();
+  assert.equal(malformedResponse.status, 200);
+  assert.equal(await malformedResponse.text(), '{malformed JSON');
+  await assert.rejects(malformedRequest, (error) => error instanceof APIError && error.status === 200);
 
   let unauthenticatedFetchCalls = 0;
   const unauthenticatedSdk = new UnlayerDefault({

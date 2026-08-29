@@ -8,6 +8,16 @@ import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const packageJson = JSON.parse(fs.readFileSync(path.join(repositoryRoot, 'package.json'), 'utf8'));
+const [packageMajor, packageMinor, packagePatch] = packageJson.version
+  .split('-', 1)[0]
+  .split('.')
+  .map(BigInt);
+const earlierRegistryVersion =
+  packagePatch > 0n ? `${packageMajor}.${packageMinor}.${packagePatch - 1n}`
+  : packageMinor > 0n ? `${packageMajor}.${packageMinor - 1n}.0`
+  : packageMajor > 0n ? `${packageMajor - 1n}.0.0`
+  : '0.0.0-0';
+const laterRegistryVersion = `${packageMajor + 1n}.0.0`;
 
 function createHarness() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'unlayer-sdk-publish-test.'));
@@ -41,7 +51,7 @@ case "\${1:-}" in
   view)
     case "\${FAKE_NPM_VIEW_MODE:-}" in
       success)
-        echo '"0.1.0"'
+        printf '"%s"\n' "\${FAKE_NPM_LAST_VERSION:-0.0.0}"
         ;;
       e404)
         echo '{"error":{"code":"E404"}}'
@@ -74,13 +84,14 @@ esac
   );
   fs.chmodSync(fakeNpm, 0o755);
 
-  const run = (mode) =>
+  const run = (mode, { lastVersion = earlierRegistryVersion } = {}) =>
     spawnSync('bash', ['./bin/publish-npm', archive], {
       cwd: repositoryRoot,
       encoding: 'utf8',
       env: {
         ...process.env,
         FAKE_NPM_PUBLISH_LOG: publishLog,
+        FAKE_NPM_LAST_VERSION: lastVersion,
         FAKE_NPM_VIEW_MODE: mode,
         GITHUB_ACTIONS: 'true',
         GITHUB_REF_NAME: `v${packageJson.version}`,
@@ -114,6 +125,39 @@ for (const mode of ['success', 'e404']) {
     }
   });
 }
+
+test('does not move latest backwards when an older stable release is dispatched', () => {
+  const harness = createHarness();
+  try {
+    const result = harness.run('success', { lastVersion: laterRegistryVersion });
+    assert.notEqual(result.status, 0);
+    assert.equal(
+      result.stderr.includes(
+        `refusing to move the latest dist-tag from ${laterRegistryVersion} to ${packageJson.version}`,
+      ),
+      true,
+    );
+    assert.equal(fs.existsSync(harness.publishLog), false);
+  } finally {
+    harness.cleanup();
+  }
+});
+
+test('semantic version ordering handles stable and prerelease versions', () => {
+  const compare = (candidate, current) =>
+    spawnSync('node', ['./scripts/utils/is-newer-semver.cjs', candidate, current], {
+      cwd: repositoryRoot,
+      encoding: 'utf8',
+    });
+
+  assert.equal(compare('1.0.1', '1.0.0').status, 0);
+  assert.equal(compare('1.0.0', '1.0.0-rc.1').status, 0);
+  assert.equal(compare('1.0.0-rc.2', '1.0.0-rc.1').status, 0);
+  assert.notEqual(compare('1.0.0', '1.0.0').status, 0);
+  assert.notEqual(compare('1.0.0-rc.1', '1.0.0').status, 0);
+  assert.notEqual(compare('1.0.0-alpha.2', '1.0.0-alpha.10').status, 0);
+  assert.notEqual(compare('1.0.0-alpha.01', '1.0.0-alpha.1').status, 0);
+});
 
 for (const mode of ['registry-error', 'empty', 'malformed']) {
   test(`does not publish after an npm view ${mode} response`, () => {

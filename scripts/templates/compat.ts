@@ -52,26 +52,30 @@ type APIResponseProps<T> = {
   response: Response;
 };
 
-const rawResponses = new WeakMap<Response, Response>();
+type CompatibilityRequest<T> = {
+  parsedResponse: Promise<APIResponseProps<T>>;
+  rawResponse: Promise<Response>;
+};
 
 export class APIPromise<T> extends Promise<T> {
   readonly #responsePromise: Promise<APIResponseProps<T>>;
+  readonly #rawResponsePromise: Promise<Response>;
   #parsedPromise: Promise<T> | undefined;
 
-  constructor(responsePromise: PromiseLike<APIResponseProps<T>>) {
+  constructor(request: CompatibilityRequest<T>) {
     super((resolve) => resolve(undefined as T));
-    this.#responsePromise = Promise.resolve(responsePromise).then((result) => ({
-      data: result.data,
-      response: rawResponses.get(result.response) ?? result.response,
-    }));
+    this.#responsePromise = request.parsedResponse;
+    this.#rawResponsePromise = request.rawResponse;
+    void this.#responsePromise.catch(() => undefined);
   }
 
   asResponse(): Promise<Response> {
-    return this.#responsePromise.then(({ response }) => response);
+    return this.#rawResponsePromise;
   }
 
-  withResponse(): Promise<{ data: T; response: Response }> {
-    return this.#responsePromise;
+  async withResponse(): Promise<{ data: T; response: Response }> {
+    const [data, response] = await Promise.all([this.#parse(), this.asResponse()]);
+    return { data, response };
   }
 
   #parse(): Promise<T> {
@@ -230,14 +234,17 @@ export class PagePromise<
   extends APIPromise<PageClass>
   implements AsyncIterable<Item>
 {
-  constructor(fetchPage: (cursor?: string) => PromiseLike<APIResponseProps<CursorResponse<Item>>>) {
-    const loadPage = async (cursor?: string): Promise<APIResponseProps<PageClass>> => {
-      const result = await fetchPage(cursor);
-      const page = new CursorPage<Item>(result.data, async (nextCursor) => {
-        const nextPage = await loadPage(nextCursor);
-        return nextPage.data;
-      }) as PageClass;
-      return { data: page, response: result.response };
+  constructor(fetchPage: (cursor?: string) => CompatibilityRequest<CursorResponse<Item>>) {
+    const loadPage = (cursor?: string): CompatibilityRequest<PageClass> => {
+      const request = fetchPage(cursor);
+      const parsedResponse = request.parsedResponse.then((result) => {
+        const page = new CursorPage<Item>(result.data, async (nextCursor) => {
+          const nextPage = await loadPage(nextCursor).parsedResponse;
+          return nextPage.data;
+        }) as PageClass;
+        return { data: page, response: result.response };
+      });
+      return { parsedResponse, rawResponse: request.rawResponse };
     };
     super(loadPage());
   }
@@ -249,11 +256,45 @@ export class PagePromise<
 }
 
 type NativeHeaderValue = string | ReadonlyArray<string> | null | undefined;
+type NativeRequestInitKey =
+  | 'cache'
+  | 'credentials'
+  | 'integrity'
+  | 'keepalive'
+  | 'mode'
+  | 'priority'
+  | 'redirect'
+  | 'referrer'
+  | 'referrerPolicy'
+  | 'signal'
+  | 'window';
+type NativeRequestInit = Pick<RequestInit, NativeRequestInitKey>;
 const INTERNAL_ALLOW_MISSING_AUTH = 'x-unlayer-sdk-internal-allow-missing-auth';
 const INTERNAL_MAX_RETRIES = 'x-unlayer-sdk-internal-max-retries';
+const INTERNAL_REQUEST_ID = 'x-unlayer-sdk-internal-request-id';
 const INTERNAL_TIMEOUT = 'x-unlayer-sdk-internal-timeout';
-type NativeRequestOptions = Omit<RequestOptions, 'fetchOptions' | 'headers' | 'maxRetries' | 'timeout'> & {
+type NativeRequestOptions = NativeRequestInit & {
   headers?: Record<string, NativeHeaderValue>;
+};
+
+type Deferred<T> = {
+  promise: Promise<T>;
+  reject: (reason?: unknown) => void;
+  resolve: (value: T) => void;
+};
+
+const pendingRawResponses = new Map<string, Deferred<Response>>();
+let nextRequestID = 0;
+
+const createDeferred = <T>(): Deferred<T> => {
+  let reject!: (reason?: unknown) => void;
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise;
+    reject = rejectPromise;
+  });
+  void promise.catch(() => undefined);
+  return { promise, reject, resolve };
 };
 
 const mergeNullableHeaders = (...sources: Array<HeadersLike>): Record<string, NativeHeaderValue> => {
@@ -276,32 +317,62 @@ const mergeNullableHeaders = (...sources: Array<HeadersLike>): Record<string, Na
   return Object.fromEntries([...headers.values()].map(({ name, value }) => [name, value]));
 };
 
-const nativeRequestOptions = (options?: RequestOptions): NativeRequestOptions => {
-  const {
-    client: _client,
-    fetchOptions,
-    headers: requestHeaders,
-    maxRetries,
-    timeout,
-    ...requestOptions
-  } = (options ?? {}) as RequestOptions & { client?: unknown };
-  const {
-    body: _fetchBody,
-    headers: fetchHeaders,
-    method: _fetchMethod,
-    ...fetchConfig
-  } = fetchOptions ?? {};
+const pickRequestInit = (options?: NativeRequestInit): NativeRequestInit => ({
+  ...(options?.cache !== undefined ? { cache: options.cache } : {}),
+  ...(options?.credentials !== undefined ? { credentials: options.credentials } : {}),
+  ...(options?.integrity !== undefined ? { integrity: options.integrity } : {}),
+  ...(options?.keepalive !== undefined ? { keepalive: options.keepalive } : {}),
+  ...(options?.mode !== undefined ? { mode: options.mode } : {}),
+  ...(options?.priority !== undefined ? { priority: options.priority } : {}),
+  ...(options?.redirect !== undefined ? { redirect: options.redirect } : {}),
+  ...(options?.referrer !== undefined ? { referrer: options.referrer } : {}),
+  ...(options?.referrerPolicy !== undefined ? { referrerPolicy: options.referrerPolicy } : {}),
+  ...(options?.signal !== undefined ? { signal: options.signal } : {}),
+  ...(options?.window !== undefined ? { window: options.window } : {}),
+});
+
+const nativeRequestOptions = (
+  options: RequestOptions | undefined,
+  requestID: string,
+): NativeRequestOptions => {
+  const { fetchOptions, headers: requestHeaders, maxRetries, timeout } = options ?? {};
+  const fetchHeaders = fetchOptions?.headers;
   const headers = mergeNullableHeaders(requestHeaders, fetchHeaders);
   if (headerValue(headers, 'authorization') === null) {
     headers[INTERNAL_ALLOW_MISSING_AUTH] = 'true';
   }
   if (maxRetries !== undefined) headers[INTERNAL_MAX_RETRIES] = String(maxRetries);
+  headers[INTERNAL_REQUEST_ID] = requestID;
   if (timeout !== undefined) headers[INTERNAL_TIMEOUT] = String(timeout);
   return {
-    ...requestOptions,
-    ...fetchConfig,
-    ...(Object.keys(headers).length ? { headers } : {}),
+    ...pickRequestInit(options),
+    ...pickRequestInit(fetchOptions),
+    headers,
   };
+};
+
+const createCompatibilityRequest = <T>(
+  options: RequestOptions | undefined,
+  send: (options: NativeRequestOptions) => PromiseLike<APIResponseProps<T>>,
+): CompatibilityRequest<T> => {
+  const requestID = String(++nextRequestID);
+  const rawResponse = createDeferred<Response>();
+  pendingRawResponses.set(requestID, rawResponse);
+
+  let parsedResponse: Promise<APIResponseProps<T>>;
+  try {
+    parsedResponse = Promise.resolve(send(nativeRequestOptions(options, requestID)));
+  } catch (error) {
+    parsedResponse = Promise.reject(error);
+  }
+  void parsedResponse.catch((error) => {
+    if (pendingRawResponses.get(requestID) === rawResponse) {
+      pendingRawResponses.delete(requestID);
+      rawResponse.reject(error);
+    }
+  });
+
+  return { parsedResponse, rawResponse: rawResponse.promise };
 };
 
 const headerValue = (headers: Record<string, NativeHeaderValue>, name: string): NativeHeaderValue =>
@@ -433,14 +504,32 @@ const createCompatibilityFetch =
     const headers = new Headers(inputRequest.headers);
     const allowMissingAuth = options.allowMissingAuth || headers.get(INTERNAL_ALLOW_MISSING_AUTH) === 'true';
     const maxRetriesHeader = headers.get(INTERNAL_MAX_RETRIES);
+    const requestID = headers.get(INTERNAL_REQUEST_ID);
     const timeoutHeader = headers.get(INTERNAL_TIMEOUT);
+    const rejectRawResponse = (error: unknown): void => {
+      if (requestID === null) return;
+      const deferred = pendingRawResponses.get(requestID);
+      if (!deferred) return;
+      pendingRawResponses.delete(requestID);
+      deferred.reject(error);
+    };
+    const resolveRawResponse = (response: Response): void => {
+      if (requestID === null) return;
+      const deferred = pendingRawResponses.get(requestID);
+      if (!deferred) return;
+      pendingRawResponses.delete(requestID);
+      deferred.resolve(response);
+    };
     headers.delete(INTERNAL_ALLOW_MISSING_AUTH);
     headers.delete(INTERNAL_MAX_RETRIES);
+    headers.delete(INTERNAL_REQUEST_ID);
     headers.delete(INTERNAL_TIMEOUT);
     if (!headers.has('authorization') && !allowMissingAuth) {
-      throw new UnlayerError(
+      const error = new UnlayerError(
         'Could not resolve authentication method. Expected either apiKey or personalAccessToken to be set. Or for the Authorization header to be explicitly omitted.',
       );
+      rejectRawResponse(error);
+      throw error;
     }
     const request = new Request(inputRequest, { headers });
     const maxRetries =
@@ -450,11 +539,14 @@ const createCompatibilityFetch =
     const timeout =
       timeoutHeader === null ? options.timeout : validateInteger('timeout', Number(timeoutHeader), 1);
     const requestOptions = { ...options, maxRetries, timeout };
+    const fetchImplementation = options.fetch;
     let lastError: unknown;
 
     for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
       if (request.signal.aborted) {
-        throw new APIUserAbortError({ cause: request.signal.reason });
+        const error = new APIUserAbortError({ cause: request.signal.reason });
+        rejectRawResponse(error);
+        throw error;
       }
       const controller = new AbortController();
       let timedOut = false;
@@ -465,7 +557,7 @@ const createCompatibilityFetch =
       }, timeout);
 
       try {
-        const response = await options.fetch(new Request(request.clone(), { signal: attemptSignal }));
+        const response = await fetchImplementation(new Request(request.clone(), { signal: attemptSignal }));
         clearTimeout(timeoutID);
         if (attempt < maxRetries && retryableStatus(response.status)) {
           await response.body?.cancel();
@@ -479,18 +571,25 @@ const createCompatibilityFetch =
           continue;
         }
         const responseForParsing = response.clone();
-        rawResponses.set(responseForParsing, response);
+        resolveRawResponse(response);
         return responseForParsing;
       } catch (error) {
         lastError = error;
-        if (request.signal.aborted) throw new APIUserAbortError({ cause: error });
+        if (request.signal.aborted) {
+          const abortError = new APIUserAbortError({ cause: error });
+          rejectRawResponse(abortError);
+          throw abortError;
+        }
         if (attempt >= maxRetries) {
           if (timedOut) {
-            throw new APIConnectionTimeoutError({
+            const timeoutError = new APIConnectionTimeoutError({
               cause: error,
               message: `Request timed out after ${timeout}ms.`,
             });
+            rejectRawResponse(timeoutError);
+            throw timeoutError;
           }
+          rejectRawResponse(error);
           throw error;
         }
         logRetry(requestOptions, attempt + 1, timedOut ? 'timeout' : 'connection error');
@@ -500,6 +599,7 @@ const createCompatibilityFetch =
       }
     }
 
+    rejectRawResponse(lastError);
     throw lastError;
   };
 

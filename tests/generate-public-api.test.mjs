@@ -43,7 +43,11 @@ test('the initial public SDK exposes only the seven allowlisted operations', () 
   assert.match(facade, /type TemplateListResponsesCursorPage as TemplateListResponsesCursorPage/);
   assert.match(facade, /PagePromise<TemplateListResponsesCursorPage, TemplateListResponse>/);
   assert.match(facade, /cursor === undefined \? \{\} : \{ cursor: cursor \}/);
-  assert.match(facade, /return new APIPromise\(this\.#generatedTemplates\.getTemplate/);
+  assert.match(
+    facade,
+    /return new APIPromise\(\n\s+createCompatibilityRequest\(options, \(requestOptions\) =>/,
+  );
+  assert.match(facade, /this\.#generatedTemplates\.getTemplate\(\{\n\s+\.\.\.requestOptions/);
   assert.match(facade, /query: query \?\? \{\}/);
   assert.equal(packageIndex.includes('NativeUnlayer'), false);
   assert.equal(packageIndex.includes('ListBlocksData'), false);
@@ -82,6 +86,24 @@ test('adding an operation to the allowlist generates its public resource', () =>
   assert.equal(result.exposedOperationIds.length, 8);
   assert.equal(result.unexposedOperationIds.includes('listBlocks'), false);
   assert.match(renderFacade(withBlocks.operations), /export class Blocks/);
+});
+
+test('paginated operations pass every declared path argument to the transport', () => {
+  const operation = structuredClone(
+    manifest.operations.find((candidate) => candidate.operationId === 'listTemplates'),
+  );
+  operation.resource = ['projects', 'templates'];
+  operation.pathArguments = [
+    { name: 'projectID', target: 'projectId', type: 'string' },
+    { name: 'folderID', target: 'folderId', type: 'string' },
+  ];
+
+  const facade = renderFacade([operation]);
+  assert.match(facade, /list\(\n\s+projectID: string,\n\s+folderID: string,/);
+  assert.match(
+    facade,
+    /path: \{ projectId: projectID, folderId: folderID \},\n\s+query: \{ \.\.\.\(query \?\? \{\}\)/,
+  );
 });
 
 test('generation fails closed when an allowlisted OpenAPI contract changes', () => {

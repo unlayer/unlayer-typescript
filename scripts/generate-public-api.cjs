@@ -371,25 +371,28 @@ const renderMethod = (entry) => {
       `PagePromise<${entry.pagination.pageType}, ${entry.response.type}>`
     : `APIPromise<${entry.response.type}>`;
   const transport = `this.#${transportFieldName(entry.transport)}`;
+  const pathRequestField =
+    entry.pathArguments?.length ?
+      `path: { ${entry.pathArguments.map((argument) => `${argument.target}: ${argument.name}`).join(', ')} }`
+    : undefined;
 
   if (entry.pagination) {
     const paramsName = entry.params.name ?? 'query';
+    const requestFields = [
+      ...(pathRequestField ? [pathRequestField] : []),
+      `query: { ...(${paramsName} ?? {}), ...(cursor === undefined ? {} : { ${entry.pagination.cursor}: cursor }) }`,
+    ];
     return `  ${entry.method}(\n    ${parameters.join(
       ',\n    ',
-    )},\n  ): ${returnType} {\n    return new PagePromise(async (cursor) =>\n      ${transport}.${
+    )},\n  ): ${returnType} {\n    return new PagePromise((cursor) =>\n      createCompatibilityRequest(options, (requestOptions) =>\n        ${transport}.${
       entry.operationId
-    }({\n        ...nativeRequestOptions(options),\n        query: { ...(${paramsName} ?? {}), ...(cursor === undefined ? {} : { ${
-      entry.pagination.cursor
-    }: cursor }) },\n      }),\n    );\n  }`;
+    }({\n          ...requestOptions,\n          ${requestFields.join(
+      ',\n          ',
+    )},\n        }),\n      ),\n    );\n  }`;
   }
 
   const requestFields = [];
-  if (entry.pathArguments?.length) {
-    const pathFields = entry.pathArguments
-      .map((argument) => `${argument.target}: ${argument.name}`)
-      .join(', ');
-    requestFields.push(`path: { ${pathFields} }`);
-  }
+  if (pathRequestField) requestFields.push(pathRequestField);
   if (entry.params) {
     const paramsName = entry.params.name ?? (entry.params.location === 'body' ? 'body' : 'query');
     const optionalParams =
@@ -399,14 +402,14 @@ const renderMethod = (entry) => {
 
   const call =
     requestFields.length === 0 ?
-      `${transport}.${entry.operationId}(nativeRequestOptions(options))`
-    : `${transport}.${
-        entry.operationId
-      }({\n      ...nativeRequestOptions(options),\n      ${requestFields.join(',\n      ')},\n    })`;
+      `${transport}.${entry.operationId}(requestOptions)`
+    : `${transport}.${entry.operationId}({\n          ...requestOptions,\n          ${requestFields.join(
+        ',\n          ',
+      )},\n        })`;
 
   return `  ${entry.method}(\n    ${parameters.join(
     ',\n    ',
-  )},\n  ): ${returnType} {\n    return new APIPromise(${call});\n  }`;
+  )},\n  ): ${returnType} {\n    return new APIPromise(\n      createCompatibilityRequest(options, (requestOptions) =>\n        ${call},\n      ),\n    );\n  }`;
 };
 
 const renderResourceClass = (node) => {

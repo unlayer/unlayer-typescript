@@ -56,14 +56,17 @@ fi
 
 # Check if current version is pre-release (e.g. alpha / beta / rc)
 CURRENT_IS_PRERELEASE=false
-if [[ "$VERSION" =~ -([a-zA-Z]+) ]]; then
+if [[ "$VERSION" == *-* ]]; then
   CURRENT_IS_PRERELEASE=true
-  CURRENT_TAG="${BASH_REMATCH[1]}"
+  PRERELEASE="${VERSION#*-}"
+  PRERELEASE="${PRERELEASE%%+*}"
+  CURRENT_TAG="${PRERELEASE%%.*}"
+  if [[ "$CURRENT_TAG" =~ ^[0-9]+$ ]]; then CURRENT_TAG="next"; fi
 fi
 
 # Check if last version is a stable release
 LAST_IS_STABLE_RELEASE=true
-if [[ -z "$LAST_VERSION" || "$LAST_VERSION" =~ -([a-zA-Z]+) ]]; then
+if [[ -z "$LAST_VERSION" || "$LAST_VERSION" == *-* ]]; then
   LAST_IS_STABLE_RELEASE=false
 fi
 
@@ -72,6 +75,13 @@ if $CURRENT_IS_PRERELEASE && $LAST_IS_STABLE_RELEASE; then
   TAG="$CURRENT_TAG"
 else
   TAG="latest"
+fi
+
+if [ "$TAG" = "latest" ] && [ -n "$LAST_VERSION" ]; then
+  if ! node ./scripts/utils/is-newer-semver.cjs "$VERSION" "$LAST_VERSION"; then
+    echo "refusing to move the latest dist-tag from $LAST_VERSION to $VERSION" >&2
+    exit 1
+  fi
 fi
 
 # npm trusted publishing exchanges GitHub's OIDC token for short-lived publish

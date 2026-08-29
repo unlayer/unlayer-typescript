@@ -52,6 +52,21 @@ The OpenAPI-generated transport is internal. Operations do not become public
 merely because they appear in the production OpenAPI document, and generated
 operation-ID names such as `listTemplates()` are not exported.
 
+### Intentional compatibility boundary
+
+This release has one closed, allowlisted entry point. APIs from the previous
+generated package that fall outside that public contract are intentionally no
+longer available:
+
+- raw request helpers such as `client.get()` and `client.post()`;
+- wildcard deep imports such as `@unlayer/sdk/error`;
+- the `toFile` and `Uploadable` exports.
+
+Request options also cannot replace an operation's generated URL, HTTP method,
+body, path parameters, query parameters, security configuration, or transport
+client. Add new operations through `public-api.json` so they receive the same
+generated types and compatibility behavior as the initial seven methods.
+
 ## Pagination, retries, and errors
 
 ```ts

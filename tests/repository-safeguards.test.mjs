@@ -14,6 +14,30 @@ const publishWorkflow = fs.readFileSync(
 );
 const syncWorkflow = fs.readFileSync(path.join(repositoryRoot, '.github/workflows/sync-openapi.yml'), 'utf8');
 
+test('published source maps resolve to source files inside the package', () => {
+  const distDirectory = path.join(repositoryRoot, 'dist');
+  const sourceMaps = fs.readdirSync(distDirectory).filter((file) => file.endsWith('.map'));
+  assert.notEqual(sourceMaps.length, 0);
+
+  let sourceCount = 0;
+  for (const file of sourceMaps) {
+    const sourceMapPath = path.join(distDirectory, file);
+    const sourceMap = JSON.parse(fs.readFileSync(sourceMapPath, 'utf8'));
+    for (const source of sourceMap.sources) {
+      sourceCount += 1;
+      assert.equal(source.startsWith('../src/'), false, `${file} points outside the package`);
+      if (source.startsWith('./src/')) {
+        assert.equal(
+          fs.existsSync(path.resolve(path.dirname(sourceMapPath), source)),
+          true,
+          `${file} references missing source ${source}`,
+        );
+      }
+    }
+  }
+  assert.notEqual(sourceCount, 0);
+});
+
 test('the package declares the actual Node runtime floor', () => {
   assert.equal(packageJson.engines?.node, '>=20.3.0');
 });
@@ -26,6 +50,13 @@ test('the release checkout fetches main without persisting credentials', () => {
   assert.match(
     publishWorkflow,
     /jobs:\n\s+verify:[\s\S]*?- uses: actions\/checkout@v6\n\s+with:\n\s+fetch-depth: 0\n\s+persist-credentials: false/,
+  );
+});
+
+test('the publish checkout fetches main without persisting credentials', () => {
+  assert.match(
+    publishWorkflow,
+    /\n\s+publish:[\s\S]*?steps:\n\s+- uses: actions\/checkout@v6\n\s+with:\n\s+fetch-depth: 0\n\s+persist-credentials: false/,
   );
 });
 

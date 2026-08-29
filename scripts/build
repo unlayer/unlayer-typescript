@@ -9,6 +9,7 @@ cd "$(dirname "$0")/.."
 # Releases publish from dist/, so include package metadata and generated source
 # beside the bundled CommonJS, ESM, and declaration output.
 cp -rp src README.md dist
+node scripts/utils/rewrite-dist-sourcemaps.cjs dist
 for file in LICENSE CHANGELOG.md; do
   if [ -e "${file}" ]; then cp "${file}" dist; fi
 done
