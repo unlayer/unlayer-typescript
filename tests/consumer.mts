@@ -19,6 +19,8 @@ void sdk.projects.retrieve('project-id');
 void sdk.workspaces.list();
 void sdk.workspaces.list({ fetchOptions: { cache: 'no-store' } });
 void sdk.workspaces.list({ headers: { 'X-Remove-Me': null } });
+void sdk.workspaces.list({ headers: { Authorization: 'Bearer custom' } });
+void sdk.workspaces.list({ headers: { Authorization: null } });
 void sdk.workspaces.retrieve('workspace-id');
 void sdk.convert.fullToSimple.create({ design: { body: {} } });
 void sdk.convert.simpleToFull.create({ design: { body: {} } });

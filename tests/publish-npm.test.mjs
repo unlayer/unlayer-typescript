@@ -85,7 +85,9 @@ esac
         GITHUB_ACTIONS: 'true',
         GITHUB_REF_NAME: `v${packageJson.version}`,
         GITHUB_REF_TYPE: 'tag',
+        GITHUB_SHA: 'HEAD',
         PATH: `${fakeBin}:${process.env.PATH}`,
+        RELEASE_MAIN_REF: 'HEAD',
       },
     });
 

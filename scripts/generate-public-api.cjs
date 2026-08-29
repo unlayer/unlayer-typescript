@@ -392,9 +392,9 @@ const renderMethod = (entry) => {
   }
   if (entry.params) {
     const paramsName = entry.params.name ?? (entry.params.location === 'body' ? 'body' : 'query');
-    requestFields.push(
-      `${entry.params.location}: ${entry.params.optional ? `${paramsName} ?? undefined` : paramsName}`,
-    );
+    const optionalParams =
+      entry.params.location === 'query' ? `${paramsName} ?? {}` : `${paramsName} ?? undefined`;
+    requestFields.push(`${entry.params.location}: ${entry.params.optional ? optionalParams : paramsName}`);
   }
 
   const call =

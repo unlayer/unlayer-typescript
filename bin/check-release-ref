@@ -22,4 +22,12 @@ if [ "${GITHUB_REF_NAME:-}" != "$EXPECTED_TAG" ]; then
   exit 1
 fi
 
-echo "Release tag $EXPECTED_TAG matches package version $VERSION."
+RELEASE_SHA="${GITHUB_SHA:-HEAD}"
+MAIN_REF="${RELEASE_MAIN_REF:-origin/main}"
+
+if ! git merge-base --is-ancestor "$RELEASE_SHA" "$MAIN_REF"; then
+  echo "Release commit $RELEASE_SHA is not an ancestor of $MAIN_REF." >&2
+  exit 1
+fi
+
+echo "Release tag $EXPECTED_TAG matches package version $VERSION and belongs to $MAIN_REF."

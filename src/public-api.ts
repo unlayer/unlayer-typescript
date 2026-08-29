@@ -1,7 +1,7 @@
 // Runtime template for the allowlisted public SDK. Edit this template instead of src/public-api.ts.
 
 import { createClient } from './client';
-import type { Client } from './client';
+import type { Client, Config } from './client';
 import { createQuerySerializer } from './client/utils.gen';
 
 import { Projects as GeneratedProjects, Templates as GeneratedTemplates, Workspaces as GeneratedWorkspaces } from './sdk.gen';
@@ -373,6 +373,10 @@ type ResolvedCompatibilityClient = {
   options: ClientOptions;
 };
 
+type CompatibilityClientConfig = Config & {
+  query?: Record<string, string | undefined>;
+};
+
 const resolveCompatibilityClient = (options: ClientOptions): ResolvedCompatibilityClient => {
   const apiKey = options.apiKey === undefined ? readEnv('UNLAYER_API_KEY') ?? null : options.apiKey;
   const personalAccessToken =
@@ -396,6 +400,7 @@ const resolveCompatibilityClient = (options: ClientOptions): ResolvedCompatibili
   } = options.fetchOptions ?? {};
   const headers = mergeNullableHeaders(
     projectID ? { 'X-Project-ID': projectID } : undefined,
+    personalAccessToken ?? apiKey ? { Authorization: `Bearer ${personalAccessToken ?? apiKey}` } : undefined,
     fetchHeaders,
     options.defaultHeaders,
   );
@@ -411,14 +416,15 @@ const resolveCompatibilityClient = (options: ClientOptions): ResolvedCompatibili
     timeout,
   });
 
-  const client = createClient({
+  const clientConfig: CompatibilityClientConfig = {
     ...fetchConfig,
-    auth: personalAccessToken ?? apiKey ?? undefined,
     baseUrl: baseURL,
     fetch: compatibilityFetch,
     headers,
+    query: options.defaultQuery,
     querySerializer: (query) => querySerializer({ ...options.defaultQuery, ...query }),
-  });
+  };
+  const client = createClient(clientConfig);
 
   client.interceptors.error.use((error, response, request) => {
     if (error instanceof UnlayerError) return error;
@@ -672,7 +678,7 @@ export class Templates {
     return new APIPromise(this.#generatedTemplates.getTemplate({
       ...nativeRequestOptions(options),
       path: { id: id },
-      query: query ?? undefined,
+      query: query ?? {},
     }));
   }
 }

@@ -24,7 +24,8 @@ echo "==> Running publint"
 
 echo "==> Testing release safeguards"
 RELEASE_VERSION="$(node -p 'require("./package.json").version')"
-GITHUB_ACTIONS=true GITHUB_REF_TYPE=tag GITHUB_REF_NAME="v${RELEASE_VERSION}" \
+GITHUB_ACTIONS=true GITHUB_REF_TYPE=tag GITHUB_REF_NAME="v${RELEASE_VERSION}" GITHUB_SHA=HEAD \
+  RELEASE_MAIN_REF=HEAD \
   ./bin/check-release-ref
 
 if GITHUB_ACTIONS=true GITHUB_REF_TYPE=branch GITHUB_REF_NAME=main \
@@ -41,6 +42,7 @@ fi
 
 node --test tests/sync-openapi.test.mjs
 node --test tests/generate-public-api.test.mjs
+node --test tests/repository-safeguards.test.mjs
 node --test tests/publish-npm.test.mjs
 
 echo "==> Testing the packed SDK"

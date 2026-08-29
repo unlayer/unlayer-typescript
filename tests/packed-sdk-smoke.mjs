@@ -37,6 +37,7 @@ const streamingResponseStarted = new Promise((resolve) => {
 const server = http.createServer(async (request, response) => {
   const chunks = [];
   for await (const chunk of request) chunks.push(chunk);
+  const requestURL = new URL(request.url ?? '/', 'http://localhost');
 
   requests.push({
     body: Buffer.concat(chunks).toString('utf8'),
@@ -112,12 +113,12 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
-  if (request.method === 'GET' && request.url === '/v3/projects/project-1') {
+  if (request.method === 'GET' && requestURL.pathname === '/v3/projects/project-1') {
     response.end(JSON.stringify({ data: { id: 1, name: 'Project' } }));
     return;
   }
 
-  if (request.method === 'GET' && request.url === '/v3/workspaces') {
+  if (request.method === 'GET' && requestURL.pathname === '/v3/workspaces') {
     if (request.headers['x-stream-abort'] === 'true') {
       response.on('error', () => undefined);
       response.write('{"data":[');
@@ -130,7 +131,7 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
-  if (request.method === 'GET' && request.url === '/v3/workspaces/workspace-1') {
+  if (request.method === 'GET' && requestURL.pathname === '/v3/workspaces/workspace-1') {
     response.end(JSON.stringify({ data: { id: 2, name: 'Workspace', projects: [] } }));
     return;
   }
@@ -323,6 +324,7 @@ try {
     projectID: 'constructor-project',
   });
   await optionMergeSdk.templates.retrieve('folder/Welcome & Spring', { projectId: undefined });
+  await optionMergeSdk.projects.retrieve('project-1');
   await optionMergeSdk.workspaces.list({ headers: { 'X-Remove-Me': null } });
   const optionMergeRequests = requests.slice(optionMergeRequestStart);
   const queryRemovalRequest = optionMergeRequests.find((request) =>
@@ -331,7 +333,15 @@ try {
   const queryRemovalURL = new URL(queryRemovalRequest.url, 'http://localhost');
   assert.equal(queryRemovalURL.searchParams.has('projectId'), false);
   assert.equal(queryRemovalURL.searchParams.get('stable'), 'kept');
-  const headerRemovalRequest = optionMergeRequests.find((request) => request.url === '/v3/workspaces');
+  const querylessRequest = optionMergeRequests.find((request) =>
+    request.url?.startsWith('/v3/projects/project-1'),
+  );
+  const querylessURL = new URL(querylessRequest.url, 'http://localhost');
+  assert.equal(querylessURL.searchParams.get('projectId'), 'default-query-project');
+  assert.equal(querylessURL.searchParams.get('stable'), 'kept');
+  const headerRemovalRequest = optionMergeRequests.find(
+    (request) => new URL(request.url, 'http://localhost').pathname === '/v3/workspaces',
+  );
   assert.equal(headerRemovalRequest.headers['x-project-id'], 'default-header-project');
   assert.equal('x-remove-me' in headerRemovalRequest.headers, false);
 
@@ -403,12 +413,14 @@ try {
   assert.equal(inheritedAuthorization, 'Bearer first-environment-api-key');
 
   let requestCache;
+  const requestAuthorizations = [];
   const requestOptionsSdk = new UnlayerDefault({
     apiKey: 'compat-token',
     baseURL: 'https://example.test',
     maxRetries: 0,
     fetch: async (request) => {
       requestCache = request.cache;
+      requestAuthorizations.push(request.headers.get('authorization'));
       return new Response(JSON.stringify({ data: [] }), {
         headers: { 'content-type': 'application/json' },
       });
@@ -416,6 +428,12 @@ try {
   });
   await requestOptionsSdk.workspaces.list({ fetchOptions: { cache: 'no-store' } });
   assert.equal(requestCache, 'no-store');
+  await requestOptionsSdk.workspaces.list({
+    headers: { Authorization: 'Bearer request-authorization' },
+  });
+  assert.equal(requestAuthorizations.at(-1), 'Bearer request-authorization');
+  await requestOptionsSdk.workspaces.list({ headers: { Authorization: null } });
+  assert.equal(requestAuthorizations.at(-1), null);
   let generatedClientOverrideUsed = false;
   await requestOptionsSdk.workspaces.list({
     client: {
