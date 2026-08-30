@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+if [ "$#" -ne 2 ]; then
+  echo "usage: $0 <package-archive> <smoke-test-file>" >&2
+  exit 1
+fi
+
+archive="$1"
+smoke_test_file="$2"
+
+if [ ! -f "$archive" ]; then
+  echo "package archive not found: $archive" >&2
+  exit 1
+fi
+
+if [ ! -f "$smoke_test_file" ]; then
+  echo "smoke test not found: $smoke_test_file" >&2
+  exit 1
+fi
+
+archive_dir=$(cd "$(dirname "$archive")" && pwd)
+archive="$archive_dir/$(basename "$archive")"
+
+tmp_root="${TMPDIR:-/tmp}"
+consumer_dir=$(mktemp -d "$tmp_root/unlayer-sdk-consumer.XXXXXX")
+trap 'rm -rf "$consumer_dir"' EXIT
+
+NPM_CONFIG_CACHE="$consumer_dir/npm-cache" npm install \
+  --silent \
+  --prefix "$consumer_dir" \
+  --ignore-scripts \
+  --no-audit \
+  --no-fund \
+  "$archive" >/dev/null
+
+cp "$smoke_test_file" "$consumer_dir/smoke-test.mjs"
+node "$consumer_dir/smoke-test.mjs"

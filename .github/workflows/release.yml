@@ -1,0 +1,43 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    name: release please
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create or update release
+        id: release
+        uses: googleapis/release-please-action@v5
+        with:
+          token: ${{ github.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      - name: Run CI for the release PR
+        if: steps.release.outputs.prs_created == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_PR: ${{ steps.release.outputs.pr }}
+        run: |
+          branch=$(node -e "process.stdout.write(JSON.parse(process.env.RELEASE_PR).headBranchName)")
+          test -n "$branch"
+          gh workflow run ci.yml --ref "$branch"
+
+      - name: Publish the created release
+        if: steps.release.outputs.release_created == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag_name }}
+        run: gh workflow run publish-npm.yml --ref "$RELEASE_TAG"

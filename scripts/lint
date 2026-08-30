@@ -7,6 +7,9 @@ cd "$(dirname "$0")/.."
 echo "==> Running eslint"
 ./node_modules/.bin/eslint .
 
+echo "==> Checking generated source"
+./scripts/check-generated
+
 echo "==> Building"
 ./scripts/build
 
@@ -14,8 +17,33 @@ echo "==> Checking types"
 ./node_modules/typescript/bin/tsc
 
 echo "==> Running Are The Types Wrong?"
-./node_modules/.bin/attw --pack dist -f json >.attw.json || true
-node scripts/utils/attw-report.cjs
+NPM_CONFIG_CACHE="${TMPDIR:-/tmp}/unlayer-sdk-npm-cache" ./node_modules/.bin/attw --pack dist
 
 echo "==> Running publint"
 ./node_modules/.bin/publint dist
+
+echo "==> Testing release safeguards"
+RELEASE_VERSION="$(node -p 'require("./package.json").version')"
+GITHUB_ACTIONS=true GITHUB_REF_TYPE=tag GITHUB_REF_NAME="v${RELEASE_VERSION}" GITHUB_SHA=HEAD \
+  RELEASE_MAIN_REF=HEAD \
+  ./bin/check-release-ref
+
+if GITHUB_ACTIONS=true GITHUB_REF_TYPE=branch GITHUB_REF_NAME=main \
+  ./bin/check-release-ref >/dev/null 2>&1; then
+  echo "release safeguard accepted a branch" >&2
+  exit 1
+fi
+
+if GITHUB_ACTIONS=true GITHUB_REF_TYPE=tag GITHUB_REF_NAME=v999.0.0 \
+  ./bin/check-release-ref >/dev/null 2>&1; then
+  echo "release safeguard accepted a mismatched tag" >&2
+  exit 1
+fi
+
+node --test tests/sync-openapi.test.mjs
+node --test tests/generate-public-api.test.mjs
+node --test tests/repository-safeguards.test.mjs
+node --test tests/publish-npm.test.mjs
+
+echo "==> Testing the packed SDK"
+./scripts/test-packed-sdk tests/packed-sdk-smoke.mjs

@@ -1,0 +1,189 @@
+{
+  "version": 1,
+  "operations": [
+    {
+      "operationId": "listTemplates",
+      "resource": ["templates"],
+      "method": "list",
+      "transport": "templates",
+      "params": {
+        "location": "query",
+        "type": "TemplateListParams",
+        "optional": true
+      },
+      "response": {
+        "type": "TemplateListResponse",
+        "kind": "item",
+        "property": "data"
+      },
+      "pagination": {
+        "type": "cursor",
+        "pageType": "TemplateListResponsesCursorPage",
+        "items": "data",
+        "cursor": "cursor",
+        "nextCursor": "next_cursor",
+        "hasMore": "has_more"
+      }
+    },
+    {
+      "operationId": "getTemplate",
+      "resource": ["templates"],
+      "method": "retrieve",
+      "transport": "templates",
+      "pathArguments": [
+        {
+          "name": "id",
+          "target": "id",
+          "type": "string"
+        }
+      ],
+      "params": {
+        "location": "query",
+        "type": "TemplateRetrieveParams",
+        "optional": true
+      },
+      "response": {
+        "type": "TemplateRetrieveResponse",
+        "kind": "response",
+        "nestedTypes": [
+          {
+            "name": ["Data"],
+            "path": ["data"]
+          }
+        ]
+      }
+    },
+    {
+      "operationId": "getProject",
+      "resource": ["projects"],
+      "method": "retrieve",
+      "transport": "projects",
+      "pathArguments": [
+        {
+          "name": "id",
+          "target": "id",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "type": "ProjectRetrieveResponse",
+        "kind": "response",
+        "nestedTypes": [
+          {
+            "name": ["Data"],
+            "path": ["data"]
+          },
+          {
+            "name": ["Data", "Workspace"],
+            "path": ["data", "workspace"]
+          }
+        ]
+      }
+    },
+    {
+      "operationId": "listWorkspaces",
+      "resource": ["workspaces"],
+      "method": "list",
+      "transport": "workspaces",
+      "response": {
+        "type": "WorkspaceListResponse",
+        "kind": "response",
+        "nestedTypes": [
+          {
+            "name": ["Data"],
+            "path": ["data"],
+            "item": true
+          }
+        ]
+      }
+    },
+    {
+      "operationId": "getWorkspace",
+      "resource": ["workspaces"],
+      "method": "retrieve",
+      "transport": "workspaces",
+      "pathArguments": [
+        {
+          "name": "workspaceID",
+          "target": "workspaceId",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "type": "WorkspaceRetrieveResponse",
+        "kind": "response",
+        "nestedTypes": [
+          {
+            "name": ["Data"],
+            "path": ["data"]
+          },
+          {
+            "name": ["Data", "Project"],
+            "path": ["data", "projects"],
+            "item": true
+          }
+        ]
+      }
+    },
+    {
+      "operationId": "convertFullToSimple",
+      "resource": ["convert", "fullToSimple"],
+      "method": "create",
+      "transport": "templates",
+      "params": {
+        "location": "body",
+        "name": "body",
+        "type": "FullToSimpleCreateParams",
+        "optional": false,
+        "nestedTypes": [
+          {
+            "name": ["Design"],
+            "path": ["design"]
+          }
+        ]
+      },
+      "response": {
+        "type": "FullToSimpleCreateResponse",
+        "kind": "response",
+        "nestedTypes": [
+          {
+            "name": ["Data"],
+            "path": ["data"]
+          }
+        ]
+      }
+    },
+    {
+      "operationId": "convertSimpleToFull",
+      "resource": ["convert", "simpleToFull"],
+      "method": "create",
+      "transport": "templates",
+      "params": {
+        "location": "body",
+        "name": "body",
+        "type": "SimpleToFullCreateParams",
+        "optional": false,
+        "nestedTypes": [
+          {
+            "name": ["Design"],
+            "path": ["design"]
+          },
+          {
+            "name": ["Design", "_Conversion"],
+            "path": ["design", "_conversion"]
+          }
+        ]
+      },
+      "response": {
+        "type": "SimpleToFullCreateResponse",
+        "kind": "response",
+        "nestedTypes": [
+          {
+            "name": ["Data"],
+            "path": ["data"]
+          }
+        ]
+      }
+    }
+  ]
+}

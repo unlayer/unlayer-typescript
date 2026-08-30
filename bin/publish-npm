@@ -1,52 +1,72 @@
 #!/usr/bin/env bash
 
-set -eux
+set -euo pipefail
 
-npm config set '//registry.npmjs.org/:_authToken' "$NPM_TOKEN"
+cd "$(dirname "$0")/.."
 
-yarn build
-cd dist
+bash ./bin/check-release-ref
+bash ./bin/check-release-environment
 
-# Get package name and version from package.json
-PACKAGE_NAME="$(jq -r -e '.name' ./package.json)"
-VERSION="$(jq -r -e '.version' ./package.json)"
-
-# Get latest version from npm
-#
-# If the package doesn't exist, npm will return:
-# {
-#   "error": {
-#     "code": "E404",
-#     "summary": "Unpublished on 2025-06-05T09:54:53.528Z",
-#     "detail": "'the_package' is not in this registry..."
-#   }
-# }
-NPM_INFO="$(npm view "$PACKAGE_NAME" version --json 2>/dev/null || true)"
-
-# Check if we got an E404 error
-if echo "$NPM_INFO" | jq -e '.error.code == "E404"' > /dev/null 2>&1; then
-  # Package doesn't exist yet, no last version
-  LAST_VERSION=""
-elif echo "$NPM_INFO" | jq -e '.error' > /dev/null 2>&1; then
-  # Report other errors
-  echo "ERROR: npm returned unexpected data:"
-  echo "$NPM_INFO"
+if [ "$#" -ne 1 ]; then
+  echo "usage: $0 <verified-package-archive>" >&2
   exit 1
+fi
+
+ARCHIVE="$1"
+if [ ! -f "$ARCHIVE" ]; then
+  echo "verified package archive not found: $ARCHIVE" >&2
+  exit 1
+fi
+
+# Read release identity from the exact archive that passed verification.
+PACKAGE_JSON="$(tar -xOf "$ARCHIVE" package/package.json)"
+PACKAGE_NAME="$(echo "$PACKAGE_JSON" | jq -r -e '.name')"
+VERSION="$(echo "$PACKAGE_JSON" | jq -r -e '.version')"
+EXPECTED_NAME="$(jq -r -e '.name' package.json)"
+EXPECTED_VERSION="$(jq -r -e '.version' package.json)"
+
+if [ "$PACKAGE_NAME" != "$EXPECTED_NAME" ] || [ "$VERSION" != "$EXPECTED_VERSION" ]; then
+  echo "verified archive identity does not match the release checkout" >&2
+  exit 1
+fi
+
+NPM_ERROR_FILE="$(mktemp "${TMPDIR:-/tmp}/unlayer-sdk-npm-view.XXXXXX")"
+trap 'rm -f "$NPM_ERROR_FILE"' EXIT
+
+NPM_STATUS=0
+NPM_INFO="$(npm view "$PACKAGE_NAME" version --json 2>"$NPM_ERROR_FILE")" || NPM_STATUS=$?
+
+if [ "$NPM_STATUS" -eq 0 ]; then
+  if ! LAST_VERSION="$(
+    printf '%s\n' "$NPM_INFO" |
+      jq -er 'if type == "string" and length > 0 then . else error("expected a version string") end'
+  )"; then
+    echo "npm returned an invalid version response" >&2
+    exit 1
+  fi
+elif printf '%s\n' "$NPM_INFO" | jq -e '.error.code == "E404"' > /dev/null 2>&1; then
+  # An explicit E404 means the package has not been published before.
+  LAST_VERSION=""
 else
-  # Success - get the version
-  LAST_VERSION=$(echo "$NPM_INFO" | jq -r '.') # strip quotes
+  echo "npm view failed with status $NPM_STATUS" >&2
+  if [ -n "$NPM_INFO" ]; then printf '%s\n' "$NPM_INFO" >&2; fi
+  if [ -s "$NPM_ERROR_FILE" ]; then cat "$NPM_ERROR_FILE" >&2; fi
+  exit 1
 fi
 
 # Check if current version is pre-release (e.g. alpha / beta / rc)
 CURRENT_IS_PRERELEASE=false
-if [[ "$VERSION" =~ -([a-zA-Z]+) ]]; then
+if [[ "$VERSION" == *-* ]]; then
   CURRENT_IS_PRERELEASE=true
-  CURRENT_TAG="${BASH_REMATCH[1]}"
+  PRERELEASE="${VERSION#*-}"
+  PRERELEASE="${PRERELEASE%%+*}"
+  CURRENT_TAG="${PRERELEASE%%.*}"
+  if [[ "$CURRENT_TAG" =~ ^[0-9]+$ ]]; then CURRENT_TAG="next"; fi
 fi
 
 # Check if last version is a stable release
 LAST_IS_STABLE_RELEASE=true
-if [[ -z "$LAST_VERSION" || "$LAST_VERSION" =~ -([a-zA-Z]+) ]]; then
+if [[ -z "$LAST_VERSION" || "$LAST_VERSION" == *-* ]]; then
   LAST_IS_STABLE_RELEASE=false
 fi
 
@@ -57,5 +77,13 @@ else
   TAG="latest"
 fi
 
-# Publish with the appropriate tag
-yarn publish --tag "$TAG"
+if [ "$TAG" = "latest" ] && [ -n "$LAST_VERSION" ]; then
+  if ! node ./scripts/utils/is-newer-semver.cjs "$VERSION" "$LAST_VERSION"; then
+    echo "refusing to move the latest dist-tag from $LAST_VERSION to $VERSION" >&2
+    exit 1
+  fi
+fi
+
+# npm trusted publishing exchanges GitHub's OIDC token for short-lived publish
+# credentials and automatically attaches provenance to public packages.
+npm publish "$ARCHIVE" --tag "$TAG" --access public

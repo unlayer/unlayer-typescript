@@ -1,79 +1,101 @@
 ## Setting up the environment
 
-This repository uses [`yarn@v1`](https://classic.yarnpkg.com/lang/en/docs/install).
-Other package managers may work but are not officially supported for development.
+This repository uses the pnpm version pinned in `package.json`. Development and
+SDK generation require Node.js 22.18 or newer; the published package supports
+Node.js 20 and newer. Enable Corepack before setup so the correct pnpm version
+is selected automatically.
 
 To set up the repository, run:
 
 ```sh
-$ yarn
-$ yarn build
+$ corepack enable
+$ pnpm install
+$ pnpm build
 ```
 
 This will install all the required dependencies and build output files to `dist/`.
 
+## Why Hey API
+
+The SDK uses Hey API because it produces a typed internal Fetch transport, can
+run entirely from this repository, and adds no runtime dependency to the
+published package. The generator, OpenAPI snapshot, public API allowlist,
+configuration, and postprocessing are all pinned and reviewable, so
+regeneration does not depend on a hosted SDK-generation service.
+
+OpenAPI Generator was considered for its broad language support, but Hey API's
+TypeScript output and native Fetch surface require less package-specific
+adaptation here. Hosted generators would retain an external control plane, and
+custom or LLM-generated runtime code would create more maintenance than a
+pinned open-source generator. This repository intentionally scopes generation
+to the TypeScript package.
+
 ## Modifying/Adding code
 
-Most of the SDK is generated code. Modifications to code will be persisted between generations, but may
-result in merge conflicts between manual patches and changes from the generator. The generator will never
-modify the contents of the `src/lib/` and `examples/` directories.
-
-## Adding and running examples
-
-All files in the `examples/` directory are not modified by the generator and can be freely edited or added to.
-
-```ts
-// add an example to examples/<your-example>.ts
-
-#!/usr/bin/env -S npm run tsn -T
-…
-```
+The SDK source is generated with the pinned Hey API version and
+`openapi-ts.config.ts` from the committed `openapi.json` snapshot. Run:
 
 ```sh
-$ chmod +x examples/<your-example>.ts
-# run the example against your api
-$ yarn tsn -T examples/<your-example>.ts
+$ pnpm generate
 ```
 
-## Using the repository from source
+Generation replaces `src/`, applies the fail-closed internal transport
+postprocessor, and generates the public facade from `public-api.json`. Do not
+edit generated source by hand. If Hey API changes its generated request layout
+or an allowlisted operation changes its declared path or pagination contract,
+generation stops instead of producing a mismatched SDK.
 
-If you’d like to use the repository from source, you can either install from git or link to a cloned repository:
+`public-api.json` is the only operation allowlist. OpenAPI operations absent
+from it remain internal and are not reachable from the published `Unlayer`
+client. To expose an operation, add its public resource, method, parameters,
+response, and pagination metadata to that file, run `pnpm generate`, and review
+the generated facade and consumer tests.
 
-To install via git:
+To intentionally update the snapshot from the public production API document,
+run both commands and review the specification and generated-source diffs:
 
 ```sh
-$ npm install git+ssh://git@github.com:unlayer/unlayer-typescript.git
+$ pnpm sync-spec
+$ pnpm generate
 ```
 
-Alternatively, to link a local copy of the repo:
+The sync command records the canonical API server in the local snapshot. Hey
+previously inferred that origin from the remote document URL, while local-file
+generation requires it explicitly.
+
+The `Sync OpenAPI` workflow performs this check once a day and can also be run
+manually. When the production document changes, it regenerates and verifies the
+SDK before opening or updating one automation PR. The workflow exits early when
+the committed snapshot is already current.
+
+`pnpm test` regenerates the SDK from the committed snapshot and fails if the
+checked-in source has drifted.
+
+## Testing an unreleased package
+
+Git URL dependencies are not supported because generated build output is not
+committed to the repository. To test an unreleased revision, build and pack the
+same package layout that the release workflow publishes:
 
 ```sh
-# Clone
-$ git clone https://www.github.com/unlayer/unlayer-typescript
-$ cd unlayer-typescript
-
-# With yarn
-$ yarn link
+$ pnpm build
+$ archive=$(npm pack --silent ./dist)
 $ cd ../my-package
-$ yarn link @unlayer/sdk
-
-# With pnpm
-$ pnpm link --global
-$ cd ../my-package
-$ pnpm link --global @unlayer/sdk
+$ npm install "../unlayer-typescript/$archive"
 ```
+
+This exercises the package manifest and files that consumers receive from npm
+instead of linking directly to repository internals.
 
 ## Running tests
 
-Most tests require you to [set up a mock server](https://github.com/stoplightio/prism) against the OpenAPI spec to run the tests.
-
 ```sh
-$ ./scripts/mock
+$ pnpm test
 ```
 
-```sh
-$ yarn run test
-```
+This verifies source types and formatting, CommonJS and ESM builds, public
+package exports, and the packed type surface. It also installs the package in an
+isolated consumer and exercises its HTTP behavior.
 
 ## Linting and formatting
 
@@ -83,25 +105,35 @@ This repository uses [prettier](https://www.npmjs.com/package/prettier) and
 To lint:
 
 ```sh
-$ yarn lint
+$ pnpm lint
 ```
 
 To format and fix all lint issues automatically:
 
 ```sh
-$ yarn fix
+$ pnpm fix
 ```
 
 ## Publishing and releases
 
-Changes made to this repository via the automated release PR pipeline should publish to npm automatically. If
-the changes aren't made through the automated pipeline, you may want to make releases manually.
+Release Please maintains the release PR. Merging that PR creates a GitHub
+release and dispatches the `Publish NPM` workflow at the matching tag. Publishing
+uses npm trusted publishing. The workflow runs full verification on Node.js 24,
+tests the exact packed tarball on Node.js 20, and publishes that same artifact
+only after both jobs pass.
 
-### Publish with a GitHub workflow
+The repository requires two one-time settings:
 
-You can release to package managers by using [the `Publish NPM` GitHub action](https://www.github.com/unlayer/unlayer-typescript/actions/workflows/publish-npm.yml). This requires a setup organization or repository secret to be set up.
+- GitHub Actions must be allowed to create pull requests. The built-in,
+  short-lived `GITHUB_TOKEN` creates SDK update PRs, release PRs, tags, and
+  releases only within this repository.
+- An npm trusted publisher for organization `unlayer`, repository
+  `unlayer-typescript`, workflow `publish-npm.yml`, with `npm publish` allowed.
 
-### Publish manually
+No GitHub App, personal access token, or long-lived npm token is required.
+GitHub's OIDC token provides short-lived npm credentials and npm automatically
+records package provenance.
 
-If you need to manually release a package, you can run the `bin/publish-npm` script with an `NPM_TOKEN` set on
-the environment.
+To retry a failed package release, manually run the
+[`Publish NPM` workflow](https://github.com/unlayer/unlayer-typescript/actions/workflows/publish-npm.yml)
+and select the matching `v<version>` release tag. Branches cannot publish.
