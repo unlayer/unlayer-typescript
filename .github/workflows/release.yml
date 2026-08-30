@@ -33,11 +33,11 @@ jobs:
         run: |
           branch=$(node -e "process.stdout.write(JSON.parse(process.env.RELEASE_PR).headBranchName)")
           test -n "$branch"
-          gh workflow run ci.yml --ref "$branch"
+          gh workflow run ci.yml --repo "$GITHUB_REPOSITORY" --ref "$branch"
 
       - name: Publish the created release
         if: steps.release.outputs.release_created == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ steps.release.outputs.tag_name }}
-        run: gh workflow run publish-npm.yml --ref "$RELEASE_TAG"
+        run: gh workflow run publish-npm.yml --repo "$GITHUB_REPOSITORY" --ref "$RELEASE_TAG"
