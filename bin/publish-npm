@@ -12,11 +12,17 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-ARCHIVE="$1"
-if [ ! -f "$ARCHIVE" ]; then
-  echo "verified package archive not found: $ARCHIVE" >&2
+ARCHIVE_INPUT="$1"
+if [ ! -f "$ARCHIVE_INPUT" ]; then
+  echo "verified package archive not found: $ARCHIVE_INPUT" >&2
   exit 1
 fi
+
+# npm treats a relative path without a leading ./ as a package spec. Resolve the
+# verified archive to an absolute path so workflow paths such as
+# sdk-package/unlayer-sdk-0.2.0.tgz are always published as local files.
+ARCHIVE_DIRECTORY="$(cd "$(dirname "$ARCHIVE_INPUT")" && pwd -P)"
+ARCHIVE="$ARCHIVE_DIRECTORY/$(basename "$ARCHIVE_INPUT")"
 
 # Read release identity from the exact archive that passed verification.
 PACKAGE_JSON="$(tar -xOf "$ARCHIVE" package/package.json)"
