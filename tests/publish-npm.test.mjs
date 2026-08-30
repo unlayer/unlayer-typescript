@@ -84,8 +84,8 @@ esac
   );
   fs.chmodSync(fakeNpm, 0o755);
 
-  const run = (mode, { lastVersion = earlierRegistryVersion } = {}) =>
-    spawnSync('bash', ['./bin/publish-npm', archive], {
+  const run = (mode, { archiveArgument = archive, lastVersion = earlierRegistryVersion } = {}) =>
+    spawnSync('bash', ['./bin/publish-npm', archiveArgument], {
       cwd: repositoryRoot,
       encoding: 'utf8',
       env: {
@@ -118,13 +118,36 @@ for (const mode of ['success', 'e404']) {
       assert.equal(result.status, 0, result.stderr);
       assert.equal(
         fs.readFileSync(harness.publishLog, 'utf8').trim(),
-        `publish ${harness.archive} --tag latest --access public`,
+        `publish ${fs.realpathSync(harness.archive)} --tag latest --access public`,
       );
     } finally {
       harness.cleanup();
     }
   });
 }
+
+test('publishes a workflow-style relative archive path as a local file', () => {
+  const harness = createHarness();
+  const relativeDirectory = fs.mkdtempSync(path.join(repositoryRoot, 'sdk-package-test.'));
+  const relativeArchive = path.join(relativeDirectory, path.basename(harness.archive));
+  fs.copyFileSync(harness.archive, relativeArchive);
+
+  try {
+    const archiveArgument = path.relative(repositoryRoot, relativeArchive);
+    assert.equal(path.isAbsolute(archiveArgument), false);
+    assert.equal(archiveArgument.startsWith('.'), false);
+
+    const result = harness.run('e404', { archiveArgument });
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(
+      fs.readFileSync(harness.publishLog, 'utf8').trim(),
+      `publish ${fs.realpathSync(relativeArchive)} --tag latest --access public`,
+    );
+  } finally {
+    fs.rmSync(relativeDirectory, { force: true, recursive: true });
+    harness.cleanup();
+  }
+});
 
 test('does not move latest backwards when an older stable release is dispatched', () => {
   const harness = createHarness();

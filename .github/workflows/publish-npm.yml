@@ -91,4 +91,4 @@ jobs:
           path: sdk-package
 
       - name: Publish to NPM
-        run: bash ./bin/publish-npm sdk-package/*.tgz
+        run: bash ./bin/publish-npm ./sdk-package/*.tgz
