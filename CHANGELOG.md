@@ -1,5 +1,54 @@
 # Changelog
 
+## [0.2.0](https://github.com/unlayer/unlayer-typescript/compare/v0.1.0...v0.2.0) (2026-08-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* **repo:** replace the 0.1 default-export wrapper, implicit configuration, custom errors, retries, timeouts, pagination helpers, and operation signatures with the named native Hey API client and resource methods.
+
+### Features
+
+* generate allowlisted compatible public API ([156fa92](https://github.com/unlayer/unlayer-typescript/commit/156fa929ab9d53be20a0aecb1a2334bbc469c60a))
+* **repo:** replace wrapper with native Hey API SDK ([3e23834](https://github.com/unlayer/unlayer-typescript/commit/3e23834b33a90607dcc7a6985c56edd2e1a8bd6f))
+
+
+### Bug Fixes
+
+* close SDK compatibility and release gaps ([3e22138](https://github.com/unlayer/unlayer-typescript/commit/3e2213815789034e2f5abbac85e26bb73b92bdea))
+* preserve request compatibility and harden releases ([2d2e942](https://github.com/unlayer/unlayer-typescript/commit/2d2e9421ca17e6e2b06b22d658add945cc6ce7f0))
+* **repo:** enforce safe SDK client defaults ([09a3266](https://github.com/unlayer/unlayer-typescript/commit/09a3266bcd8301b1a4827cbd689f6df3fd27c156))
+* **repo:** fail closed on npm registry errors ([ba04bc7](https://github.com/unlayer/unlayer-typescript/commit/ba04bc70914e2da97a24a76ce83f93167e83ff75))
+* **repo:** isolate generated SDK clients ([b49c5ba](https://github.com/unlayer/unlayer-typescript/commit/b49c5ba42bb674414ff47ce586af1e1bcaf645f0))
+* **repo:** preserve default SDK error throwing ([73cb592](https://github.com/unlayer/unlayer-typescript/commit/73cb592513a24dc0b0f4c2377fc8fc63dbd8d38d))
+* **repo:** target release workflow dispatches ([8758fa1](https://github.com/unlayer/unlayer-typescript/commit/8758fa1599a2b881ea6857d85f4007c2c02cb55d))
+* **repo:** target release workflow dispatches ([101116a](https://github.com/unlayer/unlayer-typescript/commit/101116aaba8fe38428d72550030310bd7291990e))
+* restore SDK compatibility behavior ([7ea4769](https://github.com/unlayer/unlayer-typescript/commit/7ea47693a187d6408421dbdacd7a9d1a860068fe))
+
+
+### Chores
+
+* **repo:** correct public package metadata ([0e00e4a](https://github.com/unlayer/unlayer-typescript/commit/0e00e4aa4d5838b532ec3d10131bbda7caaeafc6))
+
+
+### Documentation
+
+* **repo:** document automated release setup ([bdc586e](https://github.com/unlayer/unlayer-typescript/commit/bdc586e858e279aefd204a3e46d292f1a371b37a))
+* **repo:** document Hey API generator choice ([334d20f](https://github.com/unlayer/unlayer-typescript/commit/334d20fd9d59d055f8a07e1571f1927db631fb23))
+* **repo:** document native SDK migration ([3db499a](https://github.com/unlayer/unlayer-typescript/commit/3db499abe31e31d153454d1c14c0d8165724c69a))
+* **repo:** document self-contained SDK automation ([a61e78f](https://github.com/unlayer/unlayer-typescript/commit/a61e78f39f62efafb242ddedb96e8cb097fb0a6b))
+* **repo:** document supported unreleased SDK testing ([6ecde61](https://github.com/unlayer/unlayer-typescript/commit/6ecde61acbba367c22f449d8e2f01411657c8a64))
+* **repo:** keep SDK guidance public-safe ([210e997](https://github.com/unlayer/unlayer-typescript/commit/210e9973ffff15c395b588ad312876378a4a1ca8))
+
+
+### Build System
+
+* **repo:** make SDK generation deterministic ([e5f0f43](https://github.com/unlayer/unlayer-typescript/commit/e5f0f43e80ce8e5f27dabd1a836760e59c88c60f))
+* **repo:** migrate SDK tooling to pnpm ([0dc6265](https://github.com/unlayer/unlayer-typescript/commit/0dc62658aefba1f2a11747d1d5342eb50c4db003))
+* **repo:** override vulnerable YAML parser ([7e4ea6c](https://github.com/unlayer/unlayer-typescript/commit/7e4ea6c2ca9489890bc6fd12ed4f53696e1937ce))
+* **repo:** polish distributed package metadata ([1ff30a9](https://github.com/unlayer/unlayer-typescript/commit/1ff30a92775e1e3ae27fffa1f5aacbcd889be0de))
+* **repo:** reject unexpected ungrouped API operations ([15e987f](https://github.com/unlayer/unlayer-typescript/commit/15e987fa11c27a804bedf4da138b64666d32e10e))
+
 ## 0.1.0 (2026-02-24)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/unlayer/unlayer-typescript/compare/v0.0.1...v0.1.0)
