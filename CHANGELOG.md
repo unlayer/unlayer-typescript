@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1](https://github.com/unlayer/unlayer-typescript/compare/v0.2.0...v0.2.1) (2026-08-30)
+
+
+### Bug Fixes
+
+* **repo:** publish verified archive as local file ([cd21500](https://github.com/unlayer/unlayer-typescript/commit/cd21500eb7315ed44dcd93d0e13eac9c11b94f6d))
+* **repo:** publish verified archive as local file ([de236b7](https://github.com/unlayer/unlayer-typescript/commit/de236b71074e3026aa19105d6c101fea2519f6ca))
+
 ## [0.2.0](https://github.com/unlayer/unlayer-typescript/compare/v0.1.0...v0.2.0) (2026-08-30)
 
 
